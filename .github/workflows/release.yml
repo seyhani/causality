@@ -1,0 +1,41 @@
+name: Compile Latex and Release PDF  
+
+on:  [push]
+
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          root_file: latex/main.tex
+          work_in_root_file_dir: true
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: PDF
+          path: latex/main.pdf
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: 5.x
+      
+      - name: Determine Version
+        uses: gittools/actions/gitversion/execute@v0.9.7
+      
+      - name: Release
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: latex/main.pdf
+          tag_name: ${{ env.GitVersion_MajorMinorPatch }}
+          prerelease: ${{  github.ref == 'refs/heads/dev' }}
+          generate_release_notes: true

@@ -1,0 +1,30 @@
+\ProvidesPackage{custom}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{tikz} 
+\usepackage{forest}
+\usepackage[final]{listings} 
+\usepackage{MnSymbol}
+\usepackage{ stmaryrd }
+\usepackage{hyperref}
+\usepackage[toc,page]{appendix}
+\usepackage{import}
+
+\allowdisplaybreaks
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\newcommand{\s}[1]{\{#1\}}
+\newcommand{\es}{$E = (\mathcal{E,\#,\vdash})$}
+\newcommand{\tc}[1]{\textcircled{#1}}
+\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
+\newcommand{\amp}{\ \& \ }
+
+\newtheorem{definition}{Definition}[subsection]
+\newtheorem{proposition}{Proposition}
