@@ -466,61 +466,42 @@ $$
 
 \section{Causality in Event Structure}
 
-Let $\sigma = l_1,l_2,...,l_n$ be a counterexample trace for a given process $t$
-with the set of labels $L$ where for each $1 \leq i \leq n$ we have $l_i \in L$.
-Let $E = (\mathcal{E},\#,\vdash,l,L) = \sem{t}$ 
-be the event structured derived from $t$.
-To find the cause of the counterexample, first we construct a causal model $M = (\mathcal{S},\mathcal{F})$.
-To define the signature $\mathcal{S}$, we consider no exogenous variables and we 
+Let $E = (\mathcal{E},\#,\vdash,l,L)$ be an event structure.
+Assuming $|E| = m$ and $|Con| = l$ we can consider
+$\mathcal{E} = \s{e_1, e_2, ...,e_m}$ and $Con = \s{s_1,s_2,...,s_l}$.
+Let $\sigma = \s{e_{i_1},e_{i_2},...,e_{i_n}} \in \mathcal{F}(E)$ be a configuration of $E$ that
+has been given as a counterexample where $\s{i_1,i_2,..,i_n} \subseteq \s{1,2,...,m}$.
+To find the cause of this counterexample, first we construct a causal model $M = (\mathcal{S},\mathcal{F})$.
+To define the signature $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$, we consider no exogenous variables and we 
 define endogenous variables of boolean type. 
-Let $C$ be the set $\{(e,e')| \forall e,e' \in \mathcal{E}\}$ so we have $\# \subseteq C$.
-For each element $c_i \in C$ we define a boolean variable $C_i$ which indicates whether 
-$c_i \in \#$ is true.
-Thus for each $C_i$ we define $F_{C_i}$ as follows:
+We define $\mathcal{V}$ as follows:
+\begin{align*}
+    \mathcal{V} = \s{C_{i,j} | \forall 1 \leq i < j \leq m} 
+    \cup \s{E_{i,j} | \forall 1 \leq i \leq l \amp \forall 1 \leq j \leq l}
+\end{align*}
+We define $\mathcal{F}$ in a way that each $C_{i,j}$ represents the conflict
+between $e_i$ and $e_j$ and $E_{i,j}$ indicates whether $s_i \vdash e_j$.
+Thus for each variable $C_{i,j}$ we define $F_{C_{i,j}}$ as follows:
 $$
-    F_{C_i} = 
-    \begin{cases}
-    true & \text{ if } c_i \in \# \\
-    false & \text{ otherwise}
-    \end{cases}
-$$
-We use the same approach for $\vdash$.
-Let $ES = \{ (es,e) | \forall es \in Con, \forall e \in \mathcal{E} \}$.
-For each element $en_i = (es,e) \in ES$ we define a boolean variable $ES_i$
-which indicates whether $es \vdash e$.
-Thus, for $ES_i$ we define $F_{ES_i}$ as follows:
-$$
-    F_{ES_i} = 
-    \begin{cases}
-        true & \text{ if } es \vdash e \\
+    F_{C_{i,j}}  = \begin{cases}
+        true & \text{ if } e_i \# e_j \wedge e_j \# e_i \\
         false & \text{ otherwise }
     \end{cases}
 $$
-With this causal model in hand, it only remains to define the $\varphi$.
-We call $\varsigma = e_1,e_2,...,e_n$ an \emph{event trace} of $\sigma$ in $E$ if 
-there exists a sequence of event sets $s_0,s_1,s_2,...,s_n$ satisfying the following conditions:
-\begin{align*}
-    & s_0 = \emptyset  \\
-    & \forall i. 1 \leq i \leq n. s_i = s_{i-1} \cup e_i \\
-    & \forall i. 1 \leq i \leq n. l(e_i) = l_i
-\end{align*}
-We say a given event is valid if it satisfies the following conditions:
-\begin{align*}
-    & \forall i. 1 \leq i \leq n. s_{i-1} \vdash e_i \\
-    & s_n \in Con 
-\end{align*}
-Since we have $s_1 \subset s_2 ... s_{n-1} \subset s_n$, to ensure that each set is conflict-free 
-it suffices to only check whether $s_n \in Con$.
-Let $ES(s_i,e_j)$ be the $ES_i$ variable that represents the event set $s_i$ and event $e_j$ thus
-$ES(s_i,e_j)$ is true if $s_i \vdash e_j$.
-Furthermore, let $C(e_i,e_j)$ be the $C_i$ variable representing the tuple $(e_i,e_j)$ in $C$ 
-thus, $C(e_i,e_j)$ is true if $e_i\#e_j$.
-Now we define $\varphi_{\varsigma}$ in a way that it reflects the validity of $\varsigma$:
-\begin{align*}
-        \varphi_{\varsigma} = & \left( \bigwedge_{1 \leq i \leq n}ES(s_{i-1},e_i) \right) \bigwedge \neg \left( \bigvee_{1\leq i,j \leq n}C(e_i,e_j)  \right)
-\end{align*}
-
-Note that we define $\varphi_{\varsigma}$ regarding a specific valid event trace.
+And for each variable $E_{i,j}$ we define $F_{E_{i,j}}$ as follows:
+$$
+    F_{E_{i,j}} = \begin{cases}
+        true & \text{ if } s_i \vdash e_j \\
+        false & \text{ otherwise }
+    \end{cases}
+$$
+With this causal model in hand, we define $\varphi_{\sigma}$ to represent whether $\sigma \in \mathcal{F}(E)$, thus we have:
+$$
+    \varphi_{\sigma} = \begin{cases}
+        true & \text{ if } \sigma \in \mathcal{F}(E) \\
+        false & \text{ otherwise}
+    \end{cases}
+$$
 
 \subsection{Example}
 Consider the process following process:
