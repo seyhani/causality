@@ -1,3 +1,8 @@
+from typing import Set, List
+
+from event import Event, SyncedEvent, STAR
+
+
 def repr_conflict(es):
     res = ""
     for e0, conflicts in es.conflict.items():
@@ -40,3 +45,22 @@ def is_conflict_free(es: set, conflict):
         if not es.isdisjoint(conflict[e]):
             return False
     return True
+
+
+def ids(events: Set[Event]):
+    return set(map(lambda e: e.id(), events))
+
+
+def list_ids(event_sets: List[Set[Event]]):
+    return list(map(lambda event_set: ids(event_set), event_sets))
+
+
+def dual(i):
+    return (i + 1) % 2
+
+
+def async_event(e, i):
+    if i == 0:
+        return SyncedEvent(e, STAR)
+    else:
+        return SyncedEvent(STAR, e)

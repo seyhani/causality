@@ -1,9 +1,9 @@
-from event_structure import ES
+from event_structure import EventStructure
 from helper import Helper
 from utils import disjoint_relabeling
 
-a = ES().prefix('b').prefix('a')
-b = ES().prefix('d').prefix('c')
+a = EventStructure().prefix('b').prefix('a')
+b = EventStructure().prefix('d').prefix('c')
 print(a.product(b))
 
 helper = Helper()

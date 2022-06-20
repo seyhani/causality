@@ -1,10 +1,10 @@
 from expression_parser import Tree, Variable, Exponent, Plus, Times, Node
-from event_structure import ES
+from event_structure import EventStructure
 
 
-def parse_tree(node: Node) -> ES:
+def parse_tree(node: Node) -> EventStructure:
     if isinstance(node, Variable):
-        return ES().prefix(node.name)
+        return EventStructure().prefix(node.name)
     else:
         root = node
         if isinstance(node, Tree):
@@ -24,7 +24,7 @@ def parse_tree(node: Node) -> ES:
 
 
 class ProcessParser:
-    def parse(self, expression) -> ES:
+    def parse(self, expression) -> EventStructure:
         tree = Tree()
         tree.parse(expression)
         return parse_tree(tree)

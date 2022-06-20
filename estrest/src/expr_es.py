@@ -1,10 +1,10 @@
-from event_structure import ES
+from event_structure import EventStructure
 from utils import sem
 
 
 class ExprES:
     def __init__(self):
-        self.es = ES()
+        self.es = EventStructure()
         self.expr = 'nil'
         self.expr_eq = sem('nil')
 
