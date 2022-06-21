@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'estrest/**'
-      - '.github/test.yml'
+      - '.github/workflows/test.yml'
 
 jobs:
   test:
