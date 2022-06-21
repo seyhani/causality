@@ -1,6 +1,10 @@
 name: Test estrest
 
-on: [push]
+on:
+  push:
+    paths:
+      - 'estrest/**'
+      - '.github/test.yml'
 
 jobs:
   test:
