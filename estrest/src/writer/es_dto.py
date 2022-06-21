@@ -1,6 +1,6 @@
 from event_structure import EventStructure
-from expr_es import ExprES
-from writer import WordList
+from writer.evnet_structure_expression import EventStructureExpression
+from .word_list import WordList
 
 
 def events_to_words(es: EventStructure) -> WordList:
@@ -38,7 +38,7 @@ def labeling_to_words(es: EventStructure) -> WordList:
 
 
 class ESDto:
-    def __init__(self, expr_es: ExprES, defs=''):
+    def __init__(self, expr_es: EventStructureExpression, defs=''):
         es = expr_es.es
         self.defs = defs
         self.expr = expr_es.expr

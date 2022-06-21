@@ -48,7 +48,7 @@ def is_conflict_free(es: set, conflict):
 
 
 def ids(events: Set[Event]):
-    return set(map(lambda e: e.id(), events))
+    return set(map(lambda e: e.idx(), events))
 
 
 def list_ids(event_sets: List[Set[Event]]):

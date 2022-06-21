@@ -1,12 +1,11 @@
 from event_structure import EventStructure
-from helper import Helper
+from writer.semantic_derivation_writer import SemanticDerivationWriter
 from utils import disjoint_relabeling
 
 a = EventStructure().prefix('b').prefix('a')
 b = EventStructure().prefix('d').prefix('c')
-print(a.product(b))
 
-helper = Helper()
+helper = SemanticDerivationWriter()
 
 c = helper.new_expr('c')
 d = helper.new_expr('d')

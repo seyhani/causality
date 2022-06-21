@@ -2,7 +2,7 @@ from event_structure import EventStructure
 from utils import sem
 
 
-class ExprES:
+class EventStructureExpression:
     def __init__(self):
         self.es = EventStructure()
         self.expr = 'nil'
@@ -17,13 +17,13 @@ class ExprES:
     def plus(self, es1):
         self.expr_eq = "{} + {}".format(sem(self.expr), sem(es1.expr))
         self.expr = "({} + {})".format(self.expr, es1.expr)
-        self.es = self.es.sum(es1.es)
+        self.es = self.es.plus(es1.es)
         return self
 
     def times(self, es1):
         self.expr_eq = "{} \\times {}".format(sem(self.expr), sem(es1.expr))
         self.expr = "({} \\times {})".format(self.expr, es1.expr)
-        self.es = self.es.product(es1.es)
+        self.es = self.es.times(es1.es)
         return self
 
     def restrict(self, name, labels):

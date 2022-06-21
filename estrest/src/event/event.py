@@ -7,11 +7,14 @@ class Event:
         self._mutations = (prefix,) + self._mutations
         return self
 
-    def id(self):
+    def idx(self):
         if self._mutations:
             return self._mutations + (self.label,)
         else:
             return self.label
 
     def __repr__(self):
-        return repr(self.id()).replace("\'", "")
+        return repr(self.idx()).replace("\'", "")
+
+    def to_json(self):
+        return dict(label=self.label)

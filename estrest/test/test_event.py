@@ -1,24 +1,30 @@
+import json
+import os
 import unittest
 
-from event import Event, SyncedEvent
+from event_structure import EventStructure
+from serializer import to_relation, SerializableEncoder, IdRelation
 
 
-class TestEvent(unittest.TestCase):
+def save_relation(relation: IdRelation):
+    encoded = json.dumps(relation, cls=SerializableEncoder)
+    with open('es.json', "w+") as file:
+        file.write(encoded)
 
-    def test_event(self):
-        e0 = Event('a').prefix(0)
-        e1 = Event('b').prefix(0)
-        self.assertEqual(e0.id(), (0, 'a'))
-        self.assertIn(e0, {e0})
-        self.assertEqual(repr(e0), '(0, a)')
-        self.assertNotEqual(e0, e1)
 
-    def test_synced_event(self):
-        e0 = Event('a')
-        e1 = Event('b')
-        e = SyncedEvent(e0, e1)
-        self.assertEqual(e.id(), ('a', 'b'))
-        self.assertEqual(repr(e), '(a, b)')
+class TestRegression(unittest.TestCase):
+
+    def test_regression(self):
+        es = EventStructure().prefix('b').prefix('a').plus(EventStructure().prefix('y').prefix('x'))
+        relation = to_relation(es)
+
+        if os.getenv('SAVE_REL') == 'true':
+            save_relation(relation)
+
+        with open('es.json', "r") as file:
+            deserialized = file.read()
+        decoded_relation = IdRelation.from_json(json.loads(deserialized))
+        self.assertEqual(relation, decoded_relation)
 
 
 if __name__ == '__main__':

@@ -15,7 +15,7 @@ class EventStructure:
 
     def get_event(self, _id: tuple):
         for e in self.events:
-            if e.id() == _id:
+            if e.idx() == _id:
                 return e
         return None
 
@@ -59,7 +59,7 @@ class EventStructure:
 
         return es
 
-    def sum(self, es1):
+    def plus(self, es1):
         res = EventStructure()
         es = {0: deepcopy(self), 1: deepcopy(es1)}
 
@@ -74,7 +74,7 @@ class EventStructure:
 
         return res
 
-    def product(self, es1):
+    def times(self, es1):
         res = EventStructure()
         es = {0: deepcopy(self), 1: deepcopy(es1)}
 
@@ -194,6 +194,11 @@ class EventStructure:
 
     def get_labels(self):
         return set(map(lambda x: repr(x.label).replace("\'", ""), self.events))
+
+    def __eq__(self, other):
+        if not isinstance(other, EventStructure):
+            return False
+        return self.events == other.events
 
     def __repr__(self) -> str:
         return ",".join(map(repr, self.events))
