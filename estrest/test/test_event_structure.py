@@ -35,7 +35,6 @@ class TestEventStructure(unittest.TestCase):
         self.assertIn(set(), p.get_enabling(('a', '*')))
         self.assertIn(('a', 'y'), ids(p.get_conflict(('a', 'x'))))
         self.assertNotIn({('a', 'x'), ('b', 'x')}, list_ids(p.get_enabling(('b', 'y'))))
-        print(p)
 
     def test_restrict(self):
         s = EventStructure().prefix('a').plus(EventStructure().prefix('b'))
