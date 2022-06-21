@@ -1,8 +1,11 @@
 \ProvidesPackage{custom}
 
 \usepackage[utf8]{inputenc}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath,amssymb,amsthm}
 \usepackage{tikz} 
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usepackage{forest}
 \usepackage{forest}
 \usepackage[final]{listings} 
 \usepackage{MnSymbol}
@@ -25,6 +28,12 @@
 \newcommand{\tc}[1]{\textcircled{#1}}
 \newcommand{\sem}[1]{\llbracket #1 \rrbracket}
 \newcommand{\amp}{\ \& \ }
+\newcommand{\crd}[4][above]{
+    \node[draw,circle,inner sep=2pt,fill,label={[#1]:#4}] at (#2,#3) {};
+}
 
+\theoremstyle{definition}
 \newtheorem{definition}{Definition}[subsection]
 \newtheorem{proposition}{Proposition}
+\newtheorem{example}{Example}
+\newtheorem{notion}{Notion}
