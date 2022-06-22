@@ -2,10 +2,7 @@ from event_structure import EventStructure
 from writer.semantic_derivation_writer import SemanticDerivationWriter
 from utils import disjoint_relabeling
 
-a = EventStructure().prefix('b').prefix('a')
-b = EventStructure().prefix('d').prefix('c')
-
-helper = SemanticDerivationWriter()
+helper = SemanticDerivationWriter("derivation.tex")
 
 c = helper.new_expr('c')
 d = helper.new_expr('d')

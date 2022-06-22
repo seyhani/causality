@@ -3,8 +3,8 @@ from .event_structure_writer import EventStructureWriter
 
 
 class SemanticDerivationWriter:
-    def __init__(self):
-        self.writer = EventStructureWriter()
+    def __init__(self, output_file):
+        self.writer = EventStructureWriter(output_file)
 
     def new_expr(self, label):
         expr = EventStructureExpression().prefix(label)
