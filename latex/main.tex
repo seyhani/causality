@@ -58,6 +58,7 @@
 \end{notion}
 
 \begin{definition}[Configuration]
+    \label{conf}
     Let $E = (\mathcal{E},\#,\vdash)$ be an event structure.
     Define a configuration of $E$ to be a subset of events $x \subseteq \mathcal{E}$ which is
     \begin{enumerate}
@@ -77,17 +78,20 @@ We call such a sequence $e_0,e_1,...,e_n = e$ a \emph{securing} for $e$ in $x$.
 We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
 
 \begin{example}
-    Event structures can exhibit non-determinism, or conflict.
-    Consider the event structure with two events 0,1 in which
-    $\emptyset \vdash 0$ and $\emptyset \vdash 1$,
-    $\s{0},\s{1} \in Con$ and yet $\s{0,1} \not \in Con$.
+    We can model non-determinism in event structures.
+    Consider a free vending machine that has a button that makes
+    the machine delivers either coffee or tea. 
+    Assume that we name the actions with $c$ and $t$ respectively.
+    Consider the event structure with two events $c,t$ in which
+    $\emptyset \vdash c$ and $\emptyset \vdash t$,
+    $\s{c},\s{t} \in Con$ and yet $\s{c,t} \not \in Con$.
     We illustrate configurations of event structures using the Hasse diagram of
     the partial order of configurations ordered by inclusion:
     \begin{center}
         \begin{tikzpicture}[scale=0.8]
             \crd{0}{0}{$\emptyset$}
-            \crd{-2}{1}{$\s{0}$}
-            \crd{2}{1}{$\s{1}$}
+            \crd{-2}{1}{$\s{c}$}
+            \crd{2}{1}{$\s{t}$}
             \draw [ultra thick] (0,0) -- (2,1);
             \draw [ultra thick] (0,0) -- (-2,1);
         \end{tikzpicture}
@@ -96,17 +100,19 @@ We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
 \end{example}
 
 \begin{example}
-    Event structures can exhibit parallelism, or concurrency.
-    The event structure with two events 0,1 in which
-    $\emptyset \vdash 0$ and $\emptyset \vdash 1$,
-    $\s{0},\s{1} \in Con$ and this time $\s{0,1} \in Con$,
+    We can also use event structure to model concurrency.
+    Consider two concurrent processes where they can perform
+    $a_1$ and $a_2$.
+    We can model these processes using an event structure with
+    two event $a_1,a_2$ in which $\emptyset \vdash a_1$ and $\emptyset \vdash a_2$,
+    $\s{a_1},\s{a_2} \in Con$ and this time $\s{a_1,a_2} \in Con$,
     has the configurations of the form:
     \begin{center}
         \begin{tikzpicture}[scale=0.8]
             \crd{0}{0}{$\emptyset$}
-            \crd{-2}{1}{$\s{0}$}
-            \crd{2}{1}{$\s{1}$}
-            \crd{0}{2}{$\s{0,1}$}
+            \crd{-2}{1}{$\s{a_1}$}
+            \crd{2}{1}{$\s{a_2}$}
+            \crd{0}{2}{$\s{a_1,a_2}$}
             \draw [ultra thick] (0,0) -- (2,1);
             \draw [ultra thick] (0,0) -- (-2,1);
             \draw [ultra thick] (-2,1) -- (0,2);
@@ -168,27 +174,30 @@ satisfy the following stability axiom.
 \end{definition}
 
 \begin{example}
-    Let $E$ be the event structure with events $\s{0,1,2}$
+    Assume two processes trying to write to a single resource.
+    Consider lock request for the processes as events $l_1,l_2$ 
+    and the $w$ as the event that indicates the write has been done.
+    We can consider an event structure
     with consistency predicate the least one such that:
     \begin{align*}
-        \s{0,1},\s{0,2},\s{1,2} \in Con
+        \s{l_1,l_2},\s{l_1,w},\s{l_2,w} \in Con
     \end{align*}
-    so $\s{0,1,2} \not \in Con$, and enabling relation the least
-    one such that
+    so $\s{l_1,l_2,w} \not \in Con$, and enabling relation the
+    least one such that
     \begin{align*}
-        \emptyset \vdash 0, \emptyset \vdash 1,
-        \s{0} \vdash 2, \s{1} \vdash 2
+        \emptyset \vdash l_1, \emptyset \vdash l_2,
+        \s{l_1} \vdash w, \s{l_2} \vdash w
     \end{align*}
     Then $E$ is a stable event structure and the configurations
     $\mathcal{F}(E)$ have the form
     \begin{center}
         \begin{tikzpicture}[scale=0.8]
             \crd{0}{0}{$\emptyset$}
-            \crd[left]{-2}{1}{$\s{0}$}
-            \crd[right]{2}{1}{$\s{1}$}
-            \crd[right]{0}{2}{$\s{0,1}$}
-            \crd{-2}{3}{$\s{0,2}$}
-            \crd{2}{3}{$\s{1,2}$}
+            \crd[left]{-2}{1}{$\s{l_1}$}
+            \crd[right]{2}{1}{$\s{l_2}$}
+            \crd[right]{0}{2}{$\s{l_1,l_2}$}
+            \crd{-2}{3}{$\s{l_1,w}$}
+            \crd{2}{3}{$\s{l_2,w}$}
             \draw [ultra thick] (0,0) -- (2,1);
             \draw [ultra thick] (0,0) -- (-2,1);
             \draw [ultra thick] (-2,1) -- (0,2);
@@ -221,6 +230,18 @@ It follows that for stable event structures
     X \vdash_{min} e \amp Y \vdash_{min} \amp
     X \cup Y \cup e \in Con \Rightarrow X = Y
 \end{align*}
+
+\begin{theorem}
+    Let $E = (\mathcal{E}, \#, \vdash)$ be an event structure.
+    Let $x = \s{e_1,e_2,...,e_m}$ be a conflict-free subset of $\mathcal{E}$.
+    Then $x$ is secured according to the definition \ref{conf} iff
+    there exists an event $e_{i_n} \in x$ with a securing sequence $e_{i_1},e_{i_2},...,e_{i_{m-1}}$.
+
+    \begin{proof}
+        Assume that $x$ is secured. 
+    \end{proof}
+
+\end{theorem}
 
 \begin{definition}
     Let $E_0 = (\mathcal{E}_0,\#_0,\vdash_0)$ and $E_1 = (\mathcal{E}_1,\#_1,\vdash_1)$
@@ -606,7 +627,7 @@ A relabelled process $p[\Xi]$ behaves like $p$ but with the events relabelled ac
 
 Let $E = (\mathcal{E},\#,\vdash,l,L)$ be an event structure.
 Let $P = \mathcal{P}(\mathcal{E})$ be the power set of $\mathcal{E}$.
-Assuming $|E| = n$ and $|P| = p = 2^m$ we can consider
+Assuming $|\mathcal{E}| = n$ and $|P| = p = 2^n$ we can consider
 $\mathcal{E} = \s{e_1, e_2, ...,e_n}$ and $P = \s{s_1,s_2,...,s_p}$.
 Without loss of generality let $\sigma = \s{e_1,e_2,...,e_m} \in \mathcal{F}(E)$ be a configuration of $E$ that
 has been given as a counterexample.
@@ -655,6 +676,7 @@ We can write the following formula for $F_{E_{i,j}}$:
 \end{align*}
 With this causal model in hand, we define $\varphi_{\sigma}$ to represent whether $\sigma \in \mathcal{F}(E)$,
 thus we must have $\varphi_{\sigma} = true \text{ iff } \sigma \in \mathcal{F}(E)$.
+To do this we need to encode the conflict-free and secured conditions in the definition \ref{conf}.
 Let the sequence $\pi = e_{i_1},e_{i_2},...,e_{i_m}$ be a
 permutation of events in $\sigma$ and $\mathcal{S}$ be the set of
 all permutations of $\sigma$.
@@ -667,7 +689,7 @@ We define $F_{\varphi_{\sigma}}$ as follows:
     \exists \pi \in \mathcal{S}. E(\emptyset, e_{i_1})
     \wedge E(\s{e_{i_1}}, e_{i_2} )
     \wedge ...
-    \wedge E(\s{e_{i_1},...,e_{i_{m-1}}},e_{i_n})
+    \wedge E(\s{e_{i_1},...,e_{i_{m-1}}},e_{i_m})
     \right)                                     \\
                            & \wedge \neg \left(
     \bigvee_{\forall 1 \leq i < j \leq m } C_{i,j}
@@ -732,7 +754,8 @@ Regarding this counterexample, we can define $F_{\varphi}$ as follows:
     \left(E_{1,2} \wedge E_{3,1}\right)
     \right) \wedge \neg C_{1,2}
 \end{align*}
-In the actual context we have $M_{1,1} = M_{2,2} = true$
+In the actual context the variables 
+$M_{1,1}, M_{2,2}, E_{1,1},E_{2,2},E_{3,1}$ are true 
 and all other variables are false thus $\varphi$ is true in the actual context.
 We may introduce $M_{2,2} = true$ as a cause of $\varphi = true$
 by considering the witness $(\vec W, \vec w', \vec x')$ as $(\emptyset, \emptyset, false)$.
