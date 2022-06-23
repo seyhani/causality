@@ -58,6 +58,7 @@
 \end{notion}
 
 \begin{definition}[Configuration]
+    \label{conf}
     Let $E = (\mathcal{E},\#,\vdash)$ be an event structure.
     Define a configuration of $E$ to be a subset of events $x \subseteq \mathcal{E}$ which is
     \begin{enumerate}
@@ -221,6 +222,18 @@ It follows that for stable event structures
     X \vdash_{min} e \amp Y \vdash_{min} \amp
     X \cup Y \cup e \in Con \Rightarrow X = Y
 \end{align*}
+
+\begin{theorem}
+    Let $E = (\mathcal{E}, \#, \vdash)$ be an event structure.
+    Let $x = \s{e_1,e_2,...,e_m}$ be a conflict-free subset of $\mathcal{E}$.
+    Then $x$ is secured according to the definition \ref{conf} iff
+    there exists an event $e_{i_n} \in x$ with a securing sequence $e_{i_1},e_{i_2},...,e_{i_{m-1}}$.
+
+    \begin{proof}
+        Assume that $x$ is secured. 
+    \end{proof}
+
+\end{theorem}
 
 \begin{definition}
     Let $E_0 = (\mathcal{E}_0,\#_0,\vdash_0)$ and $E_1 = (\mathcal{E}_1,\#_1,\vdash_1)$
@@ -606,7 +619,7 @@ A relabelled process $p[\Xi]$ behaves like $p$ but with the events relabelled ac
 
 Let $E = (\mathcal{E},\#,\vdash,l,L)$ be an event structure.
 Let $P = \mathcal{P}(\mathcal{E})$ be the power set of $\mathcal{E}$.
-Assuming $|E| = n$ and $|P| = p = 2^m$ we can consider
+Assuming $|\mathcal{E}| = n$ and $|P| = p = 2^n$ we can consider
 $\mathcal{E} = \s{e_1, e_2, ...,e_n}$ and $P = \s{s_1,s_2,...,s_p}$.
 Without loss of generality let $\sigma = \s{e_1,e_2,...,e_m} \in \mathcal{F}(E)$ be a configuration of $E$ that
 has been given as a counterexample.
@@ -655,6 +668,7 @@ We can write the following formula for $F_{E_{i,j}}$:
 \end{align*}
 With this causal model in hand, we define $\varphi_{\sigma}$ to represent whether $\sigma \in \mathcal{F}(E)$,
 thus we must have $\varphi_{\sigma} = true \text{ iff } \sigma \in \mathcal{F}(E)$.
+To do this we need to encode the conflict-free and secured conditions in the definition \ref{conf}.
 Let the sequence $\pi = e_{i_1},e_{i_2},...,e_{i_m}$ be a
 permutation of events in $\sigma$ and $\mathcal{S}$ be the set of
 all permutations of $\sigma$.
@@ -667,7 +681,7 @@ We define $F_{\varphi_{\sigma}}$ as follows:
     \exists \pi \in \mathcal{S}. E(\emptyset, e_{i_1})
     \wedge E(\s{e_{i_1}}, e_{i_2} )
     \wedge ...
-    \wedge E(\s{e_{i_1},...,e_{i_{m-1}}},e_{i_n})
+    \wedge E(\s{e_{i_1},...,e_{i_{m-1}}},e_{i_m})
     \right)                                     \\
                            & \wedge \neg \left(
     \bigvee_{\forall 1 \leq i < j \leq m } C_{i,j}
@@ -732,7 +746,8 @@ Regarding this counterexample, we can define $F_{\varphi}$ as follows:
     \left(E_{1,2} \wedge E_{3,1}\right)
     \right) \wedge \neg C_{1,2}
 \end{align*}
-In the actual context we have $M_{1,1} = M_{2,2} = true$
+In the actual context the variables 
+$M_{1,1}, M_{2,2}, E_{1,1},E_{2,2},E_{3,1}$ are true 
 and all other variables are false thus $\varphi$ is true in the actual context.
 We may introduce $M_{2,2} = true$ as a cause of $\varphi = true$
 by considering the witness $(\vec W, \vec w', \vec x')$ as $(\emptyset, \emptyset, false)$.
