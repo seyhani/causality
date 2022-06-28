@@ -79,47 +79,63 @@ We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
 
 \begin{example}
     We can model non-determinism in event structures.
-    Consider a free vending machine that has a button that makes
-    the machine delivers either coffee or tea. 
-    Assume that we name the actions with $c$ and $t$ respectively.
-    Consider the event structure with two events $c,t$ in which
-    $\emptyset \vdash c$ and $\emptyset \vdash t$,
-    $\s{c},\s{t} \in Con$ and yet $\s{c,t} \not \in Con$.
+    Consider a vending machine that at first, a user must put a
+    coin inside it and then can press a button to get either a can of beer or soda.
+    We can model this process with an event structure that consists of events $\s{c,b,s}$ and we have
+    $\emptyset \vdash c$ and $c \vdash b$, $c \vdash s$.
+    We also have $\s{c,b},\s{c,s} \in Con$ and yet $b\#s$.
     We illustrate configurations of event structures using the Hasse diagram of
     the partial order of configurations ordered by inclusion:
     \begin{center}
         \begin{tikzpicture}[scale=0.8]
-            \crd{0}{0}{$\emptyset$}
-            \crd{-2}{1}{$\s{c}$}
-            \crd{2}{1}{$\s{t}$}
-            \draw [ultra thick] (0,0) -- (2,1);
-            \draw [ultra thick] (0,0) -- (-2,1);
+            \crd[right]{0}{0}{$\emptyset$}
+            \crd{0}{2}{$\s{c}$}
+            \crd{-2}{3}{$\s{c,b}$}
+            \crd{2}{3}{$\s{c,s}$}
+            \draw [ultra thick] (0,0) -- (0,2);
+            \draw [ultra thick] (0,2) -- (-2,3);
+            \draw [ultra thick] (0,2) -- (2,3);
         \end{tikzpicture}
     \end{center}
-    Non-determinism appears as branching in the partial order of configurations.
+    We can see that non-determinism appears as branching in the partial order of configurations.
 \end{example}
 
 \begin{example}
-    We can also use event structure to model concurrency.
-    Consider two concurrent processes where they can perform
-    $a_1$ and $a_2$.
-    We can model these processes using an event structure with
-    two event $a_1,a_2$ in which $\emptyset \vdash a_1$ and $\emptyset \vdash a_2$,
-    $\s{a_1},\s{a_2} \in Con$ and this time $\s{a_1,a_2} \in Con$,
-    has the configurations of the form:
+    Assume two cars trying to pass a crossing and if one enters
+    the crossing before other leaves will result in a crash.
+    We model this scenario with events $e_1,l_1$ and $e_2,l_2$
+    respectively for each car modelling the event of their entering and leaving of the crossing.
+    Consider lock request for the processes as events $l_1,l_2$
+    and the $w$ as the event that indicates the write has been done.
+    We can consider an event structure
+    with consistency predicate the least one such that:
+    \begin{align*}
+        \s{l_1,l_2},\s{l_1,w},\s{l_2,w} \in Con
+    \end{align*}
+    so $\s{l_1,l_2,w} \not \in Con$, and enabling relation the
+    least one such that
+    \begin{align*}
+        \emptyset \vdash l_1, \emptyset \vdash l_2,
+        \s{l_1} \vdash w, \s{l_2} \vdash w
+    \end{align*}
+    Then $E$ is a stable event structure and the configurations
+    $\mathcal{F}(E)$ have the form
     \begin{center}
         \begin{tikzpicture}[scale=0.8]
             \crd{0}{0}{$\emptyset$}
-            \crd{-2}{1}{$\s{a_1}$}
-            \crd{2}{1}{$\s{a_2}$}
-            \crd{0}{2}{$\s{a_1,a_2}$}
+            \crd[left]{-2}{1}{$\s{l_1}$}
+            \crd[right]{2}{1}{$\s{l_2}$}
+            \crd[right]{0}{2}{$\s{l_1,l_2}$}
+            \crd{-2}{3}{$\s{l_1,w}$}
+            \crd{2}{3}{$\s{l_2,w}$}
             \draw [ultra thick] (0,0) -- (2,1);
             \draw [ultra thick] (0,0) -- (-2,1);
             \draw [ultra thick] (-2,1) -- (0,2);
             \draw [ultra thick] (2,1) -- (0,2);
+            \draw [ultra thick] (-2,1) -- (-2,3);
+            \draw [ultra thick] (2,1) -- (2,3);
         \end{tikzpicture}
     \end{center}
-    Concurrency of events appears as a little square in the partial order of configurations.
 \end{example}
 
 \begin{example}
@@ -173,41 +189,6 @@ satisfy the following stability axiom.
     \end{align*}
 \end{definition}
 
-\begin{example}
-    Assume two processes trying to write to a single resource.
-    Consider lock request for the processes as events $l_1,l_2$ 
-    and the $w$ as the event that indicates the write has been done.
-    We can consider an event structure
-    with consistency predicate the least one such that:
-    \begin{align*}
-        \s{l_1,l_2},\s{l_1,w},\s{l_2,w} \in Con
-    \end{align*}
-    so $\s{l_1,l_2,w} \not \in Con$, and enabling relation the
-    least one such that
-    \begin{align*}
-        \emptyset \vdash l_1, \emptyset \vdash l_2,
-        \s{l_1} \vdash w, \s{l_2} \vdash w
-    \end{align*}
-    Then $E$ is a stable event structure and the configurations
-    $\mathcal{F}(E)$ have the form
-    \begin{center}
-        \begin{tikzpicture}[scale=0.8]
-            \crd{0}{0}{$\emptyset$}
-            \crd[left]{-2}{1}{$\s{l_1}$}
-            \crd[right]{2}{1}{$\s{l_2}$}
-            \crd[right]{0}{2}{$\s{l_1,l_2}$}
-            \crd{-2}{3}{$\s{l_1,w}$}
-            \crd{2}{3}{$\s{l_2,w}$}
-            \draw [ultra thick] (0,0) -- (2,1);
-            \draw [ultra thick] (0,0) -- (-2,1);
-            \draw [ultra thick] (-2,1) -- (0,2);
-            \draw [ultra thick] (2,1) -- (0,2);
-            \draw [ultra thick] (-2,1) -- (-2,3);
-            \draw [ultra thick] (2,1) -- (2,3);
-        \end{tikzpicture}
-    \end{center}
-\end{example}
-
 The stability axiom ensures that an event in a configuration is
 enabled in an essentially unique way.
 Assume $e$ belongs to a configuration $x$ of a stable event structure.
@@ -233,13 +214,9 @@ It follows that for stable event structures
 
 \begin{theorem}
     Let $E = (\mathcal{E}, \#, \vdash)$ be an event structure.
-    Let $x = \s{e_1,e_2,...,e_m}$ be a conflict-free subset of $\mathcal{E}$.
+    Let $x = \s{e_1,e_2,...,e_n}$ be a conflict-free subset of $\mathcal{E}$.
     Then $x$ is secured according to the definition \ref{conf} iff
-    there exists an event $e_{i_n} \in x$ with a securing sequence $e_{i_1},e_{i_2},...,e_{i_{m-1}}$.
-
-    \begin{proof}
-        Assume that $x$ is secured. 
-    \end{proof}
+    there exists an event $e_{i_n} \in x$ with a securing sequence $e_{i_1},e_{i_2},...,e_{i_{n-1}}$.
 
 \end{theorem}
 
@@ -544,7 +521,6 @@ of their configurations.
          & \forall e,e' in x. e \neq e' \Rightarrow \exists y \subseteq x.\pi_0 y \in \mathcal{F}(E_0)
         \amp \pi_1y \in \mathcal{F}(E_1) \amp (e \in y \iff e' \not \in y)
     \end{align*}
-
 \end{proposition}
 The Proposition above expresses the intuition that an allowable behavior of the product
 of two processes is precisely that which projects to allowable behaviors in the component
@@ -624,64 +600,82 @@ A relabelled process $p[\Xi]$ behaves like $p$ but with the events relabelled ac
 \end{definition}
 
 \section{Causality in Event Structure}
-
-Let $E = (\mathcal{E},\#,\vdash,l,L)$ be an event structure.
-Let $P = \mathcal{P}(\mathcal{E})$ be the power set of $\mathcal{E}$.
-Assuming $|\mathcal{E}| = n$ and $|P| = p = 2^n$ we can consider
-$\mathcal{E} = \s{e_1, e_2, ...,e_n}$ and $P = \s{s_1,s_2,...,s_p}$.
-Without loss of generality let $\sigma = \s{e_1,e_2,...,e_m} \in \mathcal{F}(E)$ be a configuration of $E$ that
+Let $E = (\mathcal{E},\#,\vdash,l,L)$ be an event structure with
+$\mathcal{E} = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $\mathcal{E}$ where $p = 2^n$.
+Without the loss of generality let $\sigma = \s{e_1,e_2,...,e_m}$ be a configuration of $E$ that
 has been given as a counterexample.
 To find the cause of this counterexample, first we construct a causal model $M = (\mathcal{S},\mathcal{F})$.
-To define the signature $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$, we consider no exogenous variables and we
-define endogenous variables of boolean type.
-We define $\mathcal{V}$ as follows:
+To define the signature $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$, we assume that all variables in $\mathcal{U} \cup \mathcal{V}$ as a boolean variable.
+Next, we define $\mathcal{V}$ as follows:
 \begin{align*}
     \mathcal{V} = & \s{C_{i,j} | \forall 1 \leq i < j \leq n. e_i \in \mathcal{E} \amp e_j \in \mathcal{E}}                    \\
-    & \cup \s{E_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
-    & \cup \s{M_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
+                  & \cup \s{E_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
+                  & \cup \s{M_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
 \end{align*}
-We define $\mathcal{F}$ in a way that each $C_{i,j}$ represents the conflict
-between $e_i$ and $e_j$ and $E_{k,i}$, $M_{k,i}$ indicates whether $s_k \vdash e_i$, $s_k \vdash_{min} e_i$ respectively.
-Thus for each variable $C_{i,j}$ we have:
-\begin{align*}
-    F_{C_{i,j}}  = true \iff e_i \# e_j \wedge e_j \# e_i
-\end{align*}
-For $x,y \in \mathcal{P}$ we say $y$ is covered by $x$ written $ x \prec y$ iff:
+For $x,y \in \mathcal{P}(\mathcal{E})$ we say $y$ is covered by $x$ written $ x \prec y$ iff:
 \begin{align*}
     x \subseteq y \amp x \neq y \amp
     (\forall z. x \subseteq z \subseteq y \Rightarrow x = z
     \text{ or } y = z)
 \end{align*}
-For each variable $E_{k,i},M_{k,i}$ our goal is to define their
-functions in a way that we have:
+We define the functions in $\mathcal{F}$ as follows:
 $$
-    F_{M_{k,i}}  =  \begin{cases}
-        true & \text{ if } s_k \vdash_{min} e_i \\
-        false & \text{ otherwise}
+    F_{C_{i,j}} = \begin{cases}
+        \text{true}  & \text{ if } e_i \# e_j \text{ and } e_j \# e_i \\
+        \text{false} & \text{ otherwise }
     \end{cases}
 $$
-$$
-    F_{E_{k,i}}  =  \begin{cases}
-        true & \text{ if } s_k \vdash e_i \\
-        false & \text{ otherwise}
-    \end{cases}
-$$
-We can write the following formula for $F_{E_{i,j}}$:
 \begin{align*}
-    F_{E_{k,i}} =
+    Con(M_{k,i})     & =   \neg \left(
+    \bigvee_{\forall j,j'. j<j' \amp e_j,e_{j'} \in s_k} C_{j,j'}
+    \right)                                                                  \\
+    Con(E_{k,i})     & =   \neg \left(
+    \bigvee_{\forall j,j'. j<j' \amp e_j,e_{j'} \in s_k} C_{j,j'}
+    \right)                                                                  \\
+    Min(M_{k,i})     & = \neg \left(
+    \bigvee_{
+        \forall k'. s_{k'} \subset s_k \text{ or } s_k \subset s_{k'}
+    } M_{k',i}
+    \right)                                                                  \\
+\end{align*}
+
+$$
+    F_{M_{k,i}} = \begin{cases}
+        \text{undefined} & \text{ if } 
+            \exists k',k''. k' \neq k'' \wedge 
+            \left( s_{k'} \subset s_k \vee s_{k'} \subset s_k \right) 
+            \\
+            & \left( s_{k''} \subset s_k \vee s_{k''} \subset s_k \right) \wedge
+ M_{k',i} \wedge M_{k'',i} \\ 
+        \text{true}      & \text{ if }
+        s_k \vdash_{min} e_i \text{ and }
+        Min(M_{k,i}) \bigwedge Con(M_{k,i})
+        \\
+        \text{false}     & \text{ otherwise}
+    \end{cases}
+$$
+$$
+    F_{E_{k,i}} = \begin{cases}
+        \text{undefined} & \text{ if } \neg \left( M_{k,i} \neq \text{undefined}
+         \right) \\
+        \left(
         M_{k,i} \vee
         \left(
-        \bigvee_{\forall 1 \leq l \leq p. s_l \prec s_k}E_{l,i}
+        \bigvee_{\forall l. s_l  \prec s_k}E_{l,i}
         \right)
-\end{align*}
-With this causal model in hand, we define $\varphi_{\sigma}$ to represent whether $\sigma \in \mathcal{F}(E)$,
-thus we must have $\varphi_{\sigma} = true \text{ iff } \sigma \in \mathcal{F}(E)$.
+        \right) 
+        \bigwedge
+        Con(E_{k,i})
+        & \text{otherwise}
+        \end{cases}
+$$
+With this causal model in hand, we define $\varphi_{\sigma}$ to represent whether $\sigma$ is a configuration of $E$.
 To do this we need to encode the conflict-free and secured conditions in the definition \ref{conf}.
 Let the sequence $\pi = e_{i_1},e_{i_2},...,e_{i_m}$ be a
 permutation of events in $\sigma$ and $\mathcal{S}$ be the set of
 all permutations of $\sigma$.
 For an event $e_i$ in $\mathcal{E}$ and an element $s_k$ of
-$\mathcal{P}$ we define $E(s_k, e_i) = E_{k,i}$.
+$\mathcal{P}$ let $E(s_k, e_i) = E_{k,i}$.
 We define $F_{\varphi_{\sigma}}$ as follows:
 \begin{align*}
     F_{\varphi_{\sigma}} = &
@@ -692,80 +686,25 @@ We define $F_{\varphi_{\sigma}}$ as follows:
     \wedge E(\s{e_{i_1},...,e_{i_{m-1}}},e_{i_m})
     \right)                                     \\
                            & \wedge \neg \left(
-    \bigvee_{\forall 1 \leq i < j \leq m } C_{i,j}
+    \bigvee_{\forall 1 \leq j < i_m } C_{j,i_m}
+    \right)
+    \wedge \neg \left(
+    \bigvee_{\forall i_m < j\leq m } C_{i_m,j}
     \right)
 \end{align*}
 
 \subsection{Example}
 
-\begin{align*}
-     &                                                            & \\
-     & \llbracket ab \rrbracket                                   & \\
-     & = a\llbracket b \rrbracket:                                & \\
-     & \ \ \mathcal{{E}}= \{                                      & \\
-     & \qquad (1, 0, b), (0, a)                                     \\
-     & \ \ \}                                                     & \\
-     & \ \ \# = \emptyset                                         & \\
-     & \ \                                                        & \\
-     & \ \ \vdash_{{min}}:                                        & \\
-     & \qquad \{ (0, a) \} \vdash (1, 0, b), \{  \} \vdash (0, a)   \\
-     & \ \                                                        & \\
-     & \ \ L=\{                                                   & \\
-     & \qquad b, a                                                  \\
-     & \ \ \}                                                     & \\
-     & \ \                                                        & \\
-     & \ \ l:                                                     & \\
-     & \qquad l((1, 0, b)) = b, l((0, a)) = a                       \\
-     & \ \                                                        & \\
-\end{align*}
-Let $e_1 = (0,a)$ and $e_2 = (1,0,b)$.
-We have $P = \s{ \emptyset, \s{e_1}, \s{e_2},\s{e_1,e_2} }$
-and $\mathcal{F}(E) = \s{\emptyset, \s{e_1}, \s{e_1,e_2}}$.
-Let's consider $\sigma=\s{e_1, e_2}$ as a counterexample.
-We have:
-\begin{align*}
-    &
-    s_1 = \emptyset, s_2 = \s{e_1}, s_3 = \s{e_2},
-    s_4 = \s{e_1,e_2} \\
-    &
-    E(\emptyset, e_1) = E_{1,1}, E(\emptyset, e_2) = E_{1,2},
-    E(\s{e_1}, e_2) = E_{2,2}, E(\s{e_2}, e_1) = E_{3,1} \\
-\end{align*}
-\begin{align*}
-    F_{E_{1,1}} & = M_{1,1} \\
-    F_{E_{1,2}} & = M_{1,2} \\
-    F_{E_{2,2}} & = M_{2,2} \vee E_{1,2} \\
-    F_{E_{3,1}} & = M_{3,1} \vee E_{1,1} \\
-\end{align*}
-Regarding this counterexample, we can define $F_{\varphi}$ as follows:
-\begin{align*}
-    F_{\varphi} & =
-    \left(
-    \left(
-    E(\emptyset, e_1) \wedge E(\s{e_1},e_2)
-    \right)
-    \vee
-    \left(
-    E(\emptyset, e_2) \wedge E(\s{e_2}, e_1)
-    \right)
-    \right) \wedge \neg C_{1,2} \\
-                & = \left(
-    \left(E_{1,1} \wedge E_{2,2}\right) \vee
-    \left(E_{1,2} \wedge E_{3,1}\right)
-    \right) \wedge \neg C_{1,2}
-\end{align*}
-In the actual context the variables 
-$M_{1,1}, M_{2,2}, E_{1,1},E_{2,2},E_{3,1}$ are true 
-and all other variables are false thus $\varphi$ is true in the actual context.
-We may introduce $M_{2,2} = true$ as a cause of $\varphi = true$
-by considering the witness $(\vec W, \vec w', \vec x')$ as $(\emptyset, \emptyset, false)$.
-We can verify the actual cause conditions:
-\begin{align*}
-    AC1:     & (M,\vec u) \vDash (M_{2,2} = true) \wedge \varphi                                  \\
-    AC2(a) : & (M, \vec u) \vdash [M_{2,2} \leftarrow false] \neg \varphi                         \\
-    AC2(b) : & (M, \vec u) \vDash [M_{2,2} \leftarrow false, \vec Z' \leftarrow \vec z^*] \varphi
-    \text{ for all subsets } \vec Z' \text{ of } \vec Z
-\end{align*}
+\begin{example}
+    Consider the following network. 
+    Assume that we model arriving a packet on the switch H1 and H2 with events s, h1, and h2 respectively.
+    We can define the event structure using the enabling relation:
+    \begin{align*}
+        \emptyset \vdash s, \s{s} \vdash h1, \s{s} \vdash h2
+    \end{align*}
+    And an empty conflict relation.
+\end{example}
+
 
 \pagebreak
 \begin{appendices}
