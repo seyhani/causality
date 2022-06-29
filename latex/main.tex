@@ -78,20 +78,39 @@ We call such a sequence $e_0,e_1,...,e_n = e$ a \emph{securing} for $e$ in $x$.
 We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
 
 \begin{example}
-    We can model non-determinism in event structures.
-    Consider a vending machine that at first, a user must put a
-    coin inside it and then can press a button to get either a can of beer or soda.
-    We can model this process with an event structure that consists of events $\s{c,b,s}$ and we have
-    $\emptyset \vdash c$ and $c \vdash b$, $c \vdash s$.
-    We also have $\s{c,b},\s{c,s} \in Con$ and yet $b\#s$.
+    Consider a network with two hosts $h_1$ and $h_2$ that are
+    connected to a single switch.
+    Assume that a packet arrives at the switch and then the switch
+    non-deterministically forwards the packets to either $h_1$ or $h_2$.
+    \begin{center}
+        \begin{tikzpicture}[node distance={25mm},main/.style = {draw, circle}] 
+            \node[main] (H1) {$h_1$}; 
+            \node[main] (S) [right of=H1] {$s$}; 
+            \node[main] (H2) [right of=S] {$h_2$}; 
+            \draw[<-] (H1) -- (S);
+            \draw[->] (S) -- (H2);
+            \draw[<-] (S) -- (2.5,1.5);
+        \end{tikzpicture} 
+    \end{center}
+    To model this scenario in event structures we can define an event
+    $p$ for the arrival of the packet at the switch and events $h_1$
+    and $h_2$ for the forwarding the packet to the hosts.
+    The enabling relation is the least one for which we have:
+    \begin{align*}
+        \emptyset \vdash_{min} s,
+        \s{s} \vdash_{min} h_1,
+        \s{s} \vdash_{min} h_2,
+    \end{align*}
+    And we consider the conflict relation the least one that satisfies
+    $h_1 \# h_2$.
     We illustrate configurations of event structures using the Hasse diagram of
     the partial order of configurations ordered by inclusion:
     \begin{center}
         \begin{tikzpicture}[scale=0.8]
             \crd[right]{0}{0}{$\emptyset$}
-            \crd{0}{2}{$\s{c}$}
-            \crd{-2}{3}{$\s{c,b}$}
-            \crd{2}{3}{$\s{c,s}$}
+            \crd{0}{2}{$\s{s}$}
+            \crd{-2}{3}{$\s{s,h_1}$}
+            \crd{2}{3}{$\s{s,h_2}$}
             \draw [ultra thick] (0,0) -- (0,2);
             \draw [ultra thick] (0,2) -- (-2,3);
             \draw [ultra thick] (0,2) -- (2,3);
@@ -101,33 +120,43 @@ We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
 \end{example}
 
 \begin{example}
-    Assume two cars trying to pass a crossing and if one enters
-    the crossing before other leaves will result in a crash.
-    We model this scenario with events $e_1,l_1$ and $e_2,l_2$
-    respectively for each car modelling the event of their entering and leaving of the crossing.
-    Consider lock request for the processes as events $l_1,l_2$
-    and the $w$ as the event that indicates the write has been done.
-    We can consider an event structure
-    with consistency predicate the least one such that:
+    Consider another network in which two hosts are connected
+    to a single switch.
+    This time both hosts are sending a packet concurrently to the
+    host.
+    Once the switch received a packet from either host it will
+    drop the packets received from the other host due to capacity
+    limit.
+    \begin{center}
+        \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}] 
+            \node[main] (S) [right of=H1] {$s$}; 
+            \node[main] (H1) [above of=S,left of=S] {$h_1$}; 
+            \node[main] (H2) [above of=S,right of=S] {$h_2$}; 
+            \draw[->] (H1) -- (S);
+            \draw[<-] (S) -- (H2);
+        \end{tikzpicture} 
+    \end{center}
+    Let $r_1,r_2$ represent the events of receiving packet from
+    $h_1$ and $h_2$ and $d_1,d_2$ represent the events of dropping
+    packets from these hosts.
+    We need a conflict relation the least one for which we have
+    $r_1\#d_1$ and $r_2\#d_2$
+    and enabling relation the least one that satisfies:
     \begin{align*}
-        \s{l_1,l_2},\s{l_1,w},\s{l_2,w} \in Con
+        \emptyset & \vdash_{min} r_1 \\
+        \emptyset & \vdash_{min} r_2 \\
+        \s{r_1} & \vdash_{min} d_2 \\
+        \s{r_2} & \vdash_{min} d_1 \\
     \end{align*}
-    so $\s{l_1,l_2,w} \not \in Con$, and enabling relation the
-    least one such that
-    \begin{align*}
-        \emptyset \vdash l_1, \emptyset \vdash l_2,
-        \s{l_1} \vdash w, \s{l_2} \vdash w
-    \end{align*}
-    Then $E$ is a stable event structure and the configurations
-    $\mathcal{F}(E)$ have the form
+    Thus the configurations have the form:
     \begin{center}
         \begin{tikzpicture}[scale=0.8]
             \crd{0}{0}{$\emptyset$}
-            \crd[left]{-2}{1}{$\s{l_1}$}
-            \crd[right]{2}{1}{$\s{l_2}$}
-            \crd[right]{0}{2}{$\s{l_1,l_2}$}
-            \crd{-2}{3}{$\s{l_1,w}$}
-            \crd{2}{3}{$\s{l_2,w}$}
+            \crd[left]{-2}{1}{$\s{r_1}$}
+            \crd[right]{2}{1}{$\s{r_2}$}
+            \crd[right]{0}{2}{$\s{r_1,r_2}$}
+            \crd{-2}{3}{$\s{r_1,d_2}$}
+            \crd{2}{3}{$\s{r_2,d_1}$}
             \draw [ultra thick] (0,0) -- (2,1);
             \draw [ultra thick] (0,0) -- (-2,1);
             \draw [ultra thick] (-2,1) -- (0,2);
@@ -201,7 +230,7 @@ Take
 Because $X$ is finite this is an intersection of a finite number of
 sets and we see by the stability axiom that $X_0 \vdash e$.
 Moreover $X_0$ is the unique minimal subset of $X$ which enables $e$.
-Thus for stable event structures we have:
+Thus for stable event structures, we have:
 \begin{align*}
     Y \vdash e \amp Y \cup \s{e} \in Con \Rightarrow
     \exists ! X \subseteq Y.X \vdash_{min} e
@@ -217,8 +246,42 @@ It follows that for stable event structures
     Let $x = \s{e_1,e_2,...,e_n}$ be a conflict-free subset of $\mathcal{E}$.
     Then $x$ is secured according to the definition \ref{conf} iff
     there exists an event $e_{i_n} \in x$ with a securing sequence $e_{i_1},e_{i_2},...,e_{i_{n-1}}$.
-
 \end{theorem}
+\begin{proof}
+    Let $x$ be secured.
+    We construct a securing sequence of length $n$.
+    Pick two arbitrary events $e, e' \in x$.
+    Since $x$ is secured there exists some securing sequences
+    $s = e_{i_1},e_{i_2},...,e_{i_m}$
+    and $s' = e_{i'_1},e_{i'_2},...,e_{i'_{m'}}$
+    for $e$ and $e'$ respectively where $e_{i_m} = e$
+    and $e_{i_{m'}'} = e'$.
+    For $1 \leq a \leq b \leq p$, 
+    let $s'' = e_{j_1},e_{j_2},...,e_{j_p}$
+    be the sequence resulting from appending $s'$ to $s$.
+    Let $es(a,b) = \s{e_{j_a},e_{j_{a+1}},...,e_{j_{b}}}$.
+    Pick an arbitrary event $e_{j_q}$ with $q > m$.
+    In order for $s''$ to be a securing sequence, we must have
+    $es(1,j_{p-1}) \vdash e_{j_p}$.
+    Since we have $es(j_{m+1},j_{p-1}) \vdash e_{j_p}$ and
+    $es(j_{m+1},j_{p-1}) \subseteq es(1,j_{p-1})$ thus we can conclude
+    that $es(1,j_{p-1}) \vdash e_{j_p}$.
+    Now assume that there exists an event such as $e_{j_q}$ with $q > m$ for which we have $\exists q'. q' \leq m \wedge j_{q'} = j_q$.
+    Let $es'(1,j_{p-1})$ be the set of events preceding $e_{j_p}$, if we remove $e_{j_q}$ from $s''$.
+    We still have $e_{j_{q'}} \in es'(1,j_{p-1})$ thus we can conclude that $es'(1,j_{p-1}) = es(1,j_{p-1})$ so $es'(1,j_{p-1}) \vdash e_{j_{p}}$.
+    So, we can remove any duplicate event after $e_{j_m}$ and still
+    have a securing sequence.
+    This proves that we can construct a securing sequence by
+    appending the securing sequence of two arbitrary events.
+    So, we can first pick two arbitrary events and construct the
+    resulting securing sequence and then repeat this procedure until
+    we construct the full securing sequence.
+
+    Now assume that there exists an event $e_{i_n}$ with a securing
+    sequence $e_{i_1},e_{i_2},...,e_{i_{n-1}}$.
+    Regarding the definition of securing sequence each event has a
+    securing sequence, thus $x$ is secured.
+\end{proof}
 
 \begin{definition}
     Let $E_0 = (\mathcal{E}_0,\#_0,\vdash_0)$ and $E_1 = (\mathcal{E}_1,\#_1,\vdash_1)$
@@ -291,6 +354,7 @@ For example, the equation above claims that in the context $U=u$, if $Y$ were 4,
 
 The function $\mathcal{F}$ defines a set of (\textit{modifiable}) \textit{structural equations} relating to the values of the variables.
 
+
 \subsection{Definition of Actual Cause}
 Given a signature $S= (\mathcal{U},\mathcal{V},\mathcal{R})$, a formula of the form $X =x$, for $X \in \mathcal{V}$ and $x \in \mathcal{R}(X)$, is called a \textit{primitive event}.
 A \textit{basic causal formula} is one of the form $[Y_1 \leftarrow y_, ..., Y_l\leftarrow y_k]\varphi$, where $\varphi$ is a Boolean combination of primitive events, $Y_1,...,Y_k$ are distinct variables in $\mathcal{V}$, and $y_i \in \mathcal{R}(Y_i)$.
@@ -320,6 +384,36 @@ We abbreviate this as $\vec X = \vec x$.
     \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
 \end{itemize}
 We call the tuple $(\vec W, \vec w,x')$ a witness to the fact that $\vec X=\vec x$ is a cause of $\varphi$.
+
+\subsection{Extended Causal Model}
+An extended causal model is a tuple $(\mathcal{S},\mathcal{F},
+    \mathcal{E})$, where $(\mathcal{S},\mathcal{F})$ is a causal model, and $\mathcal{E}$ is a set of allowable settings for the endogenous variables.
+That is, if the endogenous variables are $X_1,...,X_n$ then
+$(x_1,...,x_n) \in \mathcal{E}$ if $X_1 = x_1, ..., X_n=x_n$ is an
+allowable setting.
+We say that a setting of a subset of the endogenous variables is allowable if it can be extended to a setting in $\mathcal{E}$.
+We the modify the clauses AC2(a) and (b) in the definition often
+causality to restrict to allowable settings.
+Let $\psi$ be a function $(\times_{X \in \mathcal{V}}R(X))\rightarrow \mathbb{B}$ defined on the set of endogenous variables.
+We define the model $(\mathcal{S},\mathcal{F},\psi)$ to be equal
+to the model $(\mathcal{S},\mathcal{F},\mathcal{E})$ where
+for each $\vec x \in \mathcal{E} \iff \psi(\vec x) = true$
+Thus, given an extended causal model $M = (\mathcal{S},\mathcal{F},\psi)$ we redefine the actual cause as follows:
+
+\begin{definition}
+    $\vec X = \vec x$ is an actual cause of $\varphi$ in $(M,\vec u)$ if the following three conditions hold:
+    \begin{itemize}
+        \item  \textbf{AC1.} $(M,\vec u)\models (\vec X = \vec x) \wedge \varphi \wedge \psi(\vec v)$.
+              (both $\vec X = \vec x$ and $\varphi$ are true in actual world)
+        \item  \textbf{AC2. }There exists aa partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
+
+              (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi \wedge \psi(\vec v)$.
+
+              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]\varphi \wedge \psi(\vec v)$ for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+
+        \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
+    \end{itemize}
+\end{definition}
 
 \section{Semantics of Communicating Processes}
 One use of event structure is to give a denotational semantics of language of parallel
@@ -604,13 +698,42 @@ Let $E = (\mathcal{E},\#,\vdash,l,L)$ be an event structure with
 $\mathcal{E} = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $\mathcal{E}$ where $p = 2^n$.
 Without the loss of generality let $\sigma = \s{e_1,e_2,...,e_m}$ be a configuration of $E$ that
 has been given as a counterexample.
-To find the cause of this counterexample, first we construct a causal model $M = (\mathcal{S},\mathcal{F})$.
+To find the cause of this counterexample, first we construct an extended causal model $M = (\mathcal{S},\mathcal{F},\psi)$.
 To define the signature $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$, we assume that all variables in $\mathcal{U} \cup \mathcal{V}$ as a boolean variable.
-Next, we define $\mathcal{V}$ as follows:
+Next, we define $\mathcal{U}$ and $\mathcal{V}$ as follows:
 \begin{align*}
-    \mathcal{V} = & \s{C_{i,j} | \forall 1 \leq i < j \leq n. e_i \in \mathcal{E} \amp e_j \in \mathcal{E}}                    \\
-                  & \cup \s{E_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
-                  & \cup \s{M_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
+    \mathcal{U} = & \s{CE_{i,j} | \forall 1 \leq i < j \leq n. e_i \in \mathcal{E} \amp e_j \in \mathcal{E}}                    \\
+                  & \cup \s{ME_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
+    \mathcal{V} = & \s{C_{i,j} | \forall 1 \leq i < j \leq n. e_i \in \mathcal{E} \amp e_j \in \mathcal{E}}                     \\
+                  & \cup \s{E_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} }  \\
+                  & \cup \s{M_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} }  \\
+\end{align*}
+We define $\psi$ such that we prevent invalid settings of variables:
+\begin{align*}
+    \psi(\vec v) = & \forall_{k,i}.
+    \left(
+    E_{k,i} \Rightarrow Con(k)
+    \right)
+    \wedge
+    \left(
+    M_{k,i} \Rightarrow E_{k,i}
+    \right)
+    \\
+                   & \wedge \left(E_{k,i} \Rightarrow
+    \forall k'. s_k \subset s_{k'} \Rightarrow E_{k',i}
+    \right)                                           \\
+                   & \wedge \left(
+    M_{k,i} \Rightarrow \forall k'.
+    (s_k \subset s_{k'} \vee s_{k'} \subset s_k) \Rightarrow \neg M_{k',i}
+    \right)
+\end{align*}
+We consider the given event structure as a background knowledge.
+Thus, we set value of the variables in $\mathcal{U}$ regarding
+the given event structure.
+Formally, we assume that:
+\begin{align*}
+    CE_{i,j} = \text{true} & \iff e_i \# e_j \wedge e_j\# e_i \\
+    ME_{i,j} = \text{true} & \iff s_k \vdash_{min} e_i
 \end{align*}
 For $x,y \in \mathcal{P}(\mathcal{E})$ we say $y$ is covered by $x$ written $ x \prec y$ iff:
 \begin{align*}
@@ -618,91 +741,155 @@ For $x,y \in \mathcal{P}(\mathcal{E})$ we say $y$ is covered by $x$ written $ x 
     (\forall z. x \subseteq z \subseteq y \Rightarrow x = z
     \text{ or } y = z)
 \end{align*}
+For each variable $x \in \mathcal{V}$ we define $\vec V_x$ as a vector
+of all variables in $\mathcal{V}$ excluding $x$.
+Also, assume that $\vec u$ is a setting of exogenous variables.
 We define the functions in $\mathcal{F}$ as follows:
-$$
-    F_{C_{i,j}} = \begin{cases}
-        \text{true}  & \text{ if } e_i \# e_j \text{ and } e_j \# e_i \\
-        \text{false} & \text{ otherwise }
-    \end{cases}
-$$
 \begin{align*}
-    Con(M_{k,i})     & =   \neg \left(
+    Con(k)                                & =   \neg \left(
     \bigvee_{\forall j,j'. j<j' \amp e_j,e_{j'} \in s_k} C_{j,j'}
-    \right)                                                                  \\
-    Con(E_{k,i})     & =   \neg \left(
-    \bigvee_{\forall j,j'. j<j' \amp e_j,e_{j'} \in s_k} C_{j,j'}
-    \right)                                                                  \\
-    Min(M_{k,i})     & = \neg \left(
+    \right)                                                                          \\
+    Min(k,i)                              & = \neg \left(
     \bigvee_{
-        \forall k'. s_{k'} \subset s_k \text{ or } s_k \subset s_{k'}
+        \forall k'. s_{k} \subset s_{k'} \wedge e_i \notin{s_{k'}}
     } M_{k',i}
-    \right)                                                                  \\
+    \right)                                                                          \\
+    F_{C_{i,j}}(\vec u, \vec V_{C_{i,j}}) & = CE_{i,j}                               \\
+    F_{M_{k,i}}(\vec u, \vec V_{M_{k,i}}) & = ME_{k,i} \wedge Min(k,i) \wedge Con(k) \\
+    F_{E_{k,i}}(\vec u, \vec V_{E_{k,i}}) & =
+    \left(
+    M_{k,i} \vee
+    \left(
+    \bigvee_{\forall l. s_l  \prec s_k}E_{l,i}
+    \right)
+    \right)
+    \bigwedge
+    Con(k)
 \end{align*}
-
-$$
-    F_{M_{k,i}} = \begin{cases}
-        \text{undefined} & \text{ if } 
-            \exists k',k''. k' \neq k'' \wedge 
-            \left( s_{k'} \subset s_k \vee s_{k'} \subset s_k \right) 
-            \\
-            & \left( s_{k''} \subset s_k \vee s_{k''} \subset s_k \right) \wedge
- M_{k',i} \wedge M_{k'',i} \\ 
-        \text{true}      & \text{ if }
-        s_k \vdash_{min} e_i \text{ and }
-        Min(M_{k,i}) \bigwedge Con(M_{k,i})
-        \\
-        \text{false}     & \text{ otherwise}
-    \end{cases}
-$$
-$$
-    F_{E_{k,i}} = \begin{cases}
-        \text{undefined} & \text{ if } \neg \left( M_{k,i} \neq \text{undefined}
-         \right) \\
-        \left(
-        M_{k,i} \vee
-        \left(
-        \bigvee_{\forall l. s_l  \prec s_k}E_{l,i}
-        \right)
-        \right) 
-        \bigwedge
-        Con(E_{k,i})
-        & \text{otherwise}
-        \end{cases}
-$$
 With this causal model in hand, we define $\varphi_{\sigma}$ to represent whether $\sigma$ is a configuration of $E$.
 To do this we need to encode the conflict-free and secured conditions in the definition \ref{conf}.
 Let the sequence $\pi = e_{i_1},e_{i_2},...,e_{i_m}$ be a
 permutation of events in $\sigma$ and $\mathcal{S}$ be the set of
 all permutations of $\sigma$.
-For an event $e_i$ in $\mathcal{E}$ and an element $s_k$ of
-$\mathcal{P}$ let $E(s_k, e_i) = E_{k,i}$.
+We define the following auxiliary functions:
+\begin{align*}
+    CE(e,e') = CE_{i,j}  & \iff e = e_i \wedge e' = e_j \\
+    ME(s,e)  = ME_{k,i}  & \iff s = s_k \wedge e = e_i  \\
+    C(e,e') = C_{i,j}    & \iff e = e_i \wedge e' = e_j \\
+    M(s,e)  = M_{k,i}    & \iff s = s_k \wedge e = e_i  \\
+    E(s,e)  = E_{k,i}    & \iff s = s_k \wedge e = e_i  \\
+    Con(e,e') = Con(i,j) & \iff e = e_i \wedge e' = e_j \\
+    Min(s,e) = Min(k,i)  & \iff  s = s_k \wedge e = e_i \\
+\end{align*}
 We define $F_{\varphi_{\sigma}}$ as follows:
 \begin{align*}
-    F_{\varphi_{\sigma}} = &
+    \varphi_{\sigma} = &
+    \exists \pi \in \mathcal{S}.
     \left(
-    \exists \pi \in \mathcal{S}. E(\emptyset, e_{i_1})
+    E(\emptyset, e_{i_1})
     \wedge E(\s{e_{i_1}}, e_{i_2} )
     \wedge ...
     \wedge E(\s{e_{i_1},...,e_{i_{m-1}}},e_{i_m})
-    \right)                                     \\
-                           & \wedge \neg \left(
-    \bigvee_{\forall 1 \leq j < i_m } C_{j,i_m}
     \right)
-    \wedge \neg \left(
-    \bigvee_{\forall i_m < j\leq m } C_{i_m,j}
-    \right)
+    \\
+                       & \wedge Con(\sigma)
 \end{align*}
 
-\subsection{Example}
-
+\subsection{Examples}
+\newcommand{\f}[1]{F_{#1}(\vec u,\vec V_{#1})}
+\newcommand{\e}{\emptyset}
+\newcommand{\m}{(M,\vec u)}
 \begin{example}
-    Consider the following network. 
-    Assume that we model arriving a packet on the switch H1 and H2 with events s, h1, and h2 respectively.
+    Consider the following network.
+    Assume that we model the arrival of a packet on the switch H1 and H2 with events s, $h_1$, and $h_2$ respectively.
+    Consider the configuration $\sigma = \s{a,b}$.
     We can define the event structure using the enabling relation:
     \begin{align*}
-        \emptyset \vdash s, \s{s} \vdash h1, \s{s} \vdash h2
+        \e \vdash_{min} h_1, \e \vdash_{min} h_2
     \end{align*}
     And an empty conflict relation.
+    Consider the permutation $\pi = a,b$.
+    In this example $\vec u$ is such that we have:
+    \begin{align*}
+         & CE(a,b) = false                   \\
+         & ME(\e, a) = true, ME(\e,b) = true \\
+    \end{align*}
+    We have:
+    \begin{align*}
+        \varphi_{\sigma} & =
+        \left(
+        E(\e, a) \wedge E(\s{a},b) \vee E(\e,b) \wedge E(\s{b},a)
+        \right)
+        \wedge Con(\sigma)                                                       \\
+        C(a,b)           & = CE(a,b)                                             \\
+        M(\e, a)         & =  ME(\e,a) \wedge Min(\e, a) \wedge Con(\e)          \\
+        M(\e, b)         & =  ME(\e,b) \wedge Min(\e, b) \wedge Con(\e)          \\
+        M(\s{a}, b)      & =  ME(\s{a},b) \wedge Min(\s{a}, b) \wedge Con(\s{a}) \\
+        M(\s{b}, a)      & =  ME(\s{b},a) \wedge Min(\s{b}, a) \wedge Con(\s{b}) \\
+        E(\e, a)         & =  M(\e,a) \wedge Con(\e)                             \\
+        E(\e, b)         & = M(\e,b) \wedge Con(\e)                              \\
+        E(\s{a}, b)      & = (M(\s{a},b) \vee E(\e,b))\wedge Con(\s{a})          \\
+        E(\s{b}, a)      & = (M(\s{b},a) \vee E(\e,a))\wedge Con(\s{b})          \\
+        Con(\e)          & = true                                                \\
+        Con(\s{a})       & = true                                                \\
+        Con(\s{b})       & = true                                                \\
+        Con(\s{a,b})     & = \neg C(a,b)                                         \\
+        Min(\e, a)       & = true                                                \\
+        Min(\e, b)       & = true                                                \\
+        Min(\s{a}, b)    & = \neg M(\e, b)                                       \\
+        Min(\s{b}, a)    & = \neg M(\e, a)                                       \\
+    \end{align*}
+    Regarding these functions we have:
+    \begin{align*}
+        (M,\vec u) \vDash \varphi_{\sigma} = true
+    \end{align*}
+    Now let's add a conflict between $a$ and $b$, thus we manually set
+    $C(a,b) = true$.
+    Thus we have $Con(\s{a,b}) = \neg C(a,b)$ if we set $C(a,b) = true$, then $Con(\s{a,b})$ becomes false and subsequently $\varphi_{\sigma}$ becomes false.
+    This we have:
+    \begin{align*}
+        (M,\vec u) \vDash [C(a,b) \leftarrow true] \neg \varphi_{\sigma}
+    \end{align*}
+    Thus we can consider $C(a,b)$ as a cause of $\varphi_{\sigma}$
+    using the witness $(\emptyset, \emptyset, true)$.
+    Since the set $\vec W$ in the witness is empty, $C(a,b)$ is a but-for cause and thus we do not need to verify the AC2(b) condition.
+\end{example}
+
+\begin{example}
+    Consider a firewall where we initially allow all outgoing packets and block all incoming packets.
+    We want to allow incoming packets once a packet is sent outside.
+    So we consider an event structure with events $i,o$ for incoming and
+    outgoing packets respectively.
+    If we assume the enabling relation as follows:
+    \begin{align*}
+        \e \vdash i, \e \vdash o
+    \end{align*}
+    Then we can achieve a configuration $\sigma = \s{o}$ as a
+    counterexample.
+    We have:
+    \begin{align*}
+        \varphi_{\sigma} & = E(\e, o) \wedge Con(\s{o})                        \\
+        CE(i,o)          & = false                                             \\
+        ME(\e, i)        & = true                                              \\
+        ME(\e, o)        & = true                                              \\
+        ME(\s{i}, o)     & = false                                             \\
+        ME(\s{o}, i)     & = false                                             \\
+        E(\e, o)         & = M(\e,o) \wedge Con(\e)                            \\
+        M(\e, o)         & = ME(\e,o) \wedge Min(\e, o)\wedge Con(\e)          \\
+        M(\s{i},o)       & = ME(\s{i},o) \wedge Min(\s{i},o) \wedge Con(\s{i}) \\
+        Min(\e, o)       & = \neg M(\s{i},o)
+    \end{align*}
+    Thus we have:
+    \begin{align*}
+        \m \vDash \varphi_{\sigma}
+    \end{align*}
+    Now we can introduce $M(\s{i},o) = false$ as a cause of $\varphi_{\sigma}$.
+    Assume that we set $M(\s{i},o) = true$.
+    So, $Min(\e, o)$ becomes false and thus $M(\e, o)$ becomes false.
+    Thus we have:
+    \begin{align*}
+        (M, \vec u) \vDash [M(\s{i},e) \leftarrow true] \neg \varphi_{\sigma}
+    \end{align*}
 \end{example}
 
 
