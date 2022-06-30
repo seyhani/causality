@@ -377,7 +377,7 @@ We abbreviate this as $\vec X = \vec x$.
     \begin{itemize}
         \item  \textbf{AC1.} $(M,\vec u)\models (\vec X = \vec x) \wedge \varphi$.
               (both $\vec X = \vec x$ and $\varphi$ are true in actual world)
-        \item  \textbf{AC2. }There exists aa partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
+        \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
 
               (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi$.
 
@@ -413,49 +413,51 @@ we only need to check AC1 and AC2(a) conditions.
 \subsection{Actual Cause in Non-Recursive Models}
 
 \newcommand{\la}{\leftarrow}
+In non-recursive models, there may be more than one solution to
+an equation in a given context, or there may be none.
+In particular, that means that a context no longer necessarily
+determines the values of endogenous variables.
+We identified a primitive event such as $X = x$ with basic causal formula $[](X=x)$, that is, with the special case of a formula
+of the form $[Y_1 \la y_1,...,Y_k\la y_k ]\varphi$ with $k =0 $.
+We say $(M,\vec u) \vDash [] (X = x)$ if $X=x$ in all solutions
+to the equations where $\vec U = \vec u$.
+If seems reasonable to identify $[](X=x)$ with $X=x$ if there
+is a unique solution to these equations.
+But it is not so reasonable if there may be several solutions,
+or no solution.
+What we really want to do is to be able to say that $X=x$ under
+a particular setting of variables.
+Thus, we now take the truth of a primitive event such as $X=x$
+relative not just to a context, but to a complete description
+$(\vec u, \vec v)$ of the values of both the exogenous and
+the endogenous variables.
+That is, $(M,\vec u,\vec v) \vDash X =x$ if $X$ has value $x$ in $\vec v$.
+Since truth value of $X=x$ depends on just $\vec v$, not $\vec u$,
+we sometimes write $(M,\vec v) \vDash X =x$.
+We then define $(M,\vec u, \vec v) \vDash[\vec Y \la \vec y]\varphi$ if $(M,\vec v') \vDash \varphi$ for all solutions
+$(\vec u, \vec v')$ to the equations in $M_{\vec Y \la \vec y}$.
+Since the truth of $[\vec Y \la \vec y](X=x)$ depends only on the
+context $\vec u$ and not on $\vec v$, we typically write $(M,\vec u) \vDash[ \vec Y \la \vec y](X=x)$.
+
+The formula $\langle \vec Y \la \vec y \rangle(X=x)$ is the dual
+of $[\vec Y \la \vec y](X=x)$; that is, it is an abbreviation of
+$\neg [\vec Y \la \vec y](X \neq x)$.
+It is easy to check that
+$(M,\vec u, \vec v) \vDash \langle \vec Y \la \vec y \rangle(X=x)$
+if in some solution to the equations in $M_{\vec Y \la \vec y}$ in
+context $\vec u$, the variable $X$ has value $x$.
+For recursive models, it is immediate that
+$[\vec Y \la \vec y](X = x)$ is equivalent to
+$\langle \vec Y \la \vec y \rangle(X=x)$ since all equations
+have exactly one solution.
+Now we can state the definition of causality for arbitrary models.
 \begin{definition}
-    In non-recursive models, there may be more than one solution to
-    an equation in a given context, or there may be none.
-    In particular, that means that a context no longer necessarily 
-    determines the values of endogenous variables.
-    We identified a primitive event such as $X = x$ with basic causal formula $[](X=x)$, that is, with the special case of a formula
-    of the form $[Y_1 \la y_1,...,Y_k\la y_k ]\varphi$ with $k =0 $.
-    We say $(M,\vec u) \vDash [] (X = x)$ if $X=x$ in all solutions
-    to the equations where $\vec U = \vec u$.
-    If seems reasonable to identify $[](X=x)$ with $X=x$ if there
-    is a unique solution to these equations.
-    But it is not so reasonable if there may be several solutions,
-    or no solution.
-    What we really want to do is to be able to say that $X=x$ under
-    a particular setting of variables.
-    Thus, we now take the truth of a primitive event such as $X=x$
-    relative not just to a context, but to a complete description
-    $(\vec u, \vec v)$ of the values of both the exogenous and
-    the endogenous variables.
-    That is, $(M,\vec u,\vec v) \vDash X =x$ if $X$ has value $x$ in $\vec v$.
-    Since truth value of $X=x$ depends on just $\vec v$, not $\vec u$,
-    we sometimes write $(M,\vec v) \vDash X =x$.
-    We extend then define $(M,\vec u, vec v) \vDash[\vec Y \la vec y]\varphi$ if $(M,\vec v') \vDash \varphi$ for all solutions 
-    $(\vec u, \vec v')$ to the equations in $M_{\vec Y \la \vec y}$.
-    Since the truth of $[vec Y \la \vec y](X=x)$ depends only on the
-    context $\vec u$ and not on $\vec v$, we typically write $(M,\vec u) \vDash[ \vec Y \la \vec y](X=x)$.
-    The formula $\langle \vec Y \la \vec y \rangle(X=x)$ is the dual
-    of $[\vec Y \la \vec y](X=x)$; that is, it is an abbreviation of
-    $\neg [\vec Y \la \vec y](X \neq x)$.
-    It is easy to check that 
-    $(M,\vec u, vec v) \vDash \langle \vec Y \la \vec y \rangle(X=x)$
-    if in some solution to the equations in $M_{\vec Y \la \vec y}$ in
-    context $\vec u$, the variable $X$ has value $x$.
-    For recursive models, it is immediate that 
-    $[\vec Y \la \vec y](X \neq x)$ is equivalent to
-    $\langle \vec Y \la \vec y \rangle(X=x)$ since all equations
-    have exactly one solution.
     $\vec X = \vec x$ is an actual cause of $\varphi$ in
     $(M,\vec u, \vec v) $ if the following three conditions hold.
 
     \begin{itemize}
         \item  \textbf{AC1.} $(M,\vec v)\models (\vec X = \vec x) \wedge \varphi$.
-        \item  \textbf{AC2. }There exists aa partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u, \vec v)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
+        \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u, \vec v)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
 
               (a) $(M,\vec u)\models \langle \vec X \leftarrow \vec x', \vec W \leftarrow \vec w' \rangle \neg \varphi$.
 
@@ -472,20 +474,18 @@ That is, if the endogenous variables are $X_1,...,X_n$ then
 $(x_1,...,x_n) \in \mathcal{E}$ if $X_1 = x_1, ..., X_n=x_n$ is an
 allowable setting.
 We say that a setting of a subset of the endogenous variables is allowable if it can be extended to a setting in $\mathcal{E}$.
-We the modify the clauses AC2(a) and (b) in the definition often
-causality to restrict to allowable settings.
+We then modify the clauses AC2(a) and (b) in the definition of causality to restrict to allowable settings.
 Let $\psi$ be a function $(\times_{X \in \mathcal{V}}R(X))\rightarrow \mathbb{B}$ defined on the set of endogenous variables.
 We define the model $(\mathcal{S},\mathcal{F},\psi)$ to be equal
 to the model $(\mathcal{S},\mathcal{F},\mathcal{E})$ where
-for each $\vec x \in \mathcal{E} \iff \psi(\vec x) = true$
+for each setting $\vec x$ of endogenous variables we have $\vec x \in \mathcal{E} \iff \psi(\vec x) = true$.
 Thus, given an extended causal model $M = (\mathcal{S},\mathcal{F},\psi)$ we redefine the actual cause as follows:
 
 \begin{definition}
     $\vec X = \vec x$ is an actual cause of $\varphi$ in $(M,\vec u)$ if the following three conditions hold:
     \begin{itemize}
         \item  \textbf{AC1.} $(M,\vec u)\models (\vec X = \vec x) \wedge \varphi \wedge \psi(\vec v)$.
-              (both $\vec X = \vec x$ and $\varphi$ are true in actual world)
-        \item  \textbf{AC2. }There exists aa partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
+        \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
 
               (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi \wedge \psi(\vec v)$.
 
@@ -788,7 +788,7 @@ Next, we define $\mathcal{U}$ and $\mathcal{V}$ as follows:
                   & \cup \s{E_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} }  \\
                   & \cup \s{M_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} }  \\
 \end{align*}
-We define $\psi$ such that we prevent invalid settings of variables:
+We define $\psi$ such that we can prevent invalid settings of variables:
 \begin{align*}
     \psi(\vec v) = & \forall_{k,i}.
     \left(
@@ -823,7 +823,7 @@ For $x,y \in \mathcal{P}(\mathcal{E})$ we say $y$ is covered by $x$ written $ x 
 \end{align*}
 For each variable $x \in \mathcal{V}$ we define $\vec V_x$ as a vector
 of all variables in $\mathcal{V}$ excluding $x$.
-Also, assume that $\vec u$ is a setting of exogenous variables.
+Let $\vec u$ be a setting of exogenous variables.
 We define the functions in $\mathcal{F}$ as follows:
 \begin{align*}
     Con(k)                                & =   \left(
@@ -989,7 +989,7 @@ We define $F_{\varphi_{\sigma}}$ as follows:
     counterexample.
     We have:
     \begin{align*}
-        \varphi_{\sigma} & = E(\e, o) \wedge Con(\s{o}) 
+        \varphi_{\sigma} & = E(\e, o) \wedge Con(\s{o})
         = E(\e, o)
         \\
         CE(i,o)          & = false                                             \\
@@ -997,21 +997,21 @@ We define $F_{\varphi_{\sigma}}$ as follows:
         ME(\e, o)        & = true                                              \\
         ME(\s{i}, o)     & = false                                             \\
         ME(\s{o}, i)     & = false                                             \\
-        E(\e, o)         & = M(\e,o) \wedge Con(\e) 
-        = M(\e, o) \\
-        M(\e, o)         & = ME(\e,o) \wedge Min(\e, o)\wedge Con(\e)  \\
-        & = ME(\e,o) \wedge Min(\e, o) \\
+        E(\e, o)         & = M(\e,o) \wedge Con(\e)
+        = M(\e, o)                                                             \\
+        M(\e, o)         & = ME(\e,o) \wedge Min(\e, o)\wedge Con(\e)          \\
+                         & = ME(\e,o) \wedge Min(\e, o)                        \\
         M(\s{i},o)       & = ME(\s{i},o) \wedge Min(\s{i},o) \wedge Con(\s{i}) \\
-        & = ME(\s{i},o) \wedge Min(\s{i},o) \\
-        Min(\e, o)       & = \neg M(\s{i},o) \\
+                         & = ME(\s{i},o) \wedge Min(\s{i},o)                   \\
+        Min(\e, o)       & = \neg M(\s{i},o)                                   \\
         Min(\s{i},o)     & = \neg M(\e,o)
     \end{align*}
     Consider a $\vec v$ where:
     \begin{align*}
-        M(\e, o) & = true \\
-        Min(\e, o) & = true \\
+        M(\e, o)      & = true  \\
+        Min(\e, o)    & = true  \\
         Min(\s{i}, o) & = false \\
-        M(\s{i}, o) & = false \\
+        M(\s{i}, o)   & = false \\
     \end{align*}
     Thus we have:
     \begin{align*}
@@ -1019,18 +1019,18 @@ We define $F_{\varphi_{\sigma}}$ as follows:
     \end{align*}
     Now assume that we set $M(\s{i},o)$ to $true$.
     This will cause $Min(\e,o)$ and subsequently $M(\e,o)$ becomes false.
-    Since we have $\varphi_{\sigma} = E(\e,o) = M(\e,o)$, so 
+    Since we have $\varphi_{\sigma} = E(\e,o) = M(\e,o)$, so
     $\varphi_{\sigma}$ becomes false too.
-    Consider $\vec v'$ as the new values of variables after our 
+    Consider $\vec v'$ as the new values of variables after our
     intervention.
     So we have:
     \begin{align*}
-        (M,\vec v')\vDash M(\s{i},o) = true 
+        (M,\vec v')\vDash M(\s{i},o) = true
         \Rightarrow
         (M,\vec v) \vDash \neg \varphi_{\sigma}
     \end{align*}
-    So we have found a solution $\vec v'$ to the equations in 
-    $M_{M(\s{i},o)\la true}$ in the context $\vec u$ where $\neg \varphi_{\sigma}$ holds. 
+    So we have found a solution $\vec v'$ to the equations in
+    $M_{M(\s{i},o)\la true}$ in the context $\vec u$ where $\neg \varphi_{\sigma}$ holds.
     Thus we have:
     \begin{align*}
         (M,\vec u) \vDash \langle M(\s{i},o) \la true \rangle \neg \varphi_{\sigma}
