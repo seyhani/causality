@@ -83,14 +83,14 @@ We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
     Assume that a packet arrives at the switch and then the switch
     non-deterministically forwards the packets to either $h_1$ or $h_2$.
     \begin{center}
-        \begin{tikzpicture}[node distance={25mm},main/.style = {draw, circle}] 
-            \node[main] (H1) {$h_1$}; 
-            \node[main] (S) [right of=H1] {$s$}; 
-            \node[main] (H2) [right of=S] {$h_2$}; 
+        \begin{tikzpicture}[node distance={25mm},main/.style = {draw, circle}]
+            \node[main] (H1) {$h_1$};
+            \node[main] (S) [right of=H1] {$s$};
+            \node[main] (H2) [right of=S] {$h_2$};
             \draw[<-] (H1) -- (S);
             \draw[->] (S) -- (H2);
             \draw[<-] (S) -- (2.5,1.5);
-        \end{tikzpicture} 
+        \end{tikzpicture}
     \end{center}
     To model this scenario in event structures we can define an event
     $p$ for the arrival of the packet at the switch and events $h_1$
@@ -128,13 +128,13 @@ We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
     drop the packets received from the other host due to capacity
     limit.
     \begin{center}
-        \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}] 
-            \node[main] (S) [right of=H1] {$s$}; 
-            \node[main] (H1) [above of=S,left of=S] {$h_1$}; 
-            \node[main] (H2) [above of=S,right of=S] {$h_2$}; 
+        \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
+            \node[main] (S) [right of=H1] {$s$};
+            \node[main] (H1) [above of=S,left of=S] {$h_1$};
+            \node[main] (H2) [above of=S,right of=S] {$h_2$};
             \draw[->] (H1) -- (S);
             \draw[<-] (S) -- (H2);
-        \end{tikzpicture} 
+        \end{tikzpicture}
     \end{center}
     Let $r_1,r_2$ represent the events of receiving packet from
     $h_1$ and $h_2$ and $d_1,d_2$ represent the events of dropping
@@ -145,8 +145,8 @@ We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
     \begin{align*}
         \emptyset & \vdash_{min} r_1 \\
         \emptyset & \vdash_{min} r_2 \\
-        \s{r_1} & \vdash_{min} d_2 \\
-        \s{r_2} & \vdash_{min} d_1 \\
+        \s{r_1}   & \vdash_{min} d_2 \\
+        \s{r_2}   & \vdash_{min} d_1 \\
     \end{align*}
     Thus the configurations have the form:
     \begin{center}
@@ -256,7 +256,7 @@ It follows that for stable event structures
     and $s' = e_{i'_1},e_{i'_2},...,e_{i'_{m'}}$
     for $e$ and $e'$ respectively where $e_{i_m} = e$
     and $e_{i_{m'}'} = e'$.
-    For $1 \leq a \leq b \leq p$, 
+    For $1 \leq a \leq b \leq p$,
     let $s'' = e_{j_1},e_{j_2},...,e_{j_p}$
     be the sequence resulting from appending $s'$ to $s$.
     Let $es(a,b) = \s{e_{j_a},e_{j_{a+1}},...,e_{j_{b}}}$.
@@ -371,19 +371,99 @@ The types of events that we allow as actual causes are ones of the form $X_1 = x
 We abbreviate this as $\vec X = \vec x$.
 \\
 \\
-\textbf{Definition 1:} $\vec X = \vec x$ is an actual cause of $\varphi$ in $(M,\vec u)$ if the following three conditions hold:
-\begin{itemize}
-    \item  \textbf{AC1.} $(M,\vec u)\models (\vec X = \vec x) \wedge \varphi$.
-          (both $\vec X = \vec x$ and $\varphi$ are true in actual world)
-    \item  \textbf{AC2. }There exists aa partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
+\begin{definition}
 
-          (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi$.
+    $\vec X = \vec x$ is an actual cause of $\varphi$ in $(M,\vec u)$ if the following three conditions hold:
+    \begin{itemize}
+        \item  \textbf{AC1.} $(M,\vec u)\models (\vec X = \vec x) \wedge \varphi$.
+              (both $\vec X = \vec x$ and $\varphi$ are true in actual world)
+        \item  \textbf{AC2. }There exists aa partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
 
-          (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]\varphi$ for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+              (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi$.
 
-    \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
-\end{itemize}
-We call the tuple $(\vec W, \vec w,x')$ a witness to the fact that $\vec X=\vec x$ is a cause of $\varphi$.
+              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]\varphi$ for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+
+        \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
+    \end{itemize}
+\end{definition}
+We call the tuple $(\vec W, \vec w,\vec x')$ a witness to the fact that $\vec X=\vec x$ is a cause of $\varphi$.
+
+\begin{definition}
+    We say $\vec X = \vec x$ is a but-for cause of $\varphi$ in
+    $(M,\vec u)$ if there exists a witness $(\vec W, \vec w, \vec x')$
+    for $\vec X = \vec x$ where $\vec W = \emptyset $.
+\end{definition}
+
+Note that, if we consider a witness $(\vec W, \vec w, \vec x')$
+for checking whether $\vec X = \vec x$ is a cause of $\varphi$
+in $(M,\vec u)$ where $\vec W = \e$, then in the AC2(b) condition
+we only need to check whether $(M,\vec u) \vDash [\vec X \leftarrow \vec x, \vec Z' \leftarrow \vec z^*]\varphi$ for all subsets $\vec Z'$
+of $\vec Z$.
+Since we have $(M,\vec u) \vDash (\vec X = \vec x)$ and
+$(M,\vec u) \vDash Z = z^*$ for all $Z \in vec Z$,
+the Interventions $\vec X \leftarrow \vec x$ and
+$\vec Z ' \leftarrow \vec z^*$ actually do not change the value of
+any variable thus checking whether
+$(M,\vec u) \vDash [\vec X \leftarrow \vec x, \vec Z' \leftarrow \vec z^*]\varphi$ is true
+reduces to check whether $(M,\vec u) \vDash \varphi$
+which must be already satisfied when we have checked AC1 condition.
+This means that, to check whether $\vec X = \vec x$ is an actual cuase when using a witness with an empty $\vec W$
+we only need to check AC1 and AC2(a) conditions.
+
+\subsection{Actual Cause in Non-Recursive Models}
+
+\newcommand{\la}{\leftarrow}
+\begin{definition}
+    In non-recursive models, there may be more than one solution to
+    an equation in a given context, or there may be none.
+    In particular, that means that a context no longer necessarily 
+    determines the values of endogenous variables.
+    We identified a primitive event such as $X = x$ with basic causal formula $[](X=x)$, that is, with the special case of a formula
+    of the form $[Y_1 \la y_1,...,Y_k\la y_k ]\varphi$ with $k =0 $.
+    We say $(M,\vec u) \vDash [] (X = x)$ if $X=x$ in all solutions
+    to the equations where $\vec U = \vec u$.
+    If seems reasonable to identify $[](X=x)$ with $X=x$ if there
+    is a unique solution to these equations.
+    But it is not so reasonable if there may be several solutions,
+    or no solution.
+    What we really want to do is to be able to say that $X=x$ under
+    a particular setting of variables.
+    Thus, we now take the truth of a primitive event such as $X=x$
+    relative not just to a context, but to a complete description
+    $(\vec u, \vec v)$ of the values of both the exogenous and
+    the endogenous variables.
+    That is, $(M,\vec u,\vec v) \vDash X =x$ if $X$ has value $x$ in $\vec v$.
+    Since truth value of $X=x$ depends on just $\vec v$, not $\vec u$,
+    we sometimes write $(M,\vec v) \vDash X =x$.
+    We extend then define $(M,\vec u, vec v) \vDash[\vec Y \la vec y]\varphi$ if $(M,\vec v') \vDash \varphi$ for all solutions 
+    $(\vec u, \vec v')$ to the equations in $M_{\vec Y \la \vec y}$.
+    Since the truth of $[vec Y \la \vec y](X=x)$ depends only on the
+    context $\vec u$ and not on $\vec v$, we typically write $(M,\vec u) \vDash[ \vec Y \la \vec y](X=x)$.
+    The formula $\langle \vec Y \la \vec y \rangle(X=x)$ is the dual
+    of $[\vec Y \la \vec y](X=x)$; that is, it is an abbreviation of
+    $\neg [\vec Y \la \vec y](X \neq x)$.
+    It is easy to check that 
+    $(M,\vec u, vec v) \vDash \langle \vec Y \la \vec y \rangle(X=x)$
+    if in some solution to the equations in $M_{\vec Y \la \vec y}$ in
+    context $\vec u$, the variable $X$ has value $x$.
+    For recursive models, it is immediate that 
+    $[\vec Y \la \vec y](X \neq x)$ is equivalent to
+    $\langle \vec Y \la \vec y \rangle(X=x)$ since all equations
+    have exactly one solution.
+    $\vec X = \vec x$ is an actual cause of $\varphi$ in
+    $(M,\vec u, \vec v) $ if the following three conditions hold.
+
+    \begin{itemize}
+        \item  \textbf{AC1.} $(M,\vec v)\models (\vec X = \vec x) \wedge \varphi$.
+        \item  \textbf{AC2. }There exists aa partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u, \vec v)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
+
+              (a) $(M,\vec u)\models \langle \vec X \leftarrow \vec x', \vec W \leftarrow \vec w' \rangle \neg \varphi$.
+
+              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]\varphi$ for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+
+        \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
+    \end{itemize}
+\end{definition}
 
 \subsection{Extended Causal Model}
 An extended causal model is a tuple $(\mathcal{S},\mathcal{F},
@@ -712,19 +792,19 @@ We define $\psi$ such that we prevent invalid settings of variables:
 \begin{align*}
     \psi(\vec v) = & \forall_{k,i}.
     \left(
-    E_{k,i} \Rightarrow Con(k)
+    M_{k,i} \Rightarrow E_{k,i}
     \right)
     \wedge
     \left(
-    M_{k,i} \Rightarrow E_{k,i}
+    E_{k,i} \Rightarrow Con(k)
     \right)
     \\
                    & \wedge \left(E_{k,i} \Rightarrow
-    \forall k'. s_k \subset s_{k'} \Rightarrow E_{k',i}
+    \forall k'. (s_k \subset s_{k'} \wedge Con(k')) \Rightarrow E_{k',i}
     \right)                                           \\
                    & \wedge \left(
     M_{k,i} \Rightarrow \forall k'.
-    (s_k \subset s_{k'} \vee s_{k'} \subset s_k) \Rightarrow \neg M_{k',i}
+    (s_{k'} \subset s_k) \Rightarrow \neg M_{k',i}
     \right)
 \end{align*}
 We consider the given event structure as a background knowledge.
@@ -746,13 +826,16 @@ of all variables in $\mathcal{V}$ excluding $x$.
 Also, assume that $\vec u$ is a setting of exogenous variables.
 We define the functions in $\mathcal{F}$ as follows:
 \begin{align*}
-    Con(k)                                & =   \neg \left(
-    \bigvee_{\forall j,j'. j<j' \amp e_j,e_{j'} \in s_k} C_{j,j'}
+    Con(k)                                & =   \left(
+    \bigwedge_{\forall j,j'. j<j' \amp e_j,e_{j'} \in s_k}
+    \neg C_{j,j'}
     \right)                                                                          \\
-    Min(k,i)                              & = \neg \left(
-    \bigvee_{
-        \forall k'. s_{k} \subset s_{k'} \wedge e_i \notin{s_{k'}}
-    } M_{k',i}
+    Min(k,i)                              & = \left(
+    \bigwedge_{
+        \forall k'. e_i \notin{s_{k'} \wedge \left(
+            s_{k} \subset s_{k'} \vee s_{k'} \subset s_{k}
+            \right)}
+    } \neg M_{k',i}
     \right)                                                                          \\
     F_{C_{i,j}}(\vec u, \vec V_{C_{i,j}}) & = CE_{i,j}                               \\
     F_{M_{k,i}}(\vec u, \vec V_{M_{k,i}}) & = ME_{k,i} \wedge Min(k,i) \wedge Con(k) \\
@@ -796,19 +879,28 @@ We define $F_{\varphi_{\sigma}}$ as follows:
 \end{align*}
 
 \subsection{Examples}
-\newcommand{\f}[1]{F_{#1}(\vec u,\vec V_{#1})}
-\newcommand{\e}{\emptyset}
-\newcommand{\m}{(M,\vec u)}
 \begin{example}
-    Consider the following network.
-    Assume that we model the arrival of a packet on the switch H1 and H2 with events s, $h_1$, and $h_2$ respectively.
-    Consider the configuration $\sigma = \s{a,b}$.
-    We can define the event structure using the enabling relation:
+    Consider the following network where the switch can sends the
+    received packet to either host $a$ or $b$:
+    \begin{center}
+        \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
+            \node[main] (s) {$s$};
+            \node[main] (a) [below left of=s] {$a$};
+            \node[main] (b) [below right of=s] {$b$};
+            \draw[->] (s) -- (a);
+            \draw[->] (s) -- (b);
+        \end{tikzpicture}
+    \end{center}
+    We model the forwarding of the packet to the hosts with events
+    $a$ and $b$ respectively.
+    We can define the event structure with an empty conflict relation and the least enabling relation which satisfies:
     \begin{align*}
-        \e \vdash_{min} h_1, \e \vdash_{min} h_2
+        \e \vdash_{min} a, \e \vdash_{min} b
     \end{align*}
-    And an empty conflict relation.
-    Consider the permutation $\pi = a,b$.
+    Assume that forwarding a packet to both hosts violates
+    a safety property.
+    Thus, we may consider the configuration $\sigma = \s{a,b}$ as
+    a counterexample.
     In this example $\vec u$ is such that we have:
     \begin{align*}
          & CE(a,b) = false                   \\
@@ -818,7 +910,13 @@ We define $F_{\varphi_{\sigma}}$ as follows:
     \begin{align*}
         \varphi_{\sigma} & =
         \left(
-        E(\e, a) \wedge E(\s{a},b) \vee E(\e,b) \wedge E(\s{b},a)
+        \left(
+        E(\e, a) \wedge E(\s{a},b)
+        \right)
+        \vee
+        \left(
+        E(\e,b) \wedge E(\s{b},a)
+        \right)
         \right)
         \wedge Con(\sigma)                                                       \\
         C(a,b)           & = CE(a,b)                                             \\
@@ -834,33 +932,56 @@ We define $F_{\varphi_{\sigma}}$ as follows:
         Con(\s{a})       & = true                                                \\
         Con(\s{b})       & = true                                                \\
         Con(\s{a,b})     & = \neg C(a,b)                                         \\
-        Min(\e, a)       & = true                                                \\
-        Min(\e, b)       & = true                                                \\
+        Min(\e, a)       & = \neg M(\s{b},a)                                     \\
+        Min(\e, b)       & = \neg M(\s{a},b)                                     \\
         Min(\s{a}, b)    & = \neg M(\e, b)                                       \\
         Min(\s{b}, a)    & = \neg M(\e, a)                                       \\
     \end{align*}
-    Regarding these functions we have:
+    We consider an assignment to endogenous variables $\vec v$ for which we have:
     \begin{align*}
-        (M,\vec u) \vDash \varphi_{\sigma} = true
+        (M,\vec v) & \vDash M(\e,a) = true       \\
+        (M,\vec v) & \vDash M(\e,b) = true       \\
+        (M,\vec v) & \vDash M(\s{a},b) = false   \\
+        (M,\vec v) & \vDash M(\s{b},a) = false   \\
+        (M,\vec v) & \vDash Min(\e,a) = true     \\
+        (M,\vec v) & \vDash Min(\e,b) = true     \\
+        (M,\vec v) & \vDash Min(\s{a},b) = false \\
+        (M,\vec v) & \vDash Min(\s{b},a) = false \\
     \end{align*}
-    Now let's add a conflict between $a$ and $b$, thus we manually set
+    Other variables do not have a cyclic dependency, thus their value
+    can be uniquely determined in the context $\vec u$.
+    Regarding this model and $\vec v$ we have:
+    \begin{align*}
+        (M,\vec v) \vDash (C(a,b) = false) \wedge \left(\varphi_{\sigma} = true\right)
+    \end{align*}
+    Now let's add a conflict between $a$ and $b$ so we manually set
     $C(a,b) = true$.
-    Thus we have $Con(\s{a,b}) = \neg C(a,b)$ if we set $C(a,b) = true$, then $Con(\s{a,b})$ becomes false and subsequently $\varphi_{\sigma}$ becomes false.
-    This we have:
+    Let $\vec v'$ be the new values of the endogenous variables
+    after we have set $C(a,b) = true$.
+    We have:
     \begin{align*}
-        (M,\vec u) \vDash [C(a,b) \leftarrow true] \neg \varphi_{\sigma}
+        (M, \vec v') \vDash C(a,b) = true
+        \Rightarrow  (M, \vec v') \vDash \neg \varphi_{\sigma}
     \end{align*}
-    Thus we can consider $C(a,b)$ as a cause of $\varphi_{\sigma}$
-    using the witness $(\emptyset, \emptyset, true)$.
-    Since the set $\vec W$ in the witness is empty, $C(a,b)$ is a but-for cause and thus we do not need to verify the AC2(b) condition.
+    This means that there exists a solution to the equations in
+    $M_{C(a,b) \leftarrow true}$ in the context $\vec u$ where we $\neg \varphi_{\sigma}$ holds.
+    Thus we have:
+    \begin{align*}
+        (M, \vec u) \vDash \langle C(a,b) \leftarrow true \rangle \neg \varphi_{\sigma}
+    \end{align*}
+    Since we have considered the witness $(\emptyset, \emptyset, true)$
+    and the set $\vec W$ in the witness is empty, we can conclude
+    that $C(a,b) = true$ is a but-for cause for $\varphi_{\sigma}$
+    in $(M,\vec u)$.
 \end{example}
 
 \begin{example}
     Consider a firewall where we initially allow all outgoing packets and block all incoming packets.
     We want to allow incoming packets once a packet is sent outside.
-    So we consider an event structure with events $i,o$ for incoming and
+    So, we consider an event structure with events $i,o$ for incoming and
     outgoing packets respectively.
-    If we assume the enabling relation as follows:
+    We assume an empty conflict relation and enabling relation
+    the least one that satisfies
     \begin{align*}
         \e \vdash i, \e \vdash o
     \end{align*}
@@ -868,28 +989,53 @@ We define $F_{\varphi_{\sigma}}$ as follows:
     counterexample.
     We have:
     \begin{align*}
-        \varphi_{\sigma} & = E(\e, o) \wedge Con(\s{o})                        \\
+        \varphi_{\sigma} & = E(\e, o) \wedge Con(\s{o}) 
+        = E(\e, o)
+        \\
         CE(i,o)          & = false                                             \\
         ME(\e, i)        & = true                                              \\
         ME(\e, o)        & = true                                              \\
         ME(\s{i}, o)     & = false                                             \\
         ME(\s{o}, i)     & = false                                             \\
-        E(\e, o)         & = M(\e,o) \wedge Con(\e)                            \\
-        M(\e, o)         & = ME(\e,o) \wedge Min(\e, o)\wedge Con(\e)          \\
+        E(\e, o)         & = M(\e,o) \wedge Con(\e) 
+        = M(\e, o) \\
+        M(\e, o)         & = ME(\e,o) \wedge Min(\e, o)\wedge Con(\e)  \\
+        & = ME(\e,o) \wedge Min(\e, o) \\
         M(\s{i},o)       & = ME(\s{i},o) \wedge Min(\s{i},o) \wedge Con(\s{i}) \\
-        Min(\e, o)       & = \neg M(\s{i},o)
+        & = ME(\s{i},o) \wedge Min(\s{i},o) \\
+        Min(\e, o)       & = \neg M(\s{i},o) \\
+        Min(\s{i},o)     & = \neg M(\e,o)
+    \end{align*}
+    Consider a $\vec v$ where:
+    \begin{align*}
+        M(\e, o) & = true \\
+        Min(\e, o) & = true \\
+        Min(\s{i}, o) & = false \\
+        M(\s{i}, o) & = false \\
     \end{align*}
     Thus we have:
     \begin{align*}
-        \m \vDash \varphi_{\sigma}
+        (M,\vec v) \vDash (M(\s{i},o) = false)  \wedge \varphi_{\sigma}
     \end{align*}
-    Now we can introduce $M(\s{i},o) = false$ as a cause of $\varphi_{\sigma}$.
-    Assume that we set $M(\s{i},o) = true$.
-    So, $Min(\e, o)$ becomes false and thus $M(\e, o)$ becomes false.
+    Now assume that we set $M(\s{i},o)$ to $true$.
+    This will cause $Min(\e,o)$ and subsequently $M(\e,o)$ becomes false.
+    Since we have $\varphi_{\sigma} = E(\e,o) = M(\e,o)$, so 
+    $\varphi_{\sigma}$ becomes false too.
+    Consider $\vec v'$ as the new values of variables after our 
+    intervention.
+    So we have:
+    \begin{align*}
+        (M,\vec v')\vDash M(\s{i},o) = true 
+        \Rightarrow
+        (M,\vec v) \vDash \neg \varphi_{\sigma}
+    \end{align*}
+    So we have found a solution $\vec v'$ to the equations in 
+    $M_{M(\s{i},o)\la true}$ in the context $\vec u$ where $\neg \varphi_{\sigma}$ holds. 
     Thus we have:
     \begin{align*}
-        (M, \vec u) \vDash [M(\s{i},e) \leftarrow true] \neg \varphi_{\sigma}
+        (M,\vec u) \vDash \langle M(\s{i},o) \la true \rangle \neg \varphi_{\sigma}
     \end{align*}
+    Again, like the previous example, we have considered an empty $\vec W$, thus $M(\s{i},o)$ is a but-for cause for $\varphi_{\sigma}$ in $(M,\vec u)$.
 \end{example}
 
 
