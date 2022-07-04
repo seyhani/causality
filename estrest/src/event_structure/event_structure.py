@@ -2,8 +2,8 @@ import itertools
 from copy import deepcopy
 from typing import Set, List, FrozenSet
 
-from estrest.src import utils
-from estrest.src.event import Event, SyncedEvent, STAR
+import utils
+from event import Event, SyncedEvent, STAR
 
 
 # noinspection SpellCheckingInspection
