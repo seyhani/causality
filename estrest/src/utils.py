@@ -1,6 +1,6 @@
 from typing import Set, List
 
-from .event import Event, SyncedEvent, STAR
+from event import Event, SyncedEvent, STAR
 
 
 def repr_conflict(es):
