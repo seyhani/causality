@@ -910,32 +910,33 @@ We define $F_{\varphi_{\sigma}}$ as follows:
     \begin{align*}
         \varphi_{\sigma} & =
         \left(
-        \left(
-        E(\e, a) \wedge E(\s{a},b)
-        \right)
+        \left( E(\e, a) \wedge E(\s{a},b) \right)
         \vee
-        \left(
-        E(\e,b) \wedge E(\s{b},a)
+        \left( E(\e,b) \wedge E(\s{b},a) \right)
         \right)
-        \right)
-        \wedge Con(\sigma)                                                       \\
-        C(a,b)           & = CE(a,b)                                             \\
-        M(\e, a)         & =  ME(\e,a) \wedge Min(\e, a) \wedge Con(\e)          \\
-        M(\e, b)         & =  ME(\e,b) \wedge Min(\e, b) \wedge Con(\e)          \\
-        M(\s{a}, b)      & =  ME(\s{a},b) \wedge Min(\s{a}, b) \wedge Con(\s{a}) \\
-        M(\s{b}, a)      & =  ME(\s{b},a) \wedge Min(\s{b}, a) \wedge Con(\s{b}) \\
+        \wedge Con(\s{a,b})                                                      \\
         E(\e, a)         & =  M(\e,a) \wedge Con(\e)                             \\
-        E(\e, b)         & = M(\e,b) \wedge Con(\e)                              \\
-        E(\s{a}, b)      & = (M(\s{a},b) \vee E(\e,b))\wedge Con(\s{a})          \\
-        E(\s{b}, a)      & = (M(\s{b},a) \vee E(\e,a))\wedge Con(\s{b})          \\
-        Con(\e)          & = true                                                \\
-        Con(\s{a})       & = true                                                \\
-        Con(\s{b})       & = true                                                \\
-        Con(\s{a,b})     & = \neg C(a,b)                                         \\
+                         & = M(\e,a)                                             \\
+        M(\e, a)         & =  ME(\e,a) \wedge Min(\e, a) \wedge Con(\e)          \\
+                         & = ME(\e,a) \wedge Min(\e,a)                           \\
         Min(\e, a)       & = \neg M(\s{b},a)                                     \\
-        Min(\e, b)       & = \neg M(\s{a},b)                                     \\
-        Min(\s{a}, b)    & = \neg M(\e, b)                                       \\
+        M(\s{b}, a)      & =  ME(\s{b},a) \wedge Min(\s{b}, a) \wedge Con(\s{b}) \\
+                         & =  ME(\s{b},a) \wedge Min(\s{b}, a)                   \\
         Min(\s{b}, a)    & = \neg M(\e, a)                                       \\
+        E(\s{a}, b)      & = (M(\s{a},b) \vee E(\e,b))\wedge Con(\s{a})          \\
+                         & = M(\s{a},b) \vee E(\e,b)                             \\
+        M(\e, b)         & =  ME(\e,b) \wedge Min(\e, b) \wedge Con(\e)          \\
+                         & =  ME(\e,b) \wedge Min(\e, b)                         \\
+        Min(\e, b)       & = \neg M(\s{a},b)                                     \\
+        M(\s{a}, b)      & =  ME(\s{a},b) \wedge Min(\s{a}, b) \wedge Con(\s{a}) \\
+                         & =  ME(\s{a},b) \wedge Min(\s{a}, b)                   \\
+        Min(\s{a}, b)    & = \neg M(\e, b)                                       \\
+        E(\e, b)         & = M(\e,b) \wedge Con(\e) = M(\e,b)                    \\
+                         & = M(\e,b)                                             \\
+        E(\s{b}, a)      & = (M(\s{b},a) \vee E(\e,a))\wedge Con(\s{b})          \\
+                         & = M(\s{b},a) \vee E(\e,a)                             \\
+        Con(\s{a,b})     & = \neg C(a,b)                                         \\
+        C(a,b)           & = CE(a,b)                                             \\
     \end{align*}
     We consider an assignment to endogenous variables $\vec v$ for which we have:
     \begin{align*}
@@ -952,7 +953,7 @@ We define $F_{\varphi_{\sigma}}$ as follows:
     can be uniquely determined in the context $\vec u$.
     Regarding this model and $\vec v$ we have:
     \begin{align*}
-        (M,\vec v) \vDash (C(a,b) = false) \wedge \left(\varphi_{\sigma} = true\right)
+        (M,\vec v) \vDash (C(a,b) = false) \wedge \varphi_{\sigma}
     \end{align*}
     Now let's add a conflict between $a$ and $b$ so we manually set
     $C(a,b) = true$.
@@ -986,32 +987,34 @@ We define $F_{\varphi_{\sigma}}$ as follows:
         \e \vdash i, \e \vdash o
     \end{align*}
     Then we can achieve a configuration $\sigma = \s{o}$ as a
+    Let $\vec u$ be such that we have:
+    \begin{align*}
+        CE(i,o)      & = false \\
+        ME(\e, i)    & = true  \\
+        ME(\e, o)    & = true  \\
+        ME(\s{i}, o) & = false \\
+        ME(\s{o}, i) & = false \\
+    \end{align*}
     counterexample.
     We have:
     \begin{align*}
-        \varphi_{\sigma} & = E(\e, o) \wedge Con(\s{o})
-        = E(\e, o)
-        \\
-        CE(i,o)          & = false                                             \\
-        ME(\e, i)        & = true                                              \\
-        ME(\e, o)        & = true                                              \\
-        ME(\s{i}, o)     & = false                                             \\
-        ME(\s{o}, i)     & = false                                             \\
-        E(\e, o)         & = M(\e,o) \wedge Con(\e)
-        = M(\e, o)                                                             \\
-        M(\e, o)         & = ME(\e,o) \wedge Min(\e, o)\wedge Con(\e)          \\
-                         & = ME(\e,o) \wedge Min(\e, o)                        \\
+        \varphi_{\sigma} & = E(\e, o) \wedge Con(\s{o}) \\
+        & = E(\e, o) \\
+        E(\e, o)  & = M(\e,o) \wedge Con(\e) \\
+        & = M(\e,o)  \\
+        M(\e, o)  & = ME(\e,o) \wedge Min(\e, o)\wedge Con(\e) \\
+        & = ME(\e,o) \wedge Min(\e, o)                        \\
+        Min(\e, o)       & = \neg M(\s{i},o)                                   \\
         M(\s{i},o)       & = ME(\s{i},o) \wedge Min(\s{i},o) \wedge Con(\s{i}) \\
                          & = ME(\s{i},o) \wedge Min(\s{i},o)                   \\
-        Min(\e, o)       & = \neg M(\s{i},o)                                   \\
         Min(\s{i},o)     & = \neg M(\e,o)
     \end{align*}
     Consider a $\vec v$ where:
     \begin{align*}
-        M(\e, o)      & = true  \\
-        Min(\e, o)    & = true  \\
-        Min(\s{i}, o) & = false \\
-        M(\s{i}, o)   & = false \\
+        (M,\vec v) & \vDash M(\e, o)       = true  \\
+        (M,\vec v) & \vDash Min(\e, o)     = true  \\
+        (M,\vec v) & \vDash Min(\s{i}, o)  = false \\
+        (M,\vec v) & \vDash M(\s{i}, o)    = false \\
     \end{align*}
     Thus we have:
     \begin{align*}
@@ -1027,7 +1030,7 @@ We define $F_{\varphi_{\sigma}}$ as follows:
     \begin{align*}
         (M,\vec v')\vDash M(\s{i},o) = true
         \Rightarrow
-        (M,\vec v) \vDash \neg \varphi_{\sigma}
+        (M,\vec v') \vDash \neg \varphi_{\sigma}
     \end{align*}
     So we have found a solution $\vec v'$ to the equations in
     $M_{M(\s{i},o)\la true}$ in the context $\vec u$ where $\neg \varphi_{\sigma}$ holds.
