@@ -1,9 +1,9 @@
 import itertools
 from copy import deepcopy
-from typing import Set
+from typing import Set, List, FrozenSet
 
-import utils
-from event import Event, SyncedEvent, STAR
+from estrest.src import utils
+from estrest.src.event import Event, SyncedEvent, STAR
 
 
 # noinspection SpellCheckingInspection
@@ -194,6 +194,27 @@ class EventStructure:
 
     def get_labels(self):
         return set(map(lambda x: repr(x.label).replace("\'", ""), self.events))
+
+    # Pre-conditions:
+    # * x is a subset of self.events
+    # * If event e is enabled by the null set, we have:
+    #    enabling[e] = [{}]
+    def is_configuration(self, x: Set[Event]):
+        queue: List[Set[Event]] = [set()]
+        visited: Set[FrozenSet[Event]] = set(frozenset())
+        while queue:
+            conf = queue.pop(0)
+            for e in self.events - conf:
+                conf_new = conf.union({e})
+                if not self.conflict_free(conf_new):
+                    continue
+                for s in self.enabling[e]:
+                    if s.issubset(conf_new):
+                        visited.add(frozenset(conf_new))
+                        queue.append(conf_new)
+                        break
+
+        return frozenset(x) in visited
 
     def __eq__(self, other):
         if not isinstance(other, EventStructure):
