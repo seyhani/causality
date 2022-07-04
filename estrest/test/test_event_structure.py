@@ -1,9 +1,8 @@
 import unittest
 
-from estrest.src.event import Event
-from estrest.src.event_structure import EventStructure
-from estrest.src import ids
-from estrest.src.utils import list_ids
+from event import Event
+from event_structure import EventStructure
+from utils import ids, list_ids
 
 
 class TestEventStructure(unittest.TestCase):
