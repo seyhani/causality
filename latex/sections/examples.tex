@@ -10,11 +10,8 @@
     \end{align*}
     The functions of the causal model are as follows:
     \begin{align*}
-        \f{M(\e,i)}    & = Min(\e,i) \wedge Con(\e)               \\
-                       & = Min(\e,i)                              \\
-                       & = \neg M(\s{o},i)                        \\
-        \f{M(\e,o)}    & = Min(\e,o) \wedge Con(\e)               \\
-                       & = \neg M(\s{i},o)                        \\
+        \f{M(\e,i)}    & = Con(\e) = \T                           \\
+        \f{M(\e,o)}    & = Con(\e) = \T                           \\
         \f{M(\s{i},o)} & = \F                                     \\
         \f{M(\s{o},i)} & = \F                                     \\
         \f{E(\e,i)}    & = M(\e,i) \wedge Con(\e) = M(\e,i)       \\
@@ -27,21 +24,18 @@
         \wedge Con(\s{i})                                         \\
                        & = M(\s{i},o) \vee E(\e,o)                \\
     \end{align*}
+
     Let's consider $\sigma = \s{o}$ as a counterexample.
     We can define $\varphi$ as follows:
     \begin{align*}
         \varphi & = E(\e,o) \wedge Con(\e) \\
                 & = E(\e,o)
     \end{align*}
-    This time, we may consider $M(\s{i},o) = \F$ as a cause of $\varphi$.
-    If we set $M(\s{i},o)$ to true, then $M(\e,o)$ becomes false.
-    This subsequently causes $E(\e,o)$ and finally $\varphi$ become false.
-    Thus we have:
-    \begin{align*}
-        M \vDash [M(\s{i},o) \la \T] \neg \varphi
-    \end{align*}
+    Now we can consider $M(\e,o)$ as a cause of $\varphi$.
+    If we set $M(\e,o)$ to false, then $E(\e,o)$ becomes false and finally
+    $\varphi$ becomes false.
     Since we have considered an empty $\vec W$ and the AC2(a) condition
-    is satisfied, thus $M(\s{i},o) = \F$ is a but-for cause of $\varphi$.
+    is satisfied, thus $M(\e,o) = \F$ is a but-for cause of $\varphi$.
 
 \end{example}
 
@@ -82,28 +76,20 @@
     has not been happened yet.
     Regarding this event structure we have:
     \begin{align*}
-        \f{E(\e,b)}      & = M(\e,b) \wedge Con(\e) = M(\e,b)                                   \\
-        \f{E(\s{b},c)}   & = (M(\s{b},c) \vee E(\e,c)) \wedge Con(\s{b})                        \\
-                         & = M(\s{b},c) \vee E(\e,c)                                            \\
-        \f{E(\e,c)}      & = M(\e,c) \wedge Con(\e)  = M(\e,c)                                  \\
+        \f{E(\e,b)}      & = M(\e,b) \wedge Con(\e) = M(\e,b)               \\
+        \f{E(\s{b},c)}   & = (M(\s{b},c) \vee E(\e,c)) \wedge Con(\s{b})    \\
+                         & = M(\s{b},c) \vee E(\e,c)                        \\
+        \f{E(\e,c)}      & = M(\e,c) \wedge Con(\e)  = M(\e,c)              \\
         \f{E(\s{b,c},i)} & = (M(\s{b,c},i) \vee E(\s{b},i) \vee E(\s{c},i))
-        \wedge Con(\s{b,c})                                                                     \\
-        \f{E(\s{b},i)}   & = (M(\s{b},i) \vee E(\e,i))\wedge Con(\s{b})                         \\
-                         & = M(\s{b},i) \vee E(\e,i)                                            \\
-        \f{E(\s{c},i)}   & = (M(\s{c},i) \vee E(\e,i))\wedge Con(\s{c})                         \\
-                         & = M(\s{c},i) \vee E(\e,i)                                            \\
-        \f{M(\e,b)}      & = Min(\e,b) \wedge Con(\e) = Min(\e,b)                               \\
-        \f{M(\e,c)}      & = Min(\e,c) \wedge Con(\e) = Min(\e,c)                               \\
-        \f{M(\s{b},i)}   & = Min(\s{b},i) \wedge Con(\s{b}) = Min(\s{b},i)                      \\
-        \f{M(\s{c},i)}   & = Min(\s{c},i) \wedge Con(\s{c}) = Min(\s{c},i)                      \\
-        Min(\e,b)        & = \neg (M(\s{i},b) \vee M(\s{a},b) \vee M(\s{c},b) \vee M(\s{i,a},b) \\
-                         & \vee M(\s{i,c},b) \vee M(\s{a,c},b) \vee M(\s{a,c,i},b))             \\
-        Min(\e,c)        & = \neg (M(\s{i},c) \vee M(\s{a},c) \vee M(\s{c},c) \vee M(\s{i,a},c) \\
-                         & \vee M(\s{i,c},c) \vee M(\s{a,c},c) \vee M(\s{a,c,i},c))             \\
-        Min(\s{b},i)     & = \neg (M(\e,i)\vee M(\s{a,b},i) \vee M(\s{c,b},i)
-        \vee M(\s{a,b,c},i))                                                                    \\
-        Min(\s{c},i)     & = \neg (M(\e,i)\vee M(\s{a,c},i) \vee M(\s{b,c},i)
-        \vee M(\s{a,b,c},i))                                                                    \\
+        \wedge Con(\s{b,c})                                                 \\
+        \f{E(\s{b},i)}   & = (M(\s{b},i) \vee E(\e,i))\wedge Con(\s{b})     \\
+                         & = M(\s{b},i) \vee E(\e,i)                        \\
+        \f{E(\s{c},i)}   & = (M(\s{c},i) \vee E(\e,i))\wedge Con(\s{c})     \\
+                         & = M(\s{c},i) \vee E(\e,i)                        \\
+        \f{M(\e,b)}      & =  Con(\e) =  \T                                 \\
+        \f{M(\e,c)}      & = Con(\e) = \T                                   \\
+        \f{M(\s{b},i)}   & = Con(\s{b}) =  \T                               \\
+        \f{M(\s{c},i)}   & = Con(\s{c}) =  \T                               \\
     \end{align*}
     Let $\pi = b,c,i$ be a permutation of $\sigma$, we have:
     \begin{align*}
@@ -112,42 +98,85 @@
         \wedge Con(\sigma)                            \\
         \varphi       & = \varphi_{\pi} \vee \varphi'
     \end{align*}
-    This time, we can declare $M(\s{a,b},i) = \F$ as a cause of $\varphi$.
-    Let $(M(\s{c},i),\F,\T)$ be the witness.
+    Here we can declare $M(\s{b},i) = \T$ as a cause of $\varphi$.
+    Let $(M(\s{c},i),\F,\F)$ be the witness.
     We need to verify the following conditions:
     \begin{itemize}
-        \item AC1:  $\m \vDash M(\s{a,b},i) = \F \wedge \varphi$
-        \item AC2(a): $\m\vDash [M(\s{a,b},i)\la \T,M(\s{c},i)\leftarrow \F] \neg \varphi$
+        \item AC1:  $\m \vDash M(\s{b},i) = \T \wedge \varphi$
+        \item AC2(a): $\m\vDash [M(\s{b},i)\la \F,M(\s{c},i)\leftarrow \F] \neg \varphi$
         \item AC2(b): $\m \vDash [\vec W' \la \vec w', \vec Z' \la \vec z^* ]\varphi$
               for all subsets
               $\vec W'$ of $\vec W$ and $\vec Z'$ of $\vec Z$.
     \end{itemize}
-    Regarding the definition of functions for the $M_{k,i}$ variables,
-    each variable $M_{k,i}$ is constantly false (until being intervened)
-    if $s_k \not \vdash_{min} i$.
-    Thus we have:
+    For verifying the AC2(a) condition notice that setting $M(\s{b},i)$ and
+    $M(\s{c},i)$ to false results in $E(\s{b},i)$ and $E(\s{c},i)$ become false.
+    Now, since $M(\s{b,c},i)$ is false too, all three terms of the first
+    conjunction of $\f{E(\s{b,c},i)}$ are false so $E(\s{b,c},i)$ becomes false.
+    We can finally conclude that $\varphi$ becomes false too.
+    To verify the AC2(b) condition, first we need to set $M(\s{c},i)$ to false.
+    This setting has no effect on $E(\e,b)$, $E(\s{b},c)$ and $E(\s{b},i)$.
+    Also note that $E(\s{b},i)$ is true in the actual context, it remains
+    true by setting any $\vec Z'$ to $\vec z^*$.
+    Thus, the disjunction of $E(\s{b,c},i)$ has a true value and thus it
+    remains true even if we set $E(\s{c},i)$ to false.
+    So $\varphi$ remains true and AC2(b) is satisfied.
+\end{example}
+
+\begin{example}
+    Consider the following network.
+    We wish to forward traffic from $a$ to $b$ and $x$ to $y$.
+    But we also want to limit the traffic on the link 3 so at any moment
+    there must be at most one packet traversing this link.
+    \begin{center}
+        \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
+            \node[main] (s1) {$s_1$};
+            \node[main] (s2) [below of=s1] {$s_2$};
+            \node[main] (a) [above left of=s1]{$a$};
+            \node[main] (x) [above right of=s1]{$x$};
+            \node[main] (b) [below left of=s2]{$b$};
+            \node[main] (y) [below right of=s2]{$y$};
+            \draw (a) --  node[above]{1} (s1);
+            \draw (x) --  node[above]{2}(s1);
+            \draw (s1) --  node[right]{3}(s2);
+            \draw (b) --  node[above]{4}(s2);
+            \draw (y) --  node[above]{5}(s2);
+        \end{tikzpicture}
+    \end{center}
+    We define events $a,x,b,y$ representing the forwarding of a packet from
+    1 to 3, 2 to 3, 3 to 4, and 3 to 5 respectively.
+    We define an event $c$ when congestion is detected on link 3 (at least two packets are being traversed through the).
+    Thus, we define the conflict relation in such a way that we have:
     \begin{align*}
-        M & \vDash E(\e, b) = \T       \\
-        M & \vDash E(\e, c) = \T       \\
-        M & \vDash E(\s{b},c) = \T     \\
-        M & \vDash E(\s{b},i ) = \T    \\
-        M & \vDash E(\s{c},i ) = \T    \\
-        M & \vDash E(\s{b,c},i) = \T   \\
-        M & \vDash Con(\s{b,c,i}) = \T \\
-        M & \vDash \varphi_{\pi}       \\
-        M & \vDash \varphi
+        a \# y, x\# b
     \end{align*}
-    Now we set $M(\s{a,b},i)$ to true and $M(\s{c},i)$ to false.
-    Setting $M(\s{c},i)$ to false causes $E(\s{c},i)$ to be false.
-    Setting $M(\s{a,b},i)$ to false causes $Min(\s{b},i)$ to false
-    and subsequently $M(\s{b},i)$ and $E(\s{b},i)$ become false.
-    Now, since all three terms in the first conjunction of the $\f{E(\s{b,c},i)}$
-    so $E(\s{b,c},i)$ becomes false and this results in $\varphi$ become false.
-    To verify AC2(b), assume that we have set $M(\s{c},i)$ to false.
-    This makes $E(\s{c},i)$ false.
-    But, since $\f{E(\s{b,c},i)}$ includes the term
-    $E(\s{b},i) \vee E(\s{c},i)$ and $E(\s{b},i)$ is true, regardless
-    of the value of $M(\s{c},i)$, thus changing $M(\s{c},i)$ has
-    no effect on $(E(\s{b,c},i))$ and thus does not affect
-    the value of $\varphi$, so AC2(b) is satisfied.
+    We consider an enabling relation the least one for which we have:
+    \begin{align*}
+        \e \vdash a, \e \vdash x, \s{a} \vdash b, \s{x} \vdash y,
+        \s{a,x} \vdash c
+    \end{align*}
+    The functions of the causal model are as follows:
+    \begin{align*}
+        \f{M(\e,a)}      & = Con(\e) = \T                     \\
+        \f{M(\e,x)}      & = Con(\e) = \T                     \\
+        \f{M(\s{a},b)}   & = Con(\s{a}) = \T                  \\
+        \f{M(\s{x},y)}   & = Con(\s{x}) = \T                  \\
+        \f{M(\s{a,x},c)} & = Con(\s{a,x})                     \\
+        \varphi_{\pi}    & = E(\e,a) \wedge E(\s{a},x) \wedge
+        E(\s{a,x},c) \wedge Con(\s{a,x,c})                    \\
+        \f{E(\e,a)}      & = M(\e,a) \wedge Con(\e) = M(\e,a) \\
+        \f{E{\s{a},x}}   & = (M(\s{a},x) \vee E(\e,x) )
+        \wedge Con(\s{a})                                     \\
+                         & = M(\s{a},x) \vee E(\e,x)          \\
+        \f{E(\s{a,x},c)} & = (M(\s{a,x},c) \vee E(\s{a},c)
+        \vee E(\s{x},c)) \wedge Con(\s{a,x})                  \\
+        \f{E(\s{a},x)}   & = (M(\s{a},x) \vee E(\e,x))
+        \wedge Con(\s{a})                                     \\
+                         & = M(\s{a},x) \vee E(\e,x)          \\
+    \end{align*}
+    In this example, we may introduce $M(\e,x) = \T$ as a cause of $\varphi$.
+    Assume that we set $M(\e,x)$ to false.
+    This causes $E(\e,x)$ to become false which cause $E(\s{a},x)$ become false.
+    Finally, $E(\s{a},x)$ becoming false causes $\varphi$ to become false.
+    Since we have used an empty $\vec W$, and we have satisfied the AC2(a)
+    condition, so $M(\e,x) = \T$ is a but-for cause of $\varphi$.
 \end{example}
