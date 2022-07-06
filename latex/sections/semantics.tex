@@ -1,0 +1,276 @@
+One use of event structure is to give denotational semantics of the language of parallel
+processes that reflect the parallelism in processes as causal independence between events.
+The nature of the events, how they interact with the environment,
+is specified in the language by associating each event with a label from the synchronization
+algebra $L$.
+The language we shall use is one where processes communicate by events of synchronization
+with no value passing.
+Its syntax has the form:
+\begin{align*}
+    p ::= nil | \alpha p | p_0 + p_1 | p_0 \times p_1 | p\lceil \Lambda | p[\Xi] | x | recx.p
+\end{align*}
+where $x$ is in some set of variables $X$ over processes, $\alpha$ is a label,
+$\Lambda$ is a subset of labels, in $p[\Xi]$ the symbol $\Xi$ denotes a relabelling function between
+two sets of labels.
+
+Informally, the product $p_0 \times p_1$ is a form of parallel composition which introduces
+arbitrary events of synchronization between processes.
+Unwanted synchronizations can be restricted away with the help of the restriction operation
+$p\lceil \Lambda$ and the existing events renamed with the relabelling operation $p[\Xi]$.
+So in this way, we can define specialized parallel compositions of the kind that appear in
+CCS and CSP, for example.
+To explain formally the behavior of the constructs in the language we describe them as
+constructions on labeled event structures, so a closed process term in this language is to
+denote a \textbf{stable event structure} but where the events are labeled.
+
+\subsection{Nil}
+The term $nil$ represents the $nil$ process that has stopped and refuses to perform any event;
+it will denoted by the empty labelled event structure $(\emptyset,\emptyset,\emptyset,\emptyset,\emptyset)$
+no events, no labels.
+
+\subsection{Prefix}
+
+\begin{definition}
+    Let $(\mathcal{E},L,l)$ be a labelled event structure.
+    Let $\alpha$ be a label.
+    Define $\alpha(\mathcal{E},L,l)$ to be a labelled event structure $(\alpha \mathcal{E},L',l')$
+    with labels:
+    \begin{align*}
+        L' = \s{\alpha} \cup L
+    \end{align*}
+    and
+    $$
+        l'(e') = \begin{cases}
+            \alpha & \text{if } e' = (0,\alpha) \\
+            l(e)   & \text{if } e' = (1,e)
+        \end{cases}
+    $$
+    for all $e' \in \mathcal{E'}$.
+\end{definition}
+The configurations of $\alpha E$, a prefixed labeled event structure,
+have the simple and expected characterization.
+(By $\mathcal{F}(E)$ of a labeled event structure $E$ we shall understand the set
+of configurations of the underlying event structure)
+
+\begin{proposition}
+
+    Let $E$ be a labelled event structure. Let $\alpha$ be a label.
+    \begin{align*}
+        x \in \mathcal{F}(\alpha E) \iff x = \emptyset \text{ or }
+        [(0,\alpha)\in x \amp \s{e | (1,e)\in x} \in \mathcal{F}(E)]
+    \end{align*}
+
+\end{proposition}
+
+\subsection{Sum}
+A sum $p_0 + p_1$ behaves like $p_0$ or $p_1$; which branch of a sum is followed will
+often be determined by the context and what kinds of events the process is restricted to.
+
+\begin{definition}
+    Let $E_0 = (\mathcal{E}_0,\#_0,\vdash_0,L_0,l_0)$ and
+    $E_1 = (\mathcal{E}_1,\#_1,\vdash_1,L_1,l_1)$ be labelled event structures.
+    Their sum $E_0 + E_1$, is defined to be the structure $(\mathcal{E},\#,\vdash,l)$
+    with events $\mathcal{E} = \s{(0,e)|e \in \mathcal{E}_0} \cup \s{(1,e)|e \in \mathcal{E}_1}$,
+    the disjoint union of sets $\mathcal{E}_0$ and $\mathcal{E}_1$,
+    with injections $\iota_k: \mathcal{E}_k \rightarrow \mathcal{E}$, given by
+    $\iota_k(e) = (k,e)$, for $k=0,1$, conflict relation
+    \begin{align*}
+        e \# e' \iff & \exists e_0,e_0'. e = \iota_0(e_0)
+        \amp e' = \iota_0(e_0') \amp e_0 \#_0e_0'                         \\
+                     & \text{or } \exists e_1,e_1'. e = \iota_1(e_1) \amp
+        e' = \iota_1(e_1') \amp e_1 \#_1 e_1'                             \\
+                     & \text{or } \exists e_0,e_1.(e=\iota_1(e_0)
+        \amp e' =\iota_1(e_1)) \text{ or }
+        (e'=\iota_1(e_0) \amp e =\iota_1(e_1))
+    \end{align*}
+    and enabling relation
+    \begin{align*}
+        X \vdash e \iff & X \in Con \amp e \in \mathcal{E} \amp                       & \\
+                        & (\exists X_0 \in Con_0,e_0 \in \mathcal{E}_0.X = \iota_0X_0
+        \amp e = \iota_0(e_0) \amp X_0 \vdash_0 e_0) \text{ or }                        \\
+                        & (\exists X_1 \in Con_1,e_1 \in \mathcal{E}_1.X = \iota_1X_1
+        \amp e = \iota_1(e_1) \amp X_1 \vdash_1 e_1)                                    \\
+    \end{align*}
+    We define the set of labels as $L_0 \cup L_1$ and the labelling function as:
+    $$
+        l(e) = \begin{cases}
+            l_0(e_0) & \text{ if } e = \iota_0(e_0) \\
+            l_1(e_1) & \text{ if } e = \iota_1(e_1)
+        \end{cases}
+    $$
+\end{definition}
+The configurations of a sum are obtained from copies of the configurations of the components
+identified at their empty configurations.
+
+\begin{proposition}
+
+    Let $E_0$ and $E_1$ be labelled event structures.
+    \begin{align*}
+        x \in \mathcal{F}(E_0+E_1) \iff (\exists x_0 \in \mathcal{F}(E_0).x=\iota_0x_0)
+        \text{ or } (\exists x_1 \in \mathcal{F}(E_1).x=\iota_1x_1)
+    \end{align*}
+
+\end{proposition}
+
+\subsection{Product}
+
+A product process $p_0 \times p_1$ behaves like $p_0$ and $p_1$ set in parallel.
+Their events of synchronization are those pairs of events $(e_0,e_1)$, one from each process;
+if $e_0$ is labelled $\alpha_0$ and $e_1$ is labelled $\alpha_1$ the synchronization event is
+then labelled $(\alpha_0,\alpha_1)$.
+Events need not synchronize however; an event in one component may not synchronize with
+any event in the other.
+We shall use events of the form $(e_0,*)$ to stand for the occurrence of an event $e_0$
+from one component unsynchronized with any event of the other.
+Such an event will be labeled by $(\alpha_0,*)$ where $\alpha_0$ is the original label of $e_0$
+and * is a sort of undefined.
+
+In fact we shall often want to take the first or second coordinates of such paris and,
+of course, this could give the value * which we think of as undefined,
+so that, in effect, we are working with partial functions with * understood to be undefined.
+We can keep expressions tidier by adopting some conventions about how to treat this undefined value
+when it appears in expressions and assertions.
+\begin{align*}
+     & \Theta(e) \in X \Rightarrow \Theta(e) \text{is defined, and }                                      \\
+     & \Theta(e) = \Theta(e') \Rightarrow \Theta(e) \text{is defined } \amp \Theta(e')\text{ is defined}.
+\end{align*}
+We adopt a similar strict interpretation for function application.
+So if $f$ is a function applied to some value, denoted by $a$, the $f(a)$ is undefined (gives *)
+if $a$ is undefined.
+As usual we represent the image of a set under a partial function by
+\begin{align*}
+    \Theta X = \s{\Theta(e)|e \in X \amp \Theta(e) \text{ is defined}}
+\end{align*}
+
+\begin{definition}
+
+    Let $E_0 = (\mathcal{E}_0,\#_0,\vdash_0,L_0,l_0)$ and $E_1 = (\mathcal{E}_1,\#_1,\vdash_1,L_1,l_1)$
+    be labelled event structures.
+    Define their product $E_0 \times E_1$ to be the structure $E = (\mathcal{E},\#,\vdash,L,l)$
+    consisting of events $\mathcal{E}$ of the form
+    \begin{align*}
+        \mathcal{E}_0 \times_* \mathcal{E}_1 =
+        \s{(e_0,*)|e_0 \in \mathcal{E}_0}
+        \cup \s{(*,e_1)|e_1 \in \mathcal{E}_1}
+        \cup \s{(e_0,e_1)| e_0 \in \mathcal{E}_0 \amp e_1 \in \mathcal{E}_1}
+    \end{align*}
+    with projections $\pi_i : \mathcal{E} \rightarrow_* \mathcal{E}_i$,
+    given by $\pi_i(e_0,e_1) = e_i$, for $i=0,1$, reflexive conflict relation $\doublevee$ given by
+    \begin{align*}
+        e \doublevee e' \iff \pi_0(e) \doublevee_0 \pi_0(e') \text{ or }
+        \pi_1(e) \doublevee_1 \pi_1(e')
+    \end{align*}
+    for all $e,e'$ we use $Con$ for the conflict-free finite sets,
+    enabling relation $\vdash$ given by
+    \begin{align*}
+         & X \vdash e \iff X \in Con \amp e \in \mathcal{E} \amp            \\
+         & (\pi_0(e)\text{ is defined } \Rightarrow \pi_0X\vdash_0\pi_0(e))
+        \amp (\pi_1(e)\text{ is defined } \Rightarrow \pi_1X\vdash_1\pi_1(e))
+    \end{align*}
+    Its set of labels is
+    \begin{align*}
+        L_0 \times_* L_1 = \s{ (\alpha_0,*)|\alpha_0 \in L_0}
+        \cup \s{(*,\alpha_1)|\alpha_1 \in L_1}
+        \cup \s{(\alpha_0,\alpha_1)|\alpha_0 \in L_0 \amp \alpha_1 \in L_1}
+    \end{align*}
+    with projections: $\lambda_i: \mathcal{E} \rightarrow_* \mathcal{E}_i$ given by
+    $\lambda_i(\alpha_0,\alpha_1) = \alpha_i$, for $i=0,1$.
+    Its labelling function is defined to act on an event $e$ so
+    \begin{align*}
+        l(e) = (l_0\pi_0(e),l_1\pi_1(e))
+    \end{align*}
+\end{definition}
+We characterize the configurations of the product of two event structures in terms
+of their configurations.
+
+\begin{proposition}
+
+    Let $E_0 \times E_1$ be the product of labelled event structures with projections
+    $\pi_0,\pi_1$.
+    Let $x \subseteq \mathcal{E}_0 \times \mathcal{E}_1$, the events of the product.
+    Then $x \in \mathcal{F}(\mathcal{E}_0 \times \mathcal{E}_1)$ iff
+    \begin{align*}
+         & \pi_0(x)  \in \mathcal{F}(E_0) \amp \pi_1x \in \mathcal{F}(E_1)                                      \\
+         & \forall e,e' \in x.\pi_0(e)=\pi_0(e') \text{ or } \pi_1(e) = \pi_1(e') \Rightarrow e = e'            \\
+         & \forall e \in x \exists y \subseteq x. \pi_0 y \in \mathcal{F}(E_0) \amp \pi_1y \in \mathcal{F}(E_1)
+        \amp e \in y \amp |y| < \text{infinite}                                                                 \\
+         & \forall e,e' in x. e \neq e' \Rightarrow \exists y \subseteq x.\pi_0 y \in \mathcal{F}(E_0)
+        \amp \pi_1y \in \mathcal{F}(E_1) \amp (e \in y \iff e' \not \in y)
+    \end{align*}
+\end{proposition}
+The Proposition above expresses the intuition that an allowable behavior of the product
+of two processes is precisely that which projects to allowable behaviors in the component
+processes.
+The complicated-looking conditions (c) and (d) are there just to ensure that the family
+of sets is finitary and coincidence-free.
+
+\subsection{Restriction}
+
+The restriction $t \lceil \Lambda$ behaves like the process $p$ but with its events
+restricted to those with labels that lie in the set $\Lambda$.
+
+\begin{definition}
+
+    Let $E = (\mathcal{E},\#,\vdash,L,l)$ be a labelled event structure.
+    Let $\Lambda$ be a subset of labels.
+    Define the restriction $E\lceil \Lambda$ to be $(\mathcal{E'},\#',\vdash',L\cap \Lambda,l')$
+    where $(\mathcal{E'},\#',\vdash')$ is the restriction of $(\mathcal{E},\#,\vdash)$
+    to events $\s{e \in \mathcal{E}|l(e) \in \Lambda}$ and the labelling function $l'$
+    is the restriction of the original labelling function to the domain $L \cap \Lambda$.
+
+\end{definition}
+
+\begin{proposition}
+
+    Let $E = (\mathcal{E},\#,\vdash,L,l)$ be a labelled event structure.
+    Let $\Lambda \subseteq L$.
+    \begin{align*}
+        x \in \mathcal{F}(E\lceil\Lambda) \iff x \in \mathcal{F}(E) \amp e \in x.l(e) \in \Lambda
+    \end{align*}
+
+\end{proposition}
+
+\subsection{Relabelling}
+
+A relabelled process $p[\Xi]$ behaves like $p$ but with the events relabelled according to $\Xi$.
+
+\begin{definition}
+
+    Let $E = (\mathcal{E},\#,\vdash,L,l)$ be a labelled event structure.
+    Let $\Lambda,L'$ be sets of labels and $\Xi: \Lambda \rightarrow L'$.
+    Define the relabelling $E[\Xi]$ to be $(\mathcal{E},\#,\vdash,L',l')$ where
+    $$
+        l'(e) = \begin{cases}
+            \Xi l(e) & \text{if } l(e) \in \Lambda \\
+            l(e)     & \text{otherwise}
+        \end{cases}
+    $$
+
+\end{definition}
+\subsection{Denotational Semantics}
+
+\begin{definition}
+    Define an environment for process variables to be a function $\rho$
+    from process variables $X$ to labeled event structures.
+    For a term $t$ and environment $\rho$, define the denotation of $t$ with
+    respect to $\rho$ written $\llbracket t \rrbracket \rho$ by the following
+    structural induction syntactic operators appear on the left and their
+    semantics counterparts on the right.
+    \begin{equation*}
+        \begin{aligned}[c]
+            \sem{nil}\rho       & = (\emptyset,\emptyset)         \\
+            \sem{x}\rho         & = \rho(x)                       \\
+            \sem{\alpha t}\rho  & = \alpha(\sem{t}\rho)           \\
+            \sem{t_1 + t_2}\rho & = \sem{t_1}\rho + \sem{t_2}\rho \\
+        \end{aligned}
+        \qquad
+        \begin{aligned}[c]
+            \sem{t\lceil \Lambda}\rho & = \sem{t}\rho \lceil \Lambda         \\
+            \sem{t[\Xi]}\rho          & = \sem{t}\rho[\Xi]                   \\
+            \sem{t_1 \times t_2}\rho  & = \sem{t_1}\rho \times \sem{t_2}\rho \\
+            \sem{recx.t}\rho          & = fix\Gamma                          \\
+        \end{aligned}
+    \end{equation*}
+    where $\Gamma$ is an operation on labelled event structures given by
+    $\Gamma(E) = \sem{t}\rho[E / x]$ and $fix$ is the least-fixed-point operator.
+\end{definition}

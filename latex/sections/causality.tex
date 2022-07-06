@@ -1,0 +1,98 @@
+Let $E = (\mathcal{E},\#,\vdash,l,L)$ be an event structure with
+$\mathcal{E} = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $\mathcal{E}$ where $p = 2^n$.
+Without the loss of generality let $\sigma = \s{e_1,e_2,...,e_m}$ be a configuration of $E$ that
+has been given as a counterexample.
+To find the cause of this counterexample, first we construct an extended causal model $M = (\mathcal{S},\mathcal{F},\psi)$.
+To define the signature $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$, we assume that all variables in $\mathcal{U} \cup \mathcal{V}$ as a boolean variable.
+Next, we define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
+\begin{align*}
+    \mathcal{V} = & \s{C_{i,j} | \forall 1 \leq i < j \leq n. e_i \in \mathcal{E} \amp e_j \in \mathcal{E}}                    \\
+                  & \cup \s{E_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
+                  & \cup \s{M_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
+\end{align*}
+We define $\psi$ such that we can prevent invalid settings of variables:
+\begin{align*}
+    \psi(\vec v) = & \forall_{k,i}.
+    \left(
+    M_{k,i} \Rightarrow E_{k,i}
+    \right)
+    \wedge
+    \left(
+    E_{k,i} \Rightarrow Con(k)
+    \right)
+    \\
+                   & \wedge \left(E_{k,i} \Rightarrow
+    \forall k'. (s_k \subset s_{k'} \wedge Con(k')) \Rightarrow E_{k',i}
+    \right)                                           \\
+                   & \wedge \left(
+    M_{k,i} \Rightarrow \forall k'.
+    (s_{k'} \subset s_k) \Rightarrow \neg M_{k',i}
+    \right)
+\end{align*}
+For $x,y \in \mathcal{P}(\mathcal{E})$ we say $y$ is covered by $x$ written $ x \prec y$ iff:
+\begin{align*}
+    x \subseteq y \amp x \neq y \amp
+    (\forall z. x \subseteq z \subseteq y \Rightarrow x = z
+    \text{ or } y = z)
+\end{align*}
+For each variable $x \in \mathcal{V}$ we define $\vec V_x$ as a vector
+of all variables in $\mathcal{V}$ excluding $x$.
+Since $\mathcal{U} = \emptyset$ we omit $\vec u$ from the
+signature of methods in $\mathcal{F}$.
+We define the functions in $\mathcal{F}$ as follows:
+\begin{align*}
+    Con(k) & =   \left(
+    \bigwedge_{\forall j,j'. j<j' \amp e_j,e_{j'} \in s_k}
+    \neg C_{j,j'}
+    \right)             \\
+\end{align*}
+$$
+    F_{C_{i,j}}(\vec V_{C_{i,j}}) = \begin{cases}
+        true  & \text{ if } e_i \# e_j \amp e_j \# e_i \\
+        false & \text{ otherwise }
+    \end{cases}
+$$
+$$
+    F_{M_{k,i}}(\vec V_{M_{k,i}}) = \begin{cases}
+        Con(k) & \text{ if } s_k \vdash_{min} e_i \\
+        false  & \text{ otherwise }
+    \end{cases}
+$$
+\begin{align*}
+    F_{E_{k,i}}(\vec V_{E_{k,i}}) & =
+    \left(
+    M_{k,i} \vee
+    \left(
+    \bigvee_{\forall l. s_l  \prec s_k}E_{l,i}
+    \right)
+    \right)
+    \bigwedge
+    Con(k)
+\end{align*}
+We also define the following auxiliary functions:
+\begin{align*}
+    C(e,e') = C_{i,j}    & \iff e = e_i \wedge e' = e_j \\
+    M(s,e)  = M_{k,i}    & \iff s = s_k \wedge e = e_i  \\
+    E(s,e)  = E_{k,i}    & \iff s = s_k \wedge e = e_i  \\
+    Con(e,e') = Con(i,j) & \iff e = e_i \wedge e' = e_j \\
+\end{align*}
+With this causal model in hand, we define $\varphi_{\sigma}$ to represent whether $\sigma$ is a configuration of $E$.
+To do this we need to encode the conflict-free and secured conditions in the definition \ref{conf}.
+Let the sequence $\pi = e_{i_1},e_{i_2},...,e_{i_m}$ be a
+permutation of events in $\sigma$ and $\Pi$ be the set of
+all permutations of $\sigma$.
+Let $\Pi = \s{\pi_1,\pi_2,...,\pi_o}$ be the set of
+all permutations of events in $\sigma$.
+We define:
+\begin{align*}
+    \varphi_{\pi} = E(\e,e_{i_1}) \wedge
+    E(\s{e_{i_1},e_{i_2}}) \dots
+    \wedge E(\s{e_{i_1},e_{i_2},...,e_{i_{m-1}}},e_{i_m}) \wedge Con(\sigma)
+\end{align*}
+We define $\varphi$ as follows:
+\begin{align*}
+    \varphi = \bigvee_{\forall \pi_i \in \Pi}\varphi_{\pi_i}
+\end{align*}
+\pagebreak
+\subsection{Examples}
+\input{sections/examples}
