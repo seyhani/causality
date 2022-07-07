@@ -24,18 +24,19 @@
         \wedge Con(\s{i})                                         \\
                        & = M(\s{i},o) \vee E(\e,o)                \\
     \end{align*}
-
-    Let's consider $\sigma = \s{o}$ as a counterexample.
-    We can define $\varphi$ as follows:
+    Considering $\sigma = \s{o}$ as a counterexample, we can define $\varphi$ as follows:
     \begin{align*}
-        \varphi & = E(\e,o) \wedge Con(\e) \\
+        \varphi & = E(\e,o) \wedge Con(\s{o}) \\
                 & = E(\e,o)
     \end{align*}
-    Now we can consider $M(\e,o)$ as a cause of $\varphi$.
-    If we set $M(\e,o)$ to false, then $E(\e,o)$ becomes false and finally
-    $\varphi$ becomes false.
+    Now we can consider $M(\e,o) = \T$ as a cause of $\varphi$.
+    If we set $M(\e,o)$ to false, then $E(\e,o)$ becomes false
+    and then $\varphi$ becomes false.
+    \begin{align*}
+        \m \vDash [M(\e,o)\la \F] \neg \varphi
+    \end{align*}
     Since we have considered an empty $\vec W$ and the AC2(a) condition
-    is satisfied, thus $M(\e,o) = \F$ is a but-for cause of $\varphi$.
+    is satisfied, thus $M(\e,o) = \T$ is a but-for cause of $\varphi$.
 
 \end{example}
 
@@ -43,10 +44,10 @@
     Consider the following network where we have
     a stateful firewall on the switch $s$.
     Initially, we allow outgoing packets from $a$ and
-    block all incoming packets from $b$ or $c$.
+    block all incoming packets from either $b$ or $c$.
     Assume that packets from $a$ are broadcasted to
-    both $a$ and $b$ and we wish to allow traffic
-    from $b$ or $c$ toward $a$ afterward.
+    both $b$ and $c$ and we wish to allow traffic
+    from both of them afterward.
     \begin{center}
         \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
             \node[main] (s) {$s$};
@@ -68,14 +69,18 @@
     We consider an empty conflict relation and enabling
     relation the least one for which we have:
     \begin{align*}
-        \e \vdash b, \e \vdash c,
+        \e \vdash a,\e \vdash b, \e \vdash c,
         \s{b} \vdash i, \s{c} \vdash i
     \end{align*}
-    So, the configuration $\sigma = \s{b,c,i}$ is a
-    counterexample since $i$ is happened while $a$
-    has not been happened yet.
+    We may consider the configuration $\sigma = \s{b,c,i}$ as a
+    counterexample since $i$ is happened while $a$ has not been happened yet.
     Regarding this event structure we have:
     \begin{align*}
+        \f{M(\e,a)}      & = Con(\e) =  \T                                  \\
+        \f{M(\e,b)}      & = Con(\e) =  \T                                  \\
+        \f{M(\e,c)}      & = Con(\e) = \T                                   \\
+        \f{M(\s{b},i)}   & = Con(\s{b}) =  \T                               \\
+        \f{M(\s{c},i)}   & = Con(\s{c}) =  \T                               \\
         \f{E(\e,b)}      & = M(\e,b) \wedge Con(\e) = M(\e,b)               \\
         \f{E(\s{b},c)}   & = (M(\s{b},c) \vee E(\e,c)) \wedge Con(\s{b})    \\
                          & = M(\s{b},c) \vee E(\e,c)                        \\
@@ -86,10 +91,6 @@
                          & = M(\s{b},i) \vee E(\e,i)                        \\
         \f{E(\s{c},i)}   & = (M(\s{c},i) \vee E(\e,i))\wedge Con(\s{c})     \\
                          & = M(\s{c},i) \vee E(\e,i)                        \\
-        \f{M(\e,b)}      & =  Con(\e) =  \T                                 \\
-        \f{M(\e,c)}      & = Con(\e) = \T                                   \\
-        \f{M(\s{b},i)}   & = Con(\s{b}) =  \T                               \\
-        \f{M(\s{c},i)}   & = Con(\s{c}) =  \T                               \\
     \end{align*}
     Let $\pi = b,c,i$ be a permutation of $\sigma$, we have:
     \begin{align*}
@@ -108,24 +109,32 @@
               for all subsets
               $\vec W'$ of $\vec W$ and $\vec Z'$ of $\vec Z$.
     \end{itemize}
-    For verifying the AC2(a) condition notice that setting $M(\s{b},i)$ and
-    $M(\s{c},i)$ to false results in $E(\s{b},i)$ and $E(\s{c},i)$ become false.
+    First, observe that since $M(\e,b)$ is true thus $E(\e,b)$ is true.
+    Also, since $M(\e,c)$ is true, so $E(\s{b},c)$ is true too.
+    Finally, $M(\s{b},i)$ and subsequently $E(\s{b},i)$ is true which makes
+    $E(\s{b,c},i)$ true.
+    So we can conclude that $\varphi$ is true in the actual context and
+    AC1 is satisfied.
+
+    For verifying the AC2(a) condition notice that setting both of
+    $M(\s{b},i)$ and $M(\s{c},i)$ to false results in
+    $E(\s{b},i)$ and $E(\s{c},i)$ become false.
     Now, since $M(\s{b,c},i)$ is false too, all three terms of the first
     conjunction of $\f{E(\s{b,c},i)}$ are false so $E(\s{b,c},i)$ becomes false.
     We can finally conclude that $\varphi$ becomes false too.
     To verify the AC2(b) condition, first we need to set $M(\s{c},i)$ to false.
     This setting has no effect on $E(\e,b)$, $E(\s{b},c)$ and $E(\s{b},i)$.
-    Also note that $E(\s{b},i)$ is true in the actual context, it remains
-    true by setting any $\vec Z'$ to $\vec z^*$.
+    Also note that $E(\s{b},i)$ is true in the actual context and it is
+    not affected by $M(\s{c},i)$, so it remains true by setting
+    any $\vec Z'$ to $\vec z^*$.
     Thus, the disjunction of $E(\s{b,c},i)$ has a true value and thus it
     remains true even if we set $E(\s{c},i)$ to false.
-    So $\varphi$ remains true and AC2(b) is satisfied.
+    We can conclude that $\varphi$ remains true and AC2(b) is satisfied.
 \end{example}
 
 \begin{example}
-    Consider the following network.
-    We wish to forward traffic from $a$ to $b$ and $x$ to $y$.
-    But we also want to limit the traffic on the link 3 so at any moment
+    Consider the following network where wish to forward traffic from $a$ to $b$ and $x$ to $y$.
+    But, we also want to limit the traffic on the link 3 so that at any moment
     there must be at most one packet traversing this link.
     \begin{center}
         \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
@@ -144,8 +153,8 @@
     \end{center}
     We define events $a,x,b,y$ representing the forwarding of a packet from
     1 to 3, 2 to 3, 3 to 4, and 3 to 5 respectively.
-    We define an event $c$ when congestion is detected on link 3 (at least two packets are being traversed through the).
-    Thus, we define the conflict relation in such a way that we have:
+    We define an event $c$ when congestion is detected on link 3 (at least two packets are being traversed through the link).
+    We define the conflict relation in such a way that we have:
     \begin{align*}
         a \# y, x\# b
     \end{align*}
@@ -154,6 +163,7 @@
         \e \vdash a, \e \vdash x, \s{a} \vdash b, \s{x} \vdash y,
         \s{a,x} \vdash c
     \end{align*}
+    Now, consider $\sigma = \s{a,x,c}$ as a counterexample.
     The functions of the causal model are as follows:
     \begin{align*}
         \f{M(\e,a)}      & = Con(\e) = \T                     \\
@@ -164,19 +174,22 @@
         \varphi_{\pi}    & = E(\e,a) \wedge E(\s{a},x) \wedge
         E(\s{a,x},c) \wedge Con(\s{a,x,c})                    \\
         \f{E(\e,a)}      & = M(\e,a) \wedge Con(\e) = M(\e,a) \\
-        \f{E{\s{a},x}}   & = (M(\s{a},x) \vee E(\e,x) )
+        \f{E(\s{a},x)}   & = (M(\s{a},x) \vee E(\e,x) )
         \wedge Con(\s{a})                                     \\
-                         & = M(\s{a},x) \vee E(\e,x)          \\
+        \f{E(\e,x)}      & = M(\e,x) \wedge Con(\e) = M(\e,x) \\
         \f{E(\s{a,x},c)} & = (M(\s{a,x},c) \vee E(\s{a},c)
         \vee E(\s{x},c)) \wedge Con(\s{a,x})                  \\
-        \f{E(\s{a},x)}   & = (M(\s{a},x) \vee E(\e,x))
+        \f{E(\s{a},c)}   & = (M(\s{a},c) \vee E(\e,c))
         \wedge Con(\s{a})                                     \\
-                         & = M(\s{a},x) \vee E(\e,x)          \\
+                         & = M(\s{a},c) \vee E(\e,c)          \\
+        \f{E(\s{x},c)}   & = (M(\s{x},c) \vee E(\e,c))
+        \wedge Con(\s{x})                                     \\
+                         & = M(\s{x},c) \vee E(\e,c)          \\
     \end{align*}
     In this example, we may introduce $M(\e,x) = \T$ as a cause of $\varphi$.
     Assume that we set $M(\e,x)$ to false.
     This causes $E(\e,x)$ to become false which cause $E(\s{a},x)$ become false.
     Finally, $E(\s{a},x)$ becoming false causes $\varphi$ to become false.
-    Since we have used an empty $\vec W$, and we have satisfied the AC2(a)
-    condition, so $M(\e,x) = \T$ is a but-for cause of $\varphi$.
+    Since we have used an empty $\vec W$, and the AC2(a) condition is
+    satisfied, so $M(\e,x) = \T$ is a but-for cause of $\varphi$.
 \end{example}

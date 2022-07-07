@@ -3,7 +3,7 @@ Let $E = (\mathcal{E},\#,\vdash,l,L)$ be an event structure with
 $\mathcal{E} = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $\mathcal{E}$ where $p = 2^n$.
 Without the loss of generality let $\sigma = \s{e_1,e_2,...,e_m}$ be a configuration of $E$ that
 has been given as a counterexample.
-To find the cause of this counterexample, first we construct an extended causal model $M = (\mathcal{S},\mathcal{F},\psi)$.
+To find the cause of this counterexample, first we construct an extended causal model $\m = (\mathcal{S},\mathcal{F},\psi)$.
 To define the signature $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$, we assume that all variables in $\mathcal{U} \cup \mathcal{V}$ as a boolean variable.
 Next, we define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
 \begin{align*}
@@ -75,31 +75,29 @@ $$
     \bigwedge
     Con(k)
 \end{align*}
-With this causal model in hand, we define $\varphi_{\sigma}$ to represent whether $\sigma$ is a configuration of $E$.
-To do this we need to encode the conflict-free and secured conditions in the definition \ref{conf}.
-Let the sequence $\pi = e_{i_1},e_{i_2},...,e_{i_m}$ be a
-permutation of events in $\sigma$ and $\mathcal{S}$ be the set of
-all permutations of $\sigma$.
-We define the following auxiliary functions:
+We also define the following auxiliary functions:
 \begin{align*}
     C(e,e') = C_{i,j}    & \iff e = e_i \wedge e' = e_j \\
     M(s,e)  = M_{k,i}    & \iff s = s_k \wedge e = e_i  \\
     E(s,e)  = E_{k,i}    & \iff s = s_k \wedge e = e_i  \\
     Con(e,e') = Con(i,j) & \iff e = e_i \wedge e' = e_j \\
 \end{align*}
+With this causal model in hand, we define $\varphi_{\sigma}$ to represent whether $\sigma$ is a configuration of $E$.
+To do this we need to encode the conflict-free and secured conditions in the definition \ref{conf}.
+Let the sequence $\pi = e_{i_1},e_{i_2},...,e_{i_m}$ be a
+permutation of events in $\sigma$ and $\Pi$ be the set of
+all permutations of $\sigma$.
 Let $\Pi = \s{\pi_1,\pi_2,...,\pi_o}$ be the set of
 all permutations of events in $\sigma$.
-Let $\pi_i = e_{i_1},e_{i_2},...,e_{i_m}$ be a
-permutation.
 We define:
 \begin{align*}
-    \varphi_i = E(\e,e_{i_1}) \wedge
+    \varphi_{\pi} = E(\e,e_{i_1}) \wedge
     E(\s{e_{i_1},e_{i_2}}) \dots
     \wedge E(\s{e_{i_1},e_{i_2},...,e_{i_{m-1}}},e_{i_m}) \wedge Con(\sigma)
 \end{align*}
 We define $\varphi$ as follows:
 \begin{align*}
-    \varphi = \bigvee_{\forall \pi_i \in \Pi}\varphi_i
+    \varphi = \bigvee_{\forall \pi_i \in \Pi}\varphi_{\pi_i}
 \end{align*}
 \pagebreak
 \subsection{Examples}
@@ -179,7 +177,7 @@ We define $\varphi$ as follows:
     We consider an empty conflict relation and enabling
     relation the least one for which we have:
     \begin{align*}
-        \e \vdash b, \e \vdash c,
+        \e \vdash a,\e \vdash b, \e \vdash c,
         \s{b} \vdash i, \s{c} \vdash i
     \end{align*}
     So, the configuration $\sigma = \s{b,c,i}$ is a
@@ -232,27 +230,29 @@ We define $\varphi$ as follows:
     if $s_k \not \vdash_{min} i$.
     Thus we have:
     \begin{align*}
-        M & \vDash E(\e, b) = \T       \\
-        M & \vDash E(\e, c) = \T       \\
-        M & \vDash E(\s{b},c) = \T     \\
-        M & \vDash E(\s{b},i ) = \T    \\
-        M & \vDash E(\s{c},i ) = \T    \\
-        M & \vDash E(\s{b,c},i) = \T   \\
-        M & \vDash Con(\s{b,c,i}) = \T \\
-        M & \vDash \varphi_{\pi}       \\
-        M & \vDash \varphi
+        \m & \vDash E(\e, b) = \T       \\
+        \m & \vDash E(\e, c) = \T       \\
+        \m & \vDash E(\s{b},c) = \T     \\
+        \m & \vDash E(\s{b},i ) = \T    \\
+        \m & \vDash E(\s{c},i ) = \T    \\
+        \m & \vDash E(\s{b,c},i) = \T   \\
+        \m & \vDash Con(\s{b,c,i}) = \T \\
+        \m & \vDash \varphi_{\pi}       \\
+        \m & \vDash \varphi
     \end{align*}
     Now we set $M(\s{a,b},i)$ to true and $M(\s{c},i)$ to false.
     Setting $M(\s{c},i)$ to false causes $E(\s{c},i)$ to be false.
-    Setting $M(\s{a,b},i)$ to false causes $Min(\s{b},i)$ to false
+    Setting $M(\s{a,b},i)$ to true causes $Min(\s{b},i)$ to false
     and subsequently $M(\s{b},i)$ and $E(\s{b},i)$ become false.
-    Now, since all three terms in the first conjunction of the $\f{E(\s{b,c},i)}$
-    so $E(\s{b,c},i)$ becomes false and this results in $\varphi$ become false.
+    Now, since all three terms in the first conjunction of the
+    $\f{E(\s{b,c},i)}$ became false so $E(\s{b,c},i)$ becomes false and 
+    this results in $\varphi$ become false.
+
     To verify AC2(b), assume that we have set $M(\s{c},i)$ to false.
     This makes $E(\s{c},i)$ false.
     But, since $\f{E(\s{b,c},i)}$ includes the term
-    $E(\s{b},i) \vee E(\s{c},i)$ and $E(\s{b},i)$ is true, regardless
-    of the value of $M(\s{c},i)$, thus changing $M(\s{c},i)$ has
+    $E(\s{b},i) \vee E(\s{c},i)$ and $E(\s{b},i)$ is true regardless
+    of the value of $M(\s{c},i)$, changing $M(\s{c},i)$ has
     no effect on $(E(\s{b,c},i))$ and thus does not affect
     the value of $\varphi$, so AC2(b) is satisfied.
 \end{example}
