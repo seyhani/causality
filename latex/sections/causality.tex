@@ -1,8 +1,6 @@
 Let $E = (\mathcal{E},\#,\vdash,l,L)$ be an event structure with
 $\mathcal{E} = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $\mathcal{E}$ where $p = 2^n$.
-Without the loss of generality let $\sigma = \s{e_1,e_2,...,e_m}$ be a configuration of $E$ that
-has been given as a counterexample.
-To find the cause of this counterexample, first we construct an extended causal model $\m = (\mathcal{S},\mathcal{F},\psi)$.
+To find the cause of this counterexample, first we construct an extended causal model $\m = (\mathcal{S},\mathcal{F},\mathcal{E})$.
 To define the signature $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$, we assume that all variables in $\mathcal{U} \cup \mathcal{V}$ as a boolean variable.
 Next, we define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
 \begin{align*}
@@ -10,9 +8,11 @@ Next, we define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
                   & \cup \s{E_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
                   & \cup \s{M_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
 \end{align*}
-We define $\psi$ such that we can prevent invalid settings of variables:
+We define $\mathcal{E}$ to be the set of all settings 
+$(x_1,x_2,...,x_{|\mathcal{V}|})$ of the endogenous variables satisfying
+the following conditions:
 \begin{align*}
-    \psi(\vec v) = & \forall_{k,i}.
+    & \forall_{k,i}.
     \left(
     M_{k,i} \Rightarrow E_{k,i}
     \right)

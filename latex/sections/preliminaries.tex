@@ -456,21 +456,17 @@ $(x_1,...,x_n) \in \mathcal{E}$ if $X_1 = x_1, ..., X_n=x_n$ is an
 allowable setting.
 We say that a setting of a subset of the endogenous variables is allowable if it can be extended to a setting in $\mathcal{E}$.
 We then modify the clauses AC2(a) and (b) in the definition of causality to restrict to allowable settings.
-Let $\psi$ be a function $(\times_{X \in \mathcal{V}}R(X))\rightarrow \mathbb{B}$.
-We define the model $(\mathcal{S},\mathcal{F},\psi)$ to be equal
-to the model $(\mathcal{S},\mathcal{F},\mathcal{E})$ where
-for each setting $\vec x$ of endogenous variables we have $\vec x \in \mathcal{E} \iff \psi(\vec x) = true$.
-Thus, given an extended causal model $M = (\mathcal{S},\mathcal{F},\psi)$ we redefine the actual cause as follows:
 
 \begin{definition}
     $\vec X = \vec x$ is an actual cause of $\varphi$ in $(M,\vec u)$ if the following three conditions hold:
     \begin{itemize}
-        \item  \textbf{AC1.} $(M,\vec u)\models (\vec X = \vec x) \wedge \varphi \wedge \psi(\vec v)$.
+        \item  \textbf{AC1.} $(M,\vec u)\models (\vec X = \vec x) \wedge \varphi \wedge \vec v \in \mathcal{E}$.
         \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
 
-              (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi \wedge \psi(\vec v)$.
+              (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi \wedge  \vec v \in \mathcal{E}$.
 
-              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]\varphi \wedge \psi(\vec v)$ for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]\varphi \wedge
+              \vec v \in \mathcal{E}$ for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
 
         \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
     \end{itemize}
