@@ -12,27 +12,27 @@ We define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
                   & \cup \s{EN_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
                   & \cup \s{M_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
 \end{align*}
-We define $\mathcal{E}$ to be the set of all settings
-$(x_1,x_2,...,x_{|\mathcal{V}|})$ of the endogenous variables satisfying
-the following conditions:
-\begin{align*}
-     & \forall_{k,i}.
-    \left(
-    M_{k,i} \Rightarrow EN_{k,i}
-    \right)
-    \wedge
-    \left(
-    EN_{k,i} \Rightarrow Con(k)
-    \right)
-    \\
-     & \wedge \left(EN_{k,i} \Rightarrow
-    \forall k'. (s_k \subset s_{k'} \wedge Con(k')) \Rightarrow EN_{k',i}
-    \right)                             \\
-     & \wedge \left(
-    M_{k,i} \Rightarrow \forall k'.
-    (s_{k'} \subset s_k) \Rightarrow \neg M_{k',i}
-    \right)
-\end{align*}
+% We define $\mathcal{E}$ to be the set of all settings
+% $(x_1,x_2,...,x_{|\mathcal{V}|})$ of the endogenous variables satisfying
+% the following conditions:
+% \begin{align*}
+%      & \forall_{k,i}.
+%     \left(
+%     M_{k,i} \Rightarrow EN_{k,i}
+%     \right)
+%     \wedge
+%     \left(
+%     EN_{k,i} \Rightarrow Con(k)
+%     \right)
+%     \\
+%      & \wedge \left(EN_{k,i} \Rightarrow
+%     \forall k'. (s_k \subset s_{k'} \wedge Con(k')) \Rightarrow EN_{k',i}
+%     \right)                             \\
+%      & \wedge \left(
+%     M_{k,i} \Rightarrow \forall k'.
+%     (s_{k'} \subset s_k) \Rightarrow \neg M_{k',i}
+%     \right)
+% \end{align*}
 For $x,y \in \mathcal{P}(\mathcal{E})$ we say $y$ is covered by $x$ written $ x \prec y$ iff:
 \begin{align*}
     x \subseteq y \amp x \neq y \amp
@@ -88,13 +88,16 @@ Next, we define a reverse mapping from causal models to event structures.
 Given a causal model $\m$ let $\vec v$ be the values of endogenous variables
 in $\m$, i.e. $\m \vDash \vec V \la \vec v$ where $\vec V$ is the vector of
 all endogenous variables.
-We define $\mathfrak{E}(\vec v) = (\mathrm{E},\#',\vdash')$ to be an 
-event structure where we have:
+We define $\mathfrak{E}(\vec v) = (\mathrm{E},\#',\vdash')$ where we have:
 \begin{align*}
-    e_i \# e_j \iff C_{i,j} \\
-    e_j \# e_i \iff C_{i,j} \\
-    s_k \vdash e_i \iff E_{k,i}
+    e_i \#' e_j \iff C_{i,j} \\
+    e_j \#'e_i \iff C_{i,j} \\
+    s_k \vdash' e_i \iff E_{k,i}
 \end{align*}
+Using $\mathfrak{E}$, we define $\mathcal{E}$ to be the set of allowable
+settings of the endogenous variables $\vec v$ for which
+$\mathfrak{E}(\vec v)$ is an event structure.
+
 Finally, for a given configuration $\sigma = \s{e_1,e_2,...,e_m}$ as a
 counterexample we define the effect, or $\varphi$, for which we want to
 ind the cause as a boolean variable which is true iff $\sigma \in \mathcal{F}(\mathfrak{E}(\vec v))$ where $\mathcal{F}$ is the set of the configurations of

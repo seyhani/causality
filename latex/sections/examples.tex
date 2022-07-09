@@ -24,18 +24,60 @@
         \wedge Con(\s{i})                                         \\
                        & = M(\s{i},o) \vee E(\e,o)                \\
     \end{align*}
-    Now, let's consider $\sigma = \s{o}$ as a counterexample.
-    Assume that we wish to declare $M(\e,o)$ as a cause of $\varphi$
-    using the witness $(\e,\e,\F)$.
-    So, we set $M(\e,o)$ to false.
-    This causes $E(\e,o)$ and $E(\s{i},o)$ become false in turn.
-    Formally we can write:
+    In the actual context values of the endogenous variables can be
+    determined uniquely, thus we have:
     \begin{align*}
-        \m & \vDash [M(\e,o) \la \F] E(\e,o) = \F \\
-        \m & \vDash [M(\e,o) \la \F] E(\s{i},o) = \F \\
+        \m & \vDash EN(\e,i) = \T    \\
+        \m & \vDash EN(\s{o},i) = \T \\
+        \m & \vDash EN(\e,o) = \T    \\
+        \m & \vDash EN(\s{i},o) = \T \\
+        \m & \vDash Con(i,o) = \T    \\
     \end{align*}
-    And values of the other variables remain unaffected.
-
+    Let $\vec v$ be the values of the endogenous variables in the actual
+    context and $\mathrm{E} = \mathfrak{E}(\vec v) = (\s{i,o},\e,\vdash)$ where we have:
+    \begin{align*}
+        \e \vdash o, \s{i} \vdash o, \e \vdash i, \s{o} \vdash i
+    \end{align*}
+    Now we consider $\sigma = \s{o}$ as a counterexample using 
+    $(\e,\e,\F)$ as a witness.
+    Assume that we want to declare $M(\e,o) = \T$ as a cause of 
+    $\sigma \in \mathcal{F}(\mathrm{E})$.
+    It is easy to verify that $\mathrm{E}$ is an event structure.
+    To check whether $\sigma$ is a configuration of $\mathrm{E}$ we need
+    to have $\e \vdash o$ which is satisfied.
+    Thus we have:
+    \begin{align*}
+        \m \vDash M(\e,o) = \T \wedge \sigma \in \mathcal{F}(\mathrm{E}) \wedge \vec v \in \mathcal{E}
+    \end{align*}
+    Thus the AC1 condition is satisfied.
+    Next, we need to verify the AC2 conditions.
+    Assume that we set $M(\e,o)$ to false.
+    $E(\e,o)$ depends on $M(\e,o)$ and $E(\s{o},i)$ depends on $E(\e,o)$,
+    so these are the only variables that are affected by changing $M(\e,o)$.
+    Thus, we have:
+    \begin{align*}
+        \m & \vDash [M(\e,o)\la \F] EN(\e,i) = \T \\
+        \m & \vDash [M(\e,o)\la \F] EN(\s{o},i) = \T \\
+        \m & \vDash [M(\e,o)\la \F] EN(\e,o) = \F \\
+        \m & \vDash [M(\e,o)\la \F] EN(\s{i},o) = \F 
+    \end{align*}
+    Let $\vec v'$ be the value of endogenous variables after setting 
+    $M(\e,o)$ to false so we have $\m \vDash [M(\e,o)\la \F]\vec V \la \vec v'$.
+    Let $\mathrm{E}' = \mathfrak{E}(\vec v') = (\s{i,o},\e, \vdash')$ where:
+    \begin{align*}
+        \e \vdash i, \s{o} \vdash o
+    \end{align*}
+    Again we can easily verify that $\mathrm{E}'$ is an event structure.
+    Now, since $\e \not \vdash o$, thus $\sigma$ is not a configuration of
+    the $\mathrm{E}'$, thus we have:
+    \begin{align*}
+        \m \vDash [M(\e,o) \la \F] \sigma \not \in \mathcal{F}(\mathrm{E'})
+        \wedge \vec v' \in \mathcal{E}
+    \end{align*}
+    Which satisfies the AC2(a) condition.
+    Since we have used an empty $\vec W$ set for the witness, and AC2(a)
+    condition is satisfied, thus we can conclude that $M(\e,o) = \T$ is a 
+    cause of $\sigma \in \mathcal{F}(\mathrm{E})$.
 \end{example}
 
 \begin{example}
