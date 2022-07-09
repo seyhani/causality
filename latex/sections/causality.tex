@@ -1,30 +1,34 @@
-Let $E = (\mathcal{E},\#,\vdash,l,L)$ be an event structure with
-$\mathcal{E} = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $\mathcal{E}$ where $p = 2^n$.
-To find the cause of this counterexample, first we construct an extended causal model $\m = (\mathcal{S},\mathcal{F},\mathcal{E})$.
-To define the signature $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$, we assume that all variables in $\mathcal{U} \cup \mathcal{V}$ as a boolean variable.
-Next, we define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
+% Todo: find proper signs for Es
+Let $\mathrm{E} = (E,\#,\vdash,l,L)$ be an event structure with
+$E = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $E$ where $p = 2^n$.
+Given an event structure $\mathrm{E}$, we define
+$\mathfrak{M}(\mathrm{E}) = (\mathcal{S},\mathcal{F},\mathcal{E})$
+to be its causal model where 
+$\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$, and all variables in
+$\mathcal{U} \cup \mathcal{V}$ are boolean.
+We define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
 \begin{align*}
     \mathcal{V} = & \s{C_{i,j} | \forall 1 \leq i < j \leq n. e_i \in \mathcal{E} \amp e_j \in \mathcal{E}}                    \\
-                  & \cup \s{E_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
+                  & \cup \s{EN_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
                   & \cup \s{M_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
 \end{align*}
-We define $\mathcal{E}$ to be the set of all settings 
+We define $\mathcal{E}$ to be the set of all settings
 $(x_1,x_2,...,x_{|\mathcal{V}|})$ of the endogenous variables satisfying
 the following conditions:
 \begin{align*}
-    & \forall_{k,i}.
+     & \forall_{k,i}.
     \left(
-    M_{k,i} \Rightarrow E_{k,i}
+    M_{k,i} \Rightarrow EN_{k,i}
     \right)
     \wedge
     \left(
-    E_{k,i} \Rightarrow Con(k)
+    EN_{k,i} \Rightarrow Con(k)
     \right)
     \\
-                   & \wedge \left(E_{k,i} \Rightarrow
-    \forall k'. (s_k \subset s_{k'} \wedge Con(k')) \Rightarrow E_{k',i}
-    \right)                                           \\
-                   & \wedge \left(
+     & \wedge \left(EN_{k,i} \Rightarrow
+    \forall k'. (s_k \subset s_{k'} \wedge Con(k')) \Rightarrow EN_{k',i}
+    \right)                             \\
+     & \wedge \left(
     M_{k,i} \Rightarrow \forall k'.
     (s_{k'} \subset s_k) \Rightarrow \neg M_{k',i}
     \right)
@@ -59,11 +63,11 @@ $$
     \end{cases}
 $$
 \begin{align*}
-    F_{E_{k,i}}(\vec V_{E_{k,i}}) & =
+    \f{EN_{k,i}} & =
     \left(
     M_{k,i} \vee
     \left(
-    \bigvee_{\forall l. s_l  \prec s_k}E_{l,i}
+    \bigvee_{\forall l. s_l  \prec s_k}EN_{l,i}
     \right)
     \right)
     \bigwedge
@@ -73,26 +77,28 @@ We also define the following auxiliary functions:
 \begin{align*}
     C(e,e') = C_{i,j}    & \iff e = e_i \wedge e' = e_j \\
     M(s,e)  = M_{k,i}    & \iff s = s_k \wedge e = e_i  \\
-    E(s,e)  = E_{k,i}    & \iff s = s_k \wedge e = e_i  \\
-    Con(e,e') = Con(i,j) & \iff e = e_i \wedge e' = e_j \\
+    EN(s,e)  = EN_{k,i}    & \iff s = s_k \wedge e = e_i  \\
+    Con(e,e') = Con(i,j) & \iff e = e_i \wedge e' = e_j
 \end{align*}
-With this causal model in hand, we define $\varphi_{\sigma}$ to represent whether $\sigma$ is a configuration of $E$.
-To do this we need to encode the conflict-free and secured conditions in the definition \ref{conf}.
-Let the sequence $\pi = e_{i_1},e_{i_2},...,e_{i_m}$ be a
-permutation of events in $\sigma$ and $\Pi$ be the set of
-all permutations of $\sigma$.
-Let $\Pi = \s{\pi_1,\pi_2,...,\pi_o}$ be the set of
-all permutations of events in $\sigma$.
-We define:
+Let $\m = \mathfrak{M}(\mathrm{E})$.
+Since we have defined $\mathcal{U}$ to be empty and 
+\textcolor{red}{the model is recursive}, thus the values of variables in
+$\mathcal{V}$ are uniquely defined.
+Next, we define a reverse mapping from causal models to event structures.
+Given a causal model $\m$ let $\vec v$ be the values of endogenous variables
+in $\m$, i.e. $\m \vDash \vec V \la \vec v$ where $\vec V$ is the vector of
+all endogenous variables.
+We define $\mathfrak{E}(\vec v) = (\mathrm{E},\#',\vdash')$ to be an 
+event structure where we have:
 \begin{align*}
-    \varphi_{\pi} = E(\e,e_{i_1}) \wedge
-    E(\s{e_{i_1},e_{i_2}}) \dots
-    \wedge E(\s{e_{i_1},e_{i_2},...,e_{i_{m-1}}},e_{i_m}) \wedge Con(\sigma)
+    e_i \# e_j \iff C_{i,j} \\
+    e_j \# e_i \iff C_{i,j} \\
+    s_k \vdash e_i \iff E_{k,i}
 \end{align*}
-We define $\varphi$ as follows:
-\begin{align*}
-    \varphi = \bigvee_{\forall \pi_i \in \Pi}\varphi_{\pi_i}
-\end{align*}
+Finally, for a given configuration $\sigma = \s{e_1,e_2,...,e_m}$ as a
+counterexample we define the effect, or $\varphi$, for which we want to
+ind the cause as a boolean variable which is true iff $\sigma \in \mathcal{F}(\mathfrak{E}(\vec v))$ where $\mathcal{F}$ is the set of the configurations of
+a given event structure.
 \pagebreak
 \subsection{Examples}
 \input{sections/examples}

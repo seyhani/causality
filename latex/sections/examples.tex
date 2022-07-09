@@ -24,19 +24,17 @@
         \wedge Con(\s{i})                                         \\
                        & = M(\s{i},o) \vee E(\e,o)                \\
     \end{align*}
-    Considering $\sigma = \s{o}$ as a counterexample, we can define $\varphi$ as follows:
+    Now, let's consider $\sigma = \s{o}$ as a counterexample.
+    Assume that we wish to declare $M(\e,o)$ as a cause of $\varphi$
+    using the witness $(\e,\e,\F)$.
+    So, we set $M(\e,o)$ to false.
+    This causes $E(\e,o)$ and $E(\s{i},o)$ become false in turn.
+    Formally we can write:
     \begin{align*}
-        \varphi & = E(\e,o) \wedge Con(\s{o}) \\
-                & = E(\e,o)
+        \m & \vDash [M(\e,o) \la \F] E(\e,o) = \F \\
+        \m & \vDash [M(\e,o) \la \F] E(\s{i},o) = \F \\
     \end{align*}
-    Now we can consider $M(\e,o) = \T$ as a cause of $\varphi$.
-    If we set $M(\e,o)$ to false, then $E(\e,o)$ becomes false
-    and then $\varphi$ becomes false.
-    \begin{align*}
-        \m \vDash [M(\e,o)\la \F] \neg \varphi
-    \end{align*}
-    Since we have considered an empty $\vec W$ and the AC2(a) condition
-    is satisfied, thus $M(\e,o) = \T$ is a but-for cause of $\varphi$.
+    And values of the other variables remain unaffected.
 
 \end{example}
 
