@@ -33,15 +33,14 @@
         \m & \vDash EN(\s{i},o) = \T \\
         \m & \vDash Con(i,o) = \T    \\
     \end{align*}
-    Let $\vec v$ be the values of the endogenous variables in the actual
-    context and $\mathrm{E} = \mathfrak{E}(\vec v) = (\s{i,o},\e,\vdash)$ where we have:
+    Let $\mathrm{E} = \mathfrak{E}(\vec V) = (\s{i,o},\e,\vdash)$ 
+    in the actual context where we have:
     \begin{align*}
         \e \vdash o, \s{i} \vdash o, \e \vdash i, \s{o} \vdash i
     \end{align*}
-    Now we consider $\sigma = \s{o}$ as a counterexample using 
-    $(\e,\e,\F)$ as a witness.
+    Now let $\sigma = \s{o}$ be a counterexample.     
     Assume that we want to declare $M(\e,o) = \T$ as a cause of 
-    $\sigma \in \mathcal{F}(\mathrm{E})$.
+    $\sigma \in \mathcal{F}(\mathrm{E})$ using $(\e,\e,\F)$ as a witness.
     It is easy to verify that $\mathrm{E}$ is an event structure.
     To check whether $\sigma$ is a configuration of $\mathrm{E}$ we need
     to have $\e \vdash o$ which is satisfied.
@@ -49,11 +48,11 @@
     \begin{align*}
         \m \vDash M(\e,o) = \T \wedge \sigma \in \mathcal{F}(\mathrm{E}) \wedge \vec v \in \mathcal{E}
     \end{align*}
-    Thus the AC1 condition is satisfied.
+    Thus, the AC1 condition is satisfied.
     Next, we need to verify the AC2 conditions.
     Assume that we set $M(\e,o)$ to false.
     $E(\e,o)$ depends on $M(\e,o)$ and $E(\s{o},i)$ depends on $E(\e,o)$,
-    so these are the only variables that are affected by changing $M(\e,o)$.
+    and these are the only variables that are affected by changing $M(\e,o)$.
     Thus, we have:
     \begin{align*}
         \m & \vDash [M(\e,o)\la \F] EN(\e,i) = \T \\
@@ -63,9 +62,9 @@
     \end{align*}
     Let $\vec v'$ be the value of endogenous variables after setting 
     $M(\e,o)$ to false so we have $\m \vDash [M(\e,o)\la \F]\vec V \la \vec v'$.
-    Let $\mathrm{E}' = \mathfrak{E}(\vec v') = (\s{i,o},\e, \vdash')$ where:
+    Let $\mathrm{E}' = \mathfrak{E}(\vec V) = (\s{i,o},\e, \vdash')$ where:
     \begin{align*}
-        \e \vdash i, \s{o} \vdash o
+        \e \vdash i, \s{o} \vdash i
     \end{align*}
     Again we can easily verify that $\mathrm{E}'$ is an event structure.
     Now, since $\e \not \vdash o$, thus $\sigma$ is not a configuration of
