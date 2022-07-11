@@ -1,12 +1,12 @@
 % Todo: find proper signs for Es
-Let $\mathrm{E} = (E,\#,\vdash,l,L)$ be an event structure with
+Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure with
 $E = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $E$ where $p = 2^n$.
 Given an event structure $\mathrm{E}$, we define
 $\mathfrak{M}(\mathrm{E}) = (\mathcal{S},\mathcal{F},\mathcal{E})$
 to be its causal model where
-$\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$, and all variables in
-$\mathcal{U} \cup \mathcal{V}$ are boolean.
-We define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
+$\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$.
+We define $\mathcal{U}$ to be empty and $\mathcal{V}$ consisting
+of boolean variables as follows:
 \begin{align*}
     \mathcal{V} = & \s{C_{i,j} | \forall 1 \leq i < j \leq n. e_i \in \mathcal{E} \amp e_j \in \mathcal{E}}                     \\
                   & \cup \s{EN_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
@@ -80,40 +80,36 @@ We also define the following auxiliary functions:
     EN(s,e)  = EN_{k,i}  & \iff s = s_k \wedge e = e_i  \\
     Con(e,e') = Con(i,j) & \iff e = e_i \wedge e' = e_j
 \end{align*}
-Let $\m = \mathfrak{M}(\mathrm{E})$.
-Since we have defined $\mathcal{U}$ to be empty and
-\textcolor{red}{the model is recursive}, so the values of all variables in
+Note that since we have defined $\mathcal{U}$ to be empty and
+\textcolor{red}{the model is recursive}, the values of all variables in
 $\mathcal{V}$ can be uniquely determined.
-Let $\vec v$ the values of these variables.
-Formally, if we consider $\vec V$ as the vector of all endogenous variables
-we have $\m \vDash \vec V = \vec v$.
 
-Next, we define a reverse mapping from causal models to event structures.
 Given a set of events $E$, let $\mathbb{E}$ be the set of all
 triples of the form $(E,\#,\vdash)$ where $\# \subseteq E \times E$ 
 and $\vdash \subseteq \mathcal{P}(E) \times E$.
-Given a causal model $\m$ we define
-$\mathfrak{E}: (\times_{V \in \mathcal{V}}\mathcal{R}(V)) \rightarrow \mathbb{E}$
-to be a function that returns an event structure given the values
-of endogenous variables in the causal model.
-Let $\m$ be a causal model and $\vec V$ be the vector of its
+Let $\m = \mathfrak{M}(\mathrm{E})$ for some event structure
+$\mathrm{E}$ on the set $E$ and let $\mathcal{V}$ be its set of
 endogenous variables.
+We define $\mathfrak{E}: (\times_{V \in \mathcal{V}}\mathcal{R}(V)) \rightarrow \mathbb{E}$
+to be a function that returns a triple in $\mathbb{E}$ given the
+values of endogenous variables in the causal model.
+Let $\vec V$ be the vector of endogenous variables in $\m$.
 We define $\mathfrak{E}$ such that if
-$\mathfrak{E}(\vec V) = (\mathrm{E},\#',\vdash')$ then we have:
+$\mathfrak{E}(\vec V) = (E,\#',\vdash')$ then we have:
 \begin{align*}
     e \#' e' \amp e' \#' e \iff C(e,e') \\
     s \vdash' e \iff EN(s,e)
 \end{align*}
-
 We define $\mathcal{E}$ to be the set of all allowable
-settings of the endogenous variables such as $\vec x$ for which if 
-$\vec X = \vec x$ then the triple $\mathfrak{E}(\vec X)$ is an
-event structure.
+settings of the endogenous variables such as $\vec v'$ 
+for which if $\vec V = \vec v'$ then the triple 
+$\mathfrak{E}(\vec V)$ is an event structure.
 
-Finally, for a given configuration $\sigma = \s{e_1,e_2,...,e_m}$ as a
-counterexample we define the effect, or $\varphi$, for which we want to
-find the cause as a boolean variable which is true iff $\sigma \in \mathcal{F}(\mathfrak{E}(\vec V))$ where $\mathcal{F}$ is the set of the configurations of
-a given event structure.
+Finally, for a given configuration $\sigma = \s{e_1,e_2,...,e_m}$ 
+as a counterexample we define the effect, or $\varphi$, for which 
+we want to find the cause as 
+$\sigma \in \mathcal{F}(\mathfrak{E}(\vec V))$ where $\mathcal{F}$ 
+is the set of the configurations of a given event structure.
 \pagebreak
 \subsection{Examples}
 \input{sections/examples}

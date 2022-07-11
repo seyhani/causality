@@ -1,8 +1,15 @@
 \begin{example}
     Consider a firewall where we initially allow all outgoing packets and block all incoming packets.
     We want to allow incoming packets once a packet is sent outside.
-    So, we consider an event structure with events $o,i$ for incoming and
-    outgoing packets respectively.
+    \begin{center}
+        \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
+            \node[main] (s) {$fw$};
+            \draw (s) -- node[above]{$i$} (-1,0);
+            \draw (s) -- node[above]{$o$} (1,0);
+        \end{tikzpicture}
+    \end{center}
+    We may represent this network with an event structure of
+    events $o,i$ for incoming and outgoing packets respectively.
     We assume an empty conflict relation and enabling relation
     the least one that satisfies:
     \begin{align*}
@@ -61,7 +68,7 @@
         \m & \vDash [M(\e,o)\la \F] EN(\s{i},o) = \F 
     \end{align*}
     Let $\vec v'$ be the value of endogenous variables after setting 
-    $M(\e,o)$ to false so we have $\m \vDash [M(\e,o)\la \F]\vec V \la \vec v'$.
+    $M(\e,o)$ to false so we have $\m \vDash [M(\e,o)\la \F]\vec V = \vec v'$.
     Let $\mathrm{E}' = \mathfrak{E}(\vec V) = (\s{i,o},\e, \vdash')$ where:
     \begin{align*}
         \e \vdash i, \s{o} \vdash i
