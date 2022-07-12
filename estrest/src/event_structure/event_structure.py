@@ -13,7 +13,6 @@ class EventStructure:
         self.enabling = enabling or {}  # Event -> List[Set[Event]]
         self.conflict = conflict or {}  # Event -> Set[Event]
         self.configurations = set()  # Set[FrozenSet[Event]]
-        self.build_configurations()
 
     def get_event(self, _id: tuple):
         for e in self.events:
@@ -82,6 +81,9 @@ class EventStructure:
             for e in es[i].events:
                 # Each pair of events from different ESs are in conflict
                 res.conflict[e].update([ce for ce in es[utils.dual(i)].events])
+
+        for i in (0, 1):
+            res.configurations.update(es[i].configurations)
 
         return res
 
@@ -213,7 +215,7 @@ class EventStructure:
     def build_configurations(self):
         # BFS to find all configurations
         queue: List[Set[Event]] = [set()]
-        visited: Set[FrozenSet[Event]] = set(frozenset())
+        visited: Set[FrozenSet[Event]] = {frozenset()}
         while queue:
             conf = queue.pop(0)
             for e in self.events - conf:
