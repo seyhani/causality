@@ -49,35 +49,40 @@ class TestEventStructure(unittest.TestCase):
         p = p.relabel({('a', '*'): 'x', ('*', 'b'): 'y'})
         self.assertEqual(p.get_labels(), {'(a, b)', 'x', 'y'})
 
-    def test_is_configuration_base(self):
+    def test_configuration_base(self):
         es = EventStructure()
         a, b = Event('a'), Event('b')
         es.events = {a, b}
         es.conflict = {a: set(), b: set()}
         es.enabling = {a: [set()], b: [{a}]}
+        es.build_configurations()
 
         self.assertTrue(es.is_configuration({a, b}))
 
-    def test_is_configuration_conflict(self):
+    def test_configuration_conflict(self):
         es = EventStructure()
         a, b = Event('a'), Event('b')
         es.events = {a, b}
         es.conflict = {a: {b}, b: {a}}
         es.enabling = {a: [set()], b: [set()]}
+        es.build_configurations()
 
         self.assertFalse(es.is_configuration({a, b}))
 
-    def test_is_configuration_not_secured(self):
+    def test_configuration_not_secured(self):
         es = EventStructure()
         a, b, c = Event('a'), Event('b'), Event('c')
         es.events = {a, b, c}
         es.conflict = {a: set(), b: set(), c: set()}
         es.enabling = {a: [set()], b: [{a}], c: [{a, b}]}
+        es.build_configurations()
 
         self.assertFalse(es.is_configuration({a, c}))
+        self.assertFalse(es.is_configuration({b}))
+        self.assertTrue(es.is_configuration({a, b}))
         self.assertTrue(es.is_configuration({a, b, c}))
 
-    def test_is_configuration_real(self):
+    def test_configuration_generic(self):
         es = EventStructure()
         a, b, c, d, e = [Event(x) for x in 'abcde']
         es.events = {a, b, c, d, e}
@@ -89,6 +94,7 @@ class TestEventStructure(unittest.TestCase):
             e: [{a, d}],
             c: [{a, b}, {a, d, e}]
         }
+        es.build_configurations()
 
         self.assertTrue(es.is_configuration({a, c, d, e}))
         self.assertTrue(es.is_configuration({a, b, c}))
