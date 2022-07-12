@@ -20,6 +20,16 @@ class TestCausalModel(unittest.TestCase):
         m.evaluate()
         print(m.vals['B'])
 
+    def test_intervention(self):
+        m = CausalModel()
+        m.add('A', lambda vals: True)
+        m.add('B', lambda vals: False)
+        m.add('C', lambda vals: vals['A'] and vals['B'])
+        m.add('D', lambda vals: vals['C'] and True)
+        m = m.intervene('C', True)
+        m.evaluate()
+        print(m.vals['D'])
+
 
 if __name__ == '__main__':
     unittest.main()

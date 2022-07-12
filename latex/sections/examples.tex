@@ -11,7 +11,7 @@
     We may represent this network with an event structure of
     events $o,i$ for incoming and outgoing packets respectively.
     We assume an empty conflict relation and enabling relation
-    the least one that satisfies:
+    $\vdash$ the least one that satisfies:
     \begin{align*}
         \e \vdash i, \e \vdash o
     \end{align*}
@@ -31,8 +31,7 @@
         \wedge Con(\s{i})                                         \\
                        & = M(\s{i},o) \vee E(\e,o)                \\
     \end{align*}
-    In the actual context values of the endogenous variables can be
-    determined uniquely, thus we have:
+    In the actual context we have:
     \begin{align*}
         \m & \vDash EN(\e,i) = \T    \\
         \m & \vDash EN(\s{o},i) = \T \\
@@ -40,20 +39,22 @@
         \m & \vDash EN(\s{i},o) = \T \\
         \m & \vDash Con(i,o) = \F    \\
     \end{align*}
-    Let $\mathrm{E} = \mathfrak{E}(\vec V) = (\s{i,o},\e,\vdash)$ 
+    Let $\mathrm{E'} = \mathfrak{E}(\vec V) = (\s{i,o},\e,\vdash')$ 
     in the actual context where we have:
     \begin{align*}
-        \e \vdash o, \s{i} \vdash o, \e \vdash i, \s{o} \vdash i
+        \e \vdash' o, \s{i} \vdash' o, \e \vdash' i, 
+        \s{o} \vdash' i
     \end{align*}
     Now let $\sigma = \s{o}$ be a counterexample.     
     Assume that we want to declare $M(\e,o) = \T$ as a cause of 
-    $\sigma \in \mathcal{F}(\mathrm{E})$ using $(\e,\e,\F)$ as a witness.
-    It is easy to verify that $\mathrm{E}$ is an event structure.
-    To check whether $\sigma$ is a configuration of $\mathrm{E}$ we need
-    to have $\e \vdash o$ which is satisfied.
+    $\sigma \in \mathcal{F}(\mathrm{E'})$ using $(\e,\e,\F)$ as a witness.
+    It is easy to verify that $\mathrm{E'}$ is an event structure.
+    To check whether $\sigma$ is a configuration of $\mathrm{E'}$ we need
+    to have $\e \vdash' o$ which is satisfied.
     Thus we have:
     \begin{align*}
-        \m \vDash M(\e,o) = \T \wedge \sigma \in \mathcal{F}(\mathrm{E}) \wedge \vec v \in \mathcal{E}
+        \m \vDash M(\e,o) = \T \wedge \sigma 
+        \in \mathcal{F}(\mathfrak{E}(\vec V)) \wedge \vec v \in \mathcal{E}
     \end{align*}
     Thus, the AC1 condition is satisfied.
     Next, we need to verify the AC2 conditions.
@@ -69,21 +70,21 @@
     \end{align*}
     Let $\vec v'$ be the value of endogenous variables after setting 
     $M(\e,o)$ to false so we have $\m \vDash [M(\e,o)\la \F]\vec V = \vec v'$.
-    Let $\mathrm{E}' = \mathfrak{E}(\vec V) = (\s{i,o},\e, \vdash')$ where:
+    Let $\mathrm{E}'' = \mathfrak{E}(\vec V) = (\s{i,o},\e, \vdash'')$ where:
     \begin{align*}
-        \e \vdash i, \s{o} \vdash i
+        \e \vdash'' i, \s{o} \vdash'' i
     \end{align*}
-    Again we can easily verify that $\mathrm{E}'$ is an event structure.
-    Now, since $\e \not \vdash o$, thus $\sigma$ is not a configuration of
-    the $\mathrm{E}'$, thus we have:
+    Again we can easily verify that $\mathrm{E}''$ is an event structure.
+    Now, since $\e \not \vdash'' o$, thus $\sigma$ is not a configuration of
+    the $\mathrm{E}''$, so we have:
     \begin{align*}
-        \m \vDash [M(\e,o) \la \F] \sigma \not \in \mathcal{F}(\mathrm{E'})
+        \m \vDash [M(\e,o) \la \F] \sigma \not \in \mathcal{F}(\mathfrak{E}(\vec V))
         \wedge \vec v' \in \mathcal{E}
     \end{align*}
     Which satisfies the AC2(a) condition.
     Since we have used an empty $\vec W$ set for the witness, and AC2(a)
     condition is satisfied, thus we can conclude that $M(\e,o) = \T$ is a 
-    cause of $\sigma \in \mathcal{F}(\mathrm{E})$.
+    cause of $\sigma \in \mathcal{F}(\mathrm{\mathfrak{E}(\vec V)})$.
 \end{example}
 
 \begin{example}
