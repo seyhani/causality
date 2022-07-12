@@ -8,10 +8,12 @@ from event import Event, SyncedEvent, STAR
 
 # noinspection SpellCheckingInspection
 class EventStructure:
-    def __init__(self) -> None:
-        self.events = set()
-        self.enabling = {}  # Event -> List[Set[Event]]
-        self.conflict = {}  # Event -> Set[Event]
+    def __init__(self, events=None, enabling=None, conflict=None) -> None:
+        self.events = events or set()
+        self.enabling = enabling or {}  # Event -> List[Set[Event]]
+        self.conflict = conflict or {}  # Event -> Set[Event]
+        self.configurations = set()  # Set[FrozenSet[Event]]
+        self.build_configurations()
 
     def get_event(self, _id: tuple):
         for e in self.events:
@@ -199,7 +201,8 @@ class EventStructure:
     # * x is a subset of self.events
     # * If event e is enabled by the null set, we have:
     #    enabling[e] = [{}]
-    def is_configuration(self, x: Set[Event]):
+    def build_configurations(self):
+        # BFS to find all configurations
         queue: List[Set[Event]] = [set()]
         visited: Set[FrozenSet[Event]] = set(frozenset())
         while queue:
@@ -208,13 +211,14 @@ class EventStructure:
                 conf_new = conf.union({e})
                 if not self.conflict_free(conf_new):
                     continue
-                for s in self.enabling[e]:
-                    if s.issubset(conf_new):
-                        visited.add(frozenset(conf_new))
-                        queue.append(conf_new)
-                        break
+                if not [s_ for s_ in self.enabling[e] if s_.issubset(conf_new)]:
+                    continue
+                visited.add(frozenset(conf_new))
+                queue.append(conf_new)
+        self.configurations = visited
 
-        return frozenset(x) in visited
+    def is_configuration(self, x: Set[Event]):
+        return frozenset(x) in self.configurations
 
     def __eq__(self, other):
         if not isinstance(other, EventStructure):
