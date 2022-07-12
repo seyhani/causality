@@ -36,8 +36,14 @@ class CausalModel:
         model.fns[var] = lambda vals: val
         return model
 
-    def satisfies(self, event: PrimitiveEvent) -> bool:
-        return self.vals[event.var] == event.val
+    def satisfies(self, event: PrimitiveEvent, ints: VALS = None) -> bool:
+        if ints is None:
+            ints = {}
+        m = self
+        for var, val in ints.items():
+            m = m.intervene(var, val)
+        m.evaluate()
+        return m.vals[event.var] == event.val
 
     def evaluate(self):
         for i in range(len(self.vals)):

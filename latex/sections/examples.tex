@@ -39,21 +39,21 @@
         \m & \vDash EN(\s{i},o) = \T \\
         \m & \vDash Con(i,o) = \F    \\
     \end{align*}
-    Let $\mathrm{E'} = \mathfrak{E}(\vec V) = (\s{i,o},\e,\vdash')$ 
+    Let $\mathrm{E'} = \mathfrak{E}(\vec V) = (\s{i,o},\e,\vdash')$
     in the actual context where we have:
     \begin{align*}
-        \e \vdash' o, \s{i} \vdash' o, \e \vdash' i, 
+        \e \vdash' o, \s{i} \vdash' o, \e \vdash' i,
         \s{o} \vdash' i
     \end{align*}
-    Now let $\sigma = \s{o}$ be a counterexample.     
-    Assume that we want to declare $M(\e,o) = \T$ as a cause of 
+    Now let $\sigma = \s{o}$ be a counterexample.
+    Assume that we want to declare $M(\e,o) = \T$ as a cause of
     $\sigma \in \mathcal{F}(\mathrm{E'})$ using $(\e,\e,\F)$ as a witness.
     It is easy to verify that $\mathrm{E'}$ is an event structure.
     To check whether $\sigma$ is a configuration of $\mathrm{E'}$ we need
     to have $\e \vdash' o$ which is satisfied.
     Thus we have:
     \begin{align*}
-        \m \vDash M(\e,o) = \T \wedge \sigma 
+        \m \vDash M(\e,o) = \T \wedge \sigma
         \in \mathcal{F}(\mathfrak{E}(\vec V)) \wedge \vec v \in \mathcal{E}
     \end{align*}
     Thus, the AC1 condition is satisfied.
@@ -63,12 +63,12 @@
     and these are the only variables that are affected by changing $M(\e,o)$.
     Thus, we have:
     \begin{align*}
-        \m & \vDash [M(\e,o)\la \F] EN(\e,i) = \T \\
+        \m & \vDash [M(\e,o)\la \F] EN(\e,i) = \T    \\
         \m & \vDash [M(\e,o)\la \F] EN(\s{o},i) = \T \\
-        \m & \vDash [M(\e,o)\la \F] EN(\e,o) = \F \\
-        \m & \vDash [M(\e,o)\la \F] EN(\s{i},o) = \F 
+        \m & \vDash [M(\e,o)\la \F] EN(\e,o) = \F    \\
+        \m & \vDash [M(\e,o)\la \F] EN(\s{i},o) = \F
     \end{align*}
-    Let $\vec v'$ be the value of endogenous variables after setting 
+    Let $\vec v'$ be the value of endogenous variables after setting
     $M(\e,o)$ to false so we have $\m \vDash [M(\e,o)\la \F]\vec V = \vec v'$.
     Let $\mathrm{E}'' = \mathfrak{E}(\vec V) = (\s{i,o},\e, \vdash'')$ where:
     \begin{align*}
@@ -83,8 +83,8 @@
     \end{align*}
     Which satisfies the AC2(a) condition.
     Since we have used an empty $\vec W$ set for the witness, and AC2(a)
-    condition is satisfied, thus we can conclude that $M(\e,o) = \T$ is a 
-    cause of $\sigma \in \mathcal{F}(\mathrm{\mathfrak{E}(\vec V)})$.
+    condition is satisfied, thus we can conclude that $M(\e,o) = \T$ is a
+    cause of $\sigma \in \mathcal{F}(\mathrm{\mathfrak{E}( \vec V)})$.
 \end{example}
 
 \begin{example}

@@ -33,7 +33,7 @@ of boolean variables as follows:
 %     (s_{k'} \subset s_k) \Rightarrow \neg M_{k',i}
 %     \right)
 % \end{align*}
-For $x,y \in \mathcal{P}(\mathcal{E})$ we say $y$ is covered by $x$ written $ x \prec y$ iff:
+For $x,y \in \mathcal{P}(\mathcal{E})$ we say $x$ is covered by $y$ written $ x \prec y$ iff:
 \begin{align*}
     x \subseteq y \amp x \neq y \amp
     (\forall z. x \subseteq z \subseteq y \Rightarrow x = z
@@ -82,14 +82,13 @@ We also define the following auxiliary functions:
 \end{align*}
 Note that since we have defined $\mathcal{U}$ to be empty and
 \textcolor{red}{the model is recursive}, the values of all variables in
-$\mathcal{V}$ can be uniquely determined.
+$\mathcal{V}$ can be uniquely determined in the model.
 
 Given a set of events $E$, let $\mathbb{E}$ be the set of all
 triples of the form $(E,\#,\vdash)$ where $\# \subseteq E \times E$ 
 and $\vdash \subseteq \mathcal{P}(E) \times E$.
 Let $\m = \mathfrak{M}(\mathrm{E})$ for some event structure
-$\mathrm{E}$ on the set $E$ and let $\mathcal{V}$ be its set of
-endogenous variables.
+$\mathrm{E}$ on the set $E$.
 We define $\mathfrak{E}: (\times_{V \in \mathcal{V}}\mathcal{R}(V)) \rightarrow \mathbb{E}$
 to be a function that returns a triple in $\mathbb{E}$ given the
 values of endogenous variables in the causal model.

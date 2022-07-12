@@ -32,7 +32,5 @@ class CauseChecker:
 
     def check_ac2a(self):
         m = self.model
-        m = m.intervene(self.cause.var, self.witness.vxp)
-        m = m.intervene(self.witness.w, self.witness.vw)
-        m.evaluate()
-        return m.satisfies(self.effect.negate())
+        ints = {self.cause.var: self.witness.vxp, self.witness.w: self.witness.vw}
+        return m.satisfies(self.effect.negate(), ints)
