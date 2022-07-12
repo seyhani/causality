@@ -108,12 +108,37 @@ class TestEventStructure(unittest.TestCase):
             enabling={a: [set()], b: [{a}]},
             conflict={a: set(), b: set()},
         )
+        es.build_configurations()
+
         self.assertIn({'a', 'b'}, list_ids(es.configurations))
         es = es.prefix('c')
         self.assertIn(
             {(0, 'c'), (1, 'a'), (1, 'b')},
             list_ids(es.configurations)
         )
+
+    def test_configuration_plus(self):
+        a, b = Event('a'), Event('b')
+        es = {
+            0: EventStructure(
+                events={a},
+                enabling={a: [set()]},
+                conflict={a: set()},
+            ),
+            1: EventStructure(
+                events={b},
+                enabling={b: [set()]},
+                conflict={b: set()},
+            ),
+        }
+
+        es[0].build_configurations()
+        es[1].build_configurations()
+
+        es[2] = es[0].plus(es[1])
+
+        self.assertIn({(0, 'a')}, list_ids(es[2].configurations))
+        self.assertNotIn({(0, 'a'), (1, 'b')}, list_ids(es[2].configurations))
 
 
 if __name__ == '__main__':
