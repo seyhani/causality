@@ -101,6 +101,20 @@ class TestEventStructure(unittest.TestCase):
 
         self.assertFalse(es.is_configuration({a, b, c, d}))
 
+    def test_configuration_prefix(self):
+        a, b = Event('a'), Event('b')
+        es = EventStructure(
+            events={a, b},
+            enabling={a: [set()], b: [{a}]},
+            conflict={a: set(), b: set()},
+        )
+        self.assertIn({'a', 'b'}, list_ids(es.configurations))
+        es = es.prefix('c')
+        self.assertIn(
+            {(0, 'c'), (1, 'a'), (1, 'b')},
+            list_ids(es.configurations)
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

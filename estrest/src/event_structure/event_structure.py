@@ -59,6 +59,15 @@ class EventStructure:
 
         es.add_event(event)
 
+        es.configurations = {frozenset()}.union(
+            set(
+                map(
+                    lambda c_: c_.union({event}),
+                    es.configurations
+                )
+            )
+        )
+
         return es
 
     def plus(self, es1):
