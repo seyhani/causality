@@ -166,6 +166,29 @@ class TestEventStructure(unittest.TestCase):
         self.assertIn({'c', 'b'}, list_ids(es.configurations))
         self.assertNotIn({'a'}, list_ids(es.configurations))
 
+    def test_configuration_times(self):
+        a, b, c = Event('a'), Event('b'), Event('c')
+        es = {
+            0: EventStructure(
+                events={a, b},
+                enabling={a: [set()], b: [set()]},
+                conflict={a: {b}, b: {a}},
+            ),
+            1: EventStructure(
+                events={c},
+                enabling={c: [set()]},
+                conflict={c: set()},
+            ),
+        }
+
+        es[2] = es[0].times(es[1])
+        con = list_ids(es[2].configurations)
+
+        self.assertIn({('a', '*')}, con)
+        self.assertIn({('*', 'c')}, con)
+        self.assertIn({('a', '*'), ('*', 'c')}, con)
+        self.assertNotIn({('a', '*'), ('a', 'c')}, con)
+
 
 if __name__ == '__main__':
     unittest.main()
