@@ -167,6 +167,9 @@ class EventStructure:
 
         res.enabling = enabling
         res.events = events
+
+        res.build_configurations()
+
         return res
 
     def restrict(self, labels):
