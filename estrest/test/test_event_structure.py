@@ -140,6 +140,19 @@ class TestEventStructure(unittest.TestCase):
         self.assertIn({(0, 'a')}, list_ids(es[2].configurations))
         self.assertNotIn({(0, 'a'), (1, 'b')}, list_ids(es[2].configurations))
 
+    def test_configuration_restrict(self):
+        a, b = Event('a'), Event('b')
+        es = EventStructure(
+            events={a, b},
+            enabling={a: [set()], b: [{a}]},
+            conflict={a: set(), b: set()},
+        )
+        es.build_configurations()
+
+        es1 = es.restrict({'a'})
+        self.assertIn({'a'}, list_ids(es1.configurations))
+        self.assertNotIn({'a', 'b'}, list_ids(es1.configurations))
+
 
 if __name__ == '__main__':
     unittest.main()
