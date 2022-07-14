@@ -149,9 +149,22 @@ class TestEventStructure(unittest.TestCase):
         )
         es.build_configurations()
 
-        es1 = es.restrict({'a'})
-        self.assertIn({'a'}, list_ids(es1.configurations))
-        self.assertNotIn({'a', 'b'}, list_ids(es1.configurations))
+        es = es.restrict({'a'})
+        self.assertIn({'a'}, list_ids(es.configurations))
+        self.assertNotIn({'a', 'b'}, list_ids(es.configurations))
+
+    def test_configuration_relabelling(self):
+        a, b = Event('a'), Event('b')
+        es = EventStructure(
+            events={a, b},
+            enabling={a: [set()], b: [{a}]},
+            conflict={a: set(), b: set()},
+        )
+        es.build_configurations()
+
+        es = es.relabel({'a': 'c'})
+        self.assertIn({'c', 'b'}, list_ids(es.configurations))
+        self.assertNotIn({'a'}, list_ids(es.configurations))
 
 
 if __name__ == '__main__':
