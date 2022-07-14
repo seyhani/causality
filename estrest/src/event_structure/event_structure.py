@@ -30,11 +30,6 @@ class EventStructure:
         for e in self.events:
             e.prefix(prefix)
 
-    def add_event(self, event: Event):
-        self.events.update([event])
-        self.enabling[event] = [set()]
-        self.conflict[event] = set()
-
     def prefix(self, alpha: str):
         es = deepcopy(self)
         event = Event(alpha)
@@ -51,7 +46,9 @@ class EventStructure:
             for ee in enabling:
                 ee.update([event])
 
-        es.add_event(event)
+        es.events.update([event])
+        es.enabling[event] = [set()]
+        es.conflict[event] = set()
 
         es.configurations = {frozenset()}.union(
             set(
