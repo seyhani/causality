@@ -46,10 +46,15 @@ class EventStructure:
             for ee in enabling:
                 ee.update([event])
 
+        # Add (0,a) as an event with no conflicts and no enablings
         es.events.update([event])
         es.enabling[event] = [set()]
         es.conflict[event] = set()
 
+        # Configurations = {} union (
+        #   {(0,a)} union x
+        #   forall x in previous configurations
+        # )
         es.configurations = {frozenset()}.union(
             set(
                 map(
@@ -76,6 +81,8 @@ class EventStructure:
                 # Each pair of events from different ESs are in conflict
                 res.conflict[e].update([ce for ce in es[utils.dual(i)].events])
 
+        # Sum configurations will be union of operand configurations
+        # (with updated events)
         for i in (0, 1):
             res.configurations.update(es[i].configurations)
 
