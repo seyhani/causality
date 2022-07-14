@@ -30,11 +30,6 @@ class EventStructure:
         for e in self.events:
             e.prefix(prefix)
 
-    def update(self, es: "EventStructure"):
-        self.events.update(es.events)
-        self.enabling.update(es.enabling)
-        self.conflict.update(es.conflict)
-
     def add_event(self, event: Event):
         self.events.update([event])
         self.enabling[event] = [set()]
@@ -75,7 +70,9 @@ class EventStructure:
 
         for i in (0, 1):
             es[i].prefix_events(i)  # Disjoint union
-            res.update(es[i])
+            res.events.update(es[i].events)
+            res.enabling.update(es[i].enabling)
+            res.conflict.update(es[i].conflict)
 
         for i in (0, 1):
             for e in es[i].events:
