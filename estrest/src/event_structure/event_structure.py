@@ -170,20 +170,21 @@ class EventStructure:
         return res
 
     def restrict(self, labels):
-        es = EventStructure()
-        for e in self.events:
+        es = deepcopy(self)
+        res = EventStructure()
+        for e in es.events:
             if e.label in labels:
-                es.events.update([e])
+                res.events.update([e])
 
-        for e, conflict in self.conflict.items():
-            es.conflict[e] = set()
+        for e, conflict in es.conflict.items():
+            res.conflict[e] = set()
             if e.label in labels:
                 for c in conflict:
                     if c.label in labels:
-                        es.conflict[e].update([c])
+                        res.conflict[e].update([c])
 
-        for e, enabling in self.enabling.items():
-            es.enabling[e] = []
+        for e, enabling in es.enabling.items():
+            res.enabling[e] = []
             if e.label in labels:
                 for enabling_set in enabling:
                     is_valid = True
@@ -192,9 +193,17 @@ class EventStructure:
                             is_valid = False
                             break
                     if is_valid:
-                        es.enabling[e].append(enabling_set)
+                        res.enabling[e].append(enabling_set)
 
-        return es
+        for c in es.configurations:
+            is_valid = True
+            for e in c:
+                if e.label not in labels:
+                    is_valid = False
+                    break
+            if is_valid:
+                res.configurations.update([c])
+        return res
 
     def relabel(self, relabeling):
         es = deepcopy(self)
