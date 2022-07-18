@@ -31,6 +31,9 @@ class CausalModel:
         self.vals[var] = None
         self.fns[var] = fn
 
+    def add_constant(self, var: str, val: bool):
+        self.add(var, lambda vals: val)
+
     def __intervene_internal(self, var, val):
         model = deepcopy(self)
         model.fns[var] = lambda vals: val
