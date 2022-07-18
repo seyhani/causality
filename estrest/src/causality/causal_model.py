@@ -31,9 +31,15 @@ class CausalModel:
         self.vals[var] = None
         self.fns[var] = fn
 
-    def intervene(self, var: str, val: bool) -> 'CausalModel':
+    def __intervene_internal(self, var, val):
         model = deepcopy(self)
         model.fns[var] = lambda vals: val
+        return model
+
+    def intervene(self, ints: Dict[str, bool]) -> 'CausalModel':
+        model = self
+        for var, val in ints.items():
+            model = model.__intervene_internal(var, val)
         return model
 
     def satisfies(self, event: PrimitiveEvent, ints: VALS = None) -> bool:
@@ -41,7 +47,7 @@ class CausalModel:
             ints = {}
         m = self
         for var, val in ints.items():
-            m = m.intervene(var, val)
+            m = m.intervene({var: val})
         m.evaluate()
         return m.vals[event.var] == event.val
 

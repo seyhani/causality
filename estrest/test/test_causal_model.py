@@ -26,7 +26,7 @@ class TestCausalModel(unittest.TestCase):
         m.add('B', lambda vals: False)
         m.add('C', lambda vals: vals['A'] and vals['B'])
         m.add('D', lambda vals: vals['C'] and True)
-        m = m.intervene('C', True)
+        m = m.intervene({'C': True})
         m.evaluate()
         print(m.vals['D'])
 

@@ -2,6 +2,7 @@ import unittest
 
 from causality.causal_model import CausalModel
 from causality.cause_checker import CauseChecker, PrimitiveEvent, Witness
+from utils import powerset
 
 
 class TestCausalModel(unittest.TestCase):
@@ -15,8 +16,11 @@ class TestCausalModel(unittest.TestCase):
         effect = PrimitiveEvent('C', True)
         witness = Witness('B', False, False)
         checker = CauseChecker(m, cause, effect, witness)
-        self.assertTrue(checker.check_ac1())
-        self.assertTrue(checker.check_ac2a())
+        checker.check_acs()
+
+    def test(self):
+        x = {1, 2, 3}
+        print(list(powerset(x)))
 
 
 if __name__ == '__main__':

@@ -49,6 +49,11 @@ We define the functions in $\mathcal{F}$ as follows:
     \bigwedge_{\forall j,j'. j<j' \amp e_j,e_{j'} \in s_k}
     \neg C_{j,j'}
     \right)             \\
+    Min(k,i) & = \left(
+        \bigwedge_{\forall k'. (s_{k'} \subset s_k \text{ or } s_k \subset s_{k'}) 
+        \text{ and } i \notin s_{k'}}
+        \neg M(k',i)
+    \right)
 \end{align*}
 $$
     F_{C_{i,j}}(\vec V_{C_{i,j}}) = \begin{cases}
@@ -58,7 +63,7 @@ $$
 $$
 $$
     F_{M_{k,i}}(\vec V_{M_{k,i}}) = \begin{cases}
-        Con(k) & \text{ if } s_k \vdash_{min} e_i \\
+       Min(k,i) \wedge Con(k) & \text{ if } s_k \vdash_{min} e_i \\
         false  & \text{ otherwise }
     \end{cases}
 $$

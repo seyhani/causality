@@ -17,19 +17,21 @@
     \end{align*}
     The functions of the causal model are as follows:
     \begin{align*}
-        \f{M(\e,i)}    & = Con(\e) = \T                           \\
-        \f{M(\e,o)}    & = Con(\e) = \T                           \\
+        \f{M(\e,i)}    & = Min(\e,i) \wedge Con(\e) = Min(\e,i)   \\
+                       & = \neg M(\s{o},i)                        \\
+        \f{M(\e,o)}    & = Min(\e,o) \wedge Con(\e) =  Min(\e,o)   \\
+                       & = \neg M(\s{i},o) \\
         \f{M(\s{i},o)} & = \F                                     \\
         \f{M(\s{o},i)} & = \F                                     \\
-        \f{E(\e,i)}    & = M(\e,i) \wedge Con(\e) = M(\e,i)       \\
-        \f{E(\e,o)}    & = M(\e,o) \wedge Con(\e) = M(\e,o)       \\
-        \f{E(\s{o},i)} & =
-        \left( M(\s{o},i) \vee E(\e,i)  \right) \wedge Con(\s{o}) \\
-                       & = M(\s{o},i) \vee E(\e,i)                \\
-        \f{E(\s{i},o)} & =
-        \left( M(\s{i},o) \vee E(\e,o) \right)
+        \f{EN(\e,i)}    & = M(\e,i) \wedge Con(\e) = M(\e,i)       \\
+        \f{EN(\e,o)}    & = M(\e,o) \wedge Con(\e) = M(\e,o)       \\
+        \f{EN(\s{o},i)} & =
+        \left( M(\s{o},i) \vee EN(\e,i)  \right) \wedge Con(\s{o}) \\
+                       & = M(\s{o},i) \vee EN(\e,i)                \\
+        \f{EN(\s{i},o)} & =
+        \left( M(\s{i},o) \vee EN(\e,o) \right)
         \wedge Con(\s{i})                                         \\
-                       & = M(\s{i},o) \vee E(\e,o)                \\
+                       & = M(\s{i},o) \vee EN(\e,o)                \\
     \end{align*}
     In the actual context we have:
     \begin{align*}
@@ -45,9 +47,22 @@
         \e \vdash' o, \s{i} \vdash' o, \e \vdash' i,
         \s{o} \vdash' i
     \end{align*}
+    Which has configurations of the form:
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{i}$}
+            \crd[right]{2}{1}{$\s{o}$}
+            \crd[right]{0}{2}{$\s{i,o}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
     Now let $\sigma = \s{o}$ be a counterexample.
-    Assume that we want to declare $M(\e,o) = \T$ as a cause of
-    $\sigma \in \mathcal{F}(\mathrm{E'})$ using $(\e,\e,\F)$ as a witness.
+    Assume that we want to declare $M(\s{i},o) = \F$ as a cause of
+    $\sigma \in \mathcal{F}(\mathrm{E'})$ using $(\e,\e,\T)$ as a witness.
     It is easy to verify that $\mathrm{E'}$ is an event structure.
     To check whether $\sigma$ is a configuration of $\mathrm{E'}$ we need
     to have $\e \vdash' o$ which is satisfied.
@@ -58,33 +73,143 @@
     \end{align*}
     Thus, the AC1 condition is satisfied.
     Next, we need to verify the AC2 conditions.
-    Assume that we set $M(\e,o)$ to false.
-    $E(\e,o)$ depends on $M(\e,o)$ and $E(\s{o},i)$ depends on $E(\e,o)$,
-    and these are the only variables that are affected by changing $M(\e,o)$.
+    Assume that we set $M(\s{i},o)$ to true.
+    $M(\e,o)$ depends on $M(\s{i},o)$, $E(\e,o)$ depends on $M(\e,o)$, and 
+    $E(\s{i},o)$ depends on both $M(\s{o},i)$ and $E(\e,i)$
+    and these are the only variables that are affected by changing 
+    $M(\s{i},o)$.
     Thus, we have:
     \begin{align*}
-        \m & \vDash [M(\e,o)\la \F] EN(\e,i) = \T    \\
-        \m & \vDash [M(\e,o)\la \F] EN(\s{o},i) = \T \\
-        \m & \vDash [M(\e,o)\la \F] EN(\e,o) = \F    \\
-        \m & \vDash [M(\e,o)\la \F] EN(\s{i},o) = \F
+        \m & \vDash [M(\s{i},o)\la \T] M(\e,o) = \F    \\
+        \m & \vDash [M(\s{i},o)\la \T] EN(\e,o) = \F    \\
+        \m & \vDash [M(\s{i},o)\la \T] EN(\s{i},o) = \T    
     \end{align*}
-    Let $\vec v'$ be the value of endogenous variables after setting
-    $M(\e,o)$ to false so we have $\m \vDash [M(\e,o)\la \F]\vec V = \vec v'$.
-    Let $\mathrm{E}'' = \mathfrak{E}(\vec V) = (\s{i,o},\e, \vdash'')$ where:
+    Thus we have:
     \begin{align*}
-        \e \vdash'' i, \s{o} \vdash'' i
+        \m & \vDash [M(\s{i},o)\la \T]EN(\e,i) = \T    \\
+        \m & \vDash [M(\s{i},o)\la \T]EN(\s{o},i) = \T \\
+        \m & \vDash [M(\s{i},o)\la \T]EN(\e,o) = \F    \\
+        \m & \vDash [M(\s{i},o)\la \T]EN(\s{i},o) = \T \\
+        \m & \vDash [M(\s{i},o)\la \T]Con(i,o) = \F   
+    \end{align*}    
+    So, if $\mathrm{E}'' = \mathfrak{E}(\vec V) = (\s{i,o},\e, \vdash'')$
+    after we have set $M(\s{i},o)$ to true we have:
+    \begin{align*}
+        \e \vdash'' i, \s{o} \vdash'' i, \s{i} \vdash '' o
     \end{align*}
-    Again we can easily verify that $\mathrm{E}''$ is an event structure.
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{i}$}
+            \crd[right]{2}{1}{$\s{o}$}
+            \crd[right]{0}{2}{$\s{i,o}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{i}$}
+            \crd[right]{2}{1}{$\s{o}$}
+            \crd[right]{0}{2}{$\s{i,o}$}
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+    We can easily verify that $\mathrm{E}''$ is an event structure.
     Now, since $\e \not \vdash'' o$, thus $\sigma$ is not a configuration of
-    the $\mathrm{E}''$, so we have:
+    So, if $\vec v'$ be the value of endogenous variables after setting
+    $M(\s{i},o)$ to true we have:
     \begin{align*}
-        \m \vDash [M(\e,o) \la \F] \sigma \not \in \mathcal{F}(\mathfrak{E}(\vec V))
+        \m \vDash [M(\e,o) \la T] \sigma \not \in \mathcal{F}(\mathfrak{E}(\vec V))
         \wedge \vec v' \in \mathcal{E}
     \end{align*}
     Which satisfies the AC2(a) condition.
     Since we have used an empty $\vec W$ set for the witness, and AC2(a)
-    condition is satisfied, thus we can conclude that $M(\e,o) = \T$ is a
+    condition is satisfied, thus we can conclude that $M(\s{i},o) = \F$ is a
     cause of $\sigma \in \mathcal{F}(\mathrm{\mathfrak{E}( \vec V)})$.
+\end{example}
+
+\begin{example}
+    Consider the following network where wish to forward traffic from $a$ to $b$ and $x$ to $y$.
+    But, we also want to limit the traffic on the link 3 so that at any moment
+    there must be at most one packet traversing this link.
+    \begin{center}
+        \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
+            \node[main] (s1) {$s_1$};
+            \node[main] (s2) [below of=s1] {$s_2$};
+            \node[main] (a) [above left of=s1]{$a$};
+            \node[main] (x) [above right of=s1]{$x$};
+            \node[main] (b) [below left of=s2]{$b$};
+            \node[main] (y) [below right of=s2]{$y$};
+            \draw (a) --  node[above]{1} (s1);
+            \draw (x) --  node[above]{2}(s1);
+            \draw (s1) --  node[right]{3}(s2);
+            \draw (b) --  node[above]{4}(s2);
+            \draw (y) --  node[above]{5}(s2);
+        \end{tikzpicture}
+    \end{center}
+    We define events $a,x,b,y$ representing the forwarding of a packet from
+    1 to 3, 2 to 3, 3 to 4, and 3 to 5 respectively.
+    We define an event $c$ when congestion is detected on link 3 (at least two packets are being traversed through the link).
+    We define the conflict relation in such a way that we have:
+    \begin{align*}
+        a \# y, x\# b
+    \end{align*}
+    We consider an enabling relation the least one for which we have:
+    \begin{align*}
+        \e \vdash a, \e \vdash x, \s{a} \vdash b, \s{x} \vdash y,
+        \s{a,x} \vdash c
+    \end{align*}
+    Assume that $\sigma = \s{a,x,c}$ is given as a counterexample.
+    We wish to find the cause of 
+    Let $\mathrm{E'} = \mathfrak{E}(\vec V)$, so we wish to find the cause of
+    $ \sigma \in \mathcal{F}(E')$.
+    Configurations of $\mathrm{E'}$ are as follows:
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[above]{-2}{1}{$\s{a}$}
+            \crd[above]{2}{1}{$\s{x}$}
+            \crd[left]{-4}{2}{$\s{a,b}$}
+            \crd[left]{0}{2}{$\s{a,x}$}
+            \crd[left]{4}{2}{$\s{x,y}$}
+            \crd[left]{0}{3}{$\s{a,x,c}$}
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (-2,1) -- (-4,2);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (4,2);
+            \draw [ultra thick] (0,2) -- (0,3);
+        \end{tikzpicture}
+    \end{center}
+    Obviously, $\sigma$ is a configuration of $\mathrm{E'}$.
+    Now, let's consider $C(a,x) = \F$ as a cause using the witness 
+    $(\e,\e,\T)$.
+    Now let $\mathrm{E}'' = \mathfrak{E}(\vec V) = (E, \#'',\vdash'')$ after we set $C(a,x)$ to true. So we have $a\#''x$ and $x\#''a$.
+    So, the configurations of $\mathrm{E}''$ have the form:
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[above]{-2}{1}{$\s{a}$}
+            \crd[above]{2}{1}{$\s{x}$}
+            \crd[left]{-4}{2}{$\s{a,b}$}
+            \crd[left]{4}{2}{$\s{x,y}$}
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (-2,1) -- (-4,2);
+            \draw [ultra thick] (2,1) -- (4,2);
+        \end{tikzpicture}
+    \end{center}
+    In the new event structure, $\sigma$ is no longer a configuration, thus $AC2(a)$ is satisfied. 
+    Since we have used an empty $\vec W$ in the witness and AC1 and AC2(a)
+    are satisfied, thus we can conclude that $C(a,x) = \F$ is a cause of 
+    $\sigma \in \mathcal{F}(\mathrm{E}')$
+
+
 \end{example}
 
 \begin{example}
@@ -121,24 +246,21 @@
     \end{align*}
     We may consider the configuration $\sigma = \s{b,c,i}$ as a
     counterexample since $i$ is happened while $a$ has not been happened yet.
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-8}{3}{$\s{i}$}
+            \crd[left]{-6}{2}{$\s{i}$}
+            \crd[left]{-2}{2}{$\s{i}$}
+            \crd[left]{0}{3}{$\s{i}$}
+            \crd[left]{-4}{3}{$\s{i}$}
+            \crd[left]{-4}{1}{$\s{i}$}
+            \crd[right]{2}{1}{$\s{o}$}
+            \crd[right]{0}{2}{$\s{i,o}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+        \end{tikzpicture}
+    \end{center}
     Regarding this event structure we have:
-    \begin{align*}
-        \f{M(\e,a)}      & = Con(\e) =  \T                                  \\
-        \f{M(\e,b)}      & = Con(\e) =  \T                                  \\
-        \f{M(\e,c)}      & = Con(\e) = \T                                   \\
-        \f{M(\s{b},i)}   & = Con(\s{b}) =  \T                               \\
-        \f{M(\s{c},i)}   & = Con(\s{c}) =  \T                               \\
-        \f{E(\e,b)}      & = M(\e,b) \wedge Con(\e) = M(\e,b)               \\
-        \f{E(\s{b},c)}   & = (M(\s{b},c) \vee E(\e,c)) \wedge Con(\s{b})    \\
-                         & = M(\s{b},c) \vee E(\e,c)                        \\
-        \f{E(\e,c)}      & = M(\e,c) \wedge Con(\e)  = M(\e,c)              \\
-        \f{E(\s{b,c},i)} & = (M(\s{b,c},i) \vee E(\s{b},i) \vee E(\s{c},i))
-        \wedge Con(\s{b,c})                                                 \\
-        \f{E(\s{b},i)}   & = (M(\s{b},i) \vee E(\e,i))\wedge Con(\s{b})     \\
-                         & = M(\s{b},i) \vee E(\e,i)                        \\
-        \f{E(\s{c},i)}   & = (M(\s{c},i) \vee E(\e,i))\wedge Con(\s{c})     \\
-                         & = M(\s{c},i) \vee E(\e,i)                        \\
-    \end{align*}
     Let $\pi = b,c,i$ be a permutation of $\sigma$, we have:
     \begin{align*}
         \varphi_{\pi} & =
@@ -177,66 +299,4 @@
     Thus, the disjunction of $E(\s{b,c},i)$ has a true value and thus it
     remains true even if we set $E(\s{c},i)$ to false.
     We can conclude that $\varphi$ remains true and AC2(b) is satisfied.
-\end{example}
-
-\begin{example}
-    Consider the following network where wish to forward traffic from $a$ to $b$ and $x$ to $y$.
-    But, we also want to limit the traffic on the link 3 so that at any moment
-    there must be at most one packet traversing this link.
-    \begin{center}
-        \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
-            \node[main] (s1) {$s_1$};
-            \node[main] (s2) [below of=s1] {$s_2$};
-            \node[main] (a) [above left of=s1]{$a$};
-            \node[main] (x) [above right of=s1]{$x$};
-            \node[main] (b) [below left of=s2]{$b$};
-            \node[main] (y) [below right of=s2]{$y$};
-            \draw (a) --  node[above]{1} (s1);
-            \draw (x) --  node[above]{2}(s1);
-            \draw (s1) --  node[right]{3}(s2);
-            \draw (b) --  node[above]{4}(s2);
-            \draw (y) --  node[above]{5}(s2);
-        \end{tikzpicture}
-    \end{center}
-    We define events $a,x,b,y$ representing the forwarding of a packet from
-    1 to 3, 2 to 3, 3 to 4, and 3 to 5 respectively.
-    We define an event $c$ when congestion is detected on link 3 (at least two packets are being traversed through the link).
-    We define the conflict relation in such a way that we have:
-    \begin{align*}
-        a \# y, x\# b
-    \end{align*}
-    We consider an enabling relation the least one for which we have:
-    \begin{align*}
-        \e \vdash a, \e \vdash x, \s{a} \vdash b, \s{x} \vdash y,
-        \s{a,x} \vdash c
-    \end{align*}
-    Now, consider $\sigma = \s{a,x,c}$ as a counterexample.
-    The functions of the causal model are as follows:
-    \begin{align*}
-        \f{M(\e,a)}      & = Con(\e) = \T                     \\
-        \f{M(\e,x)}      & = Con(\e) = \T                     \\
-        \f{M(\s{a},b)}   & = Con(\s{a}) = \T                  \\
-        \f{M(\s{x},y)}   & = Con(\s{x}) = \T                  \\
-        \f{M(\s{a,x},c)} & = Con(\s{a,x})                     \\
-        \varphi_{\pi}    & = E(\e,a) \wedge E(\s{a},x) \wedge
-        E(\s{a,x},c) \wedge Con(\s{a,x,c})                    \\
-        \f{E(\e,a)}      & = M(\e,a) \wedge Con(\e) = M(\e,a) \\
-        \f{E(\s{a},x)}   & = (M(\s{a},x) \vee E(\e,x) )
-        \wedge Con(\s{a})                                     \\
-        \f{E(\e,x)}      & = M(\e,x) \wedge Con(\e) = M(\e,x) \\
-        \f{E(\s{a,x},c)} & = (M(\s{a,x},c) \vee E(\s{a},c)
-        \vee E(\s{x},c)) \wedge Con(\s{a,x})                  \\
-        \f{E(\s{a},c)}   & = (M(\s{a},c) \vee E(\e,c))
-        \wedge Con(\s{a})                                     \\
-                         & = M(\s{a},c) \vee E(\e,c)          \\
-        \f{E(\s{x},c)}   & = (M(\s{x},c) \vee E(\e,c))
-        \wedge Con(\s{x})                                     \\
-                         & = M(\s{x},c) \vee E(\e,c)          \\
-    \end{align*}
-    In this example, we may introduce $M(\e,x) = \T$ as a cause of $\varphi$.
-    Assume that we set $M(\e,x)$ to false.
-    This causes $E(\e,x)$ to become false which cause $E(\s{a},x)$ become false.
-    Finally, $E(\s{a},x)$ becoming false causes $\varphi$ to become false.
-    Since we have used an empty $\vec W$, and the AC2(a) condition is
-    satisfied, so $M(\e,x) = \T$ is a but-for cause of $\varphi$.
 \end{example}

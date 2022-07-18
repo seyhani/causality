@@ -1,5 +1,6 @@
 from causality import CausalModel
 from causality.causal_model import PrimitiveEvent
+from utils import powerset
 
 
 class Witness:
@@ -34,3 +35,18 @@ class CauseChecker:
         m = self.model
         ints = {self.cause.var: self.witness.vxp, self.witness.w: self.witness.vw}
         return m.satisfies(self.effect.negate(), ints)
+
+    def check_ac2b(self):
+        m = self.model
+        m.evaluate()
+        Z = {z: m.vals[z] for z in m.vals if z != self.witness.w}
+        ints = {self.cause.var: self.cause.val, self.witness.w: self.witness.vw}
+        m = m.intervene(ints)
+        m.evaluate()
+        for Zp in powerset(Z):
+            if not m.satisfies(self.effect, {z: Z[z] for z in Zp}):
+                return False
+        return True
+
+    def check_acs(self):
+        return self.check_ac1() and self.check_ac2a() and self.check_ac2b()
