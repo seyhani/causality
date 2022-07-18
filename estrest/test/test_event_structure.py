@@ -1,8 +1,8 @@
 import unittest
 
+from event import Event
 from event_structure import EventStructure
-from src import ids
-from utils import list_ids
+from utils import ids, list_ids
 
 
 class TestEventStructure(unittest.TestCase):

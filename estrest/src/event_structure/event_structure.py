@@ -1,6 +1,6 @@
 import itertools
 from copy import deepcopy
-from typing import Set
+from typing import Set, List, FrozenSet
 
 import utils
 from event import Event, SyncedEvent, STAR
@@ -8,10 +8,11 @@ from event import Event, SyncedEvent, STAR
 
 # noinspection SpellCheckingInspection
 class EventStructure:
-    def __init__(self) -> None:
-        self.events = set()
-        self.enabling = {}  # Event -> List[Set[Event]]
-        self.conflict = {}  # Event -> Set[Event]
+    def __init__(self, events=None, enabling=None, conflict=None) -> None:
+        self.events = events or set()
+        self.enabling = enabling or {}  # Event -> List[Set[Event]]
+        self.conflict = conflict or {}  # Event -> Set[Event]
+        self.configurations = set()  # Set[FrozenSet[Event]]
 
     def get_event(self, _id: tuple):
         for e in self.events:
@@ -29,16 +30,6 @@ class EventStructure:
         for e in self.events:
             e.prefix(prefix)
 
-    def update(self, es: "EventStructure"):
-        self.events.update(es.events)
-        self.enabling.update(es.enabling)
-        self.conflict.update(es.conflict)
-
-    def add_event(self, event: Event):
-        self.events.update([event])
-        self.enabling[event] = [set()]
-        self.conflict[event] = set()
-
     def prefix(self, alpha: str):
         es = deepcopy(self)
         event = Event(alpha)
@@ -55,7 +46,23 @@ class EventStructure:
             for ee in enabling:
                 ee.update([event])
 
-        es.add_event(event)
+        # Add (0,a) as an event with no conflicts and no enablings
+        es.events.update([event])
+        es.enabling[event] = [set()]
+        es.conflict[event] = set()
+
+        # Configurations = {} union (
+        #   {(0,a)} union x
+        #   forall x in previous configurations
+        # )
+        es.configurations = {frozenset()}.union(
+            set(
+                map(
+                    lambda c_: c_.union({event}),
+                    es.configurations
+                )
+            )
+        )
 
         return es
 
@@ -65,12 +72,19 @@ class EventStructure:
 
         for i in (0, 1):
             es[i].prefix_events(i)  # Disjoint union
-            res.update(es[i])
+            res.events.update(es[i].events)
+            res.enabling.update(es[i].enabling)
+            res.conflict.update(es[i].conflict)
 
         for i in (0, 1):
             for e in es[i].events:
                 # Each pair of events from different ESs are in conflict
                 res.conflict[e].update([ce for ce in es[utils.dual(i)].events])
+
+        # Sum configurations will be union of operand configurations
+        # (with updated events)
+        for i in (0, 1):
+            res.configurations.update(es[i].configurations)
 
         return res
 
@@ -153,23 +167,27 @@ class EventStructure:
 
         res.enabling = enabling
         res.events = events
+
+        res.build_configurations()
+
         return res
 
     def restrict(self, labels):
-        es = EventStructure()
-        for e in self.events:
+        es = deepcopy(self)
+        res = EventStructure()
+        for e in es.events:
             if e.label in labels:
-                es.events.update([e])
+                res.events.update([e])
 
-        for e, conflict in self.conflict.items():
-            es.conflict[e] = set()
+        for e, conflict in es.conflict.items():
+            res.conflict[e] = set()
             if e.label in labels:
                 for c in conflict:
                     if c.label in labels:
-                        es.conflict[e].update([c])
+                        res.conflict[e].update([c])
 
-        for e, enabling in self.enabling.items():
-            es.enabling[e] = []
+        for e, enabling in es.enabling.items():
+            res.enabling[e] = []
             if e.label in labels:
                 for enabling_set in enabling:
                     is_valid = True
@@ -178,9 +196,17 @@ class EventStructure:
                             is_valid = False
                             break
                     if is_valid:
-                        es.enabling[e].append(enabling_set)
+                        res.enabling[e].append(enabling_set)
 
-        return es
+        for c in es.configurations:
+            is_valid = True
+            for e in c:
+                if e.label not in labels:
+                    is_valid = False
+                    break
+            if is_valid:
+                res.configurations.update([c])
+        return res
 
     def relabel(self, relabeling):
         es = deepcopy(self)
@@ -194,6 +220,29 @@ class EventStructure:
 
     def get_labels(self):
         return set(map(lambda x: repr(x.label).replace("\'", ""), self.events))
+
+    # Pre-conditions:
+    # * x is a subset of self.events
+    # * If event e is enabled by the null set, we have:
+    #    enabling[e] = [{}]
+    def build_configurations(self):
+        # BFS to find all configurations
+        queue: List[Set[Event]] = [set()]
+        visited: Set[FrozenSet[Event]] = {frozenset()}
+        while queue:
+            conf = queue.pop(0)
+            for e in self.events - conf:
+                conf_new = conf.union({e})
+                if not self.conflict_free(conf_new):
+                    continue
+                if not [s_ for s_ in self.enabling[e] if s_.issubset(conf_new)]:
+                    continue
+                visited.add(frozenset(conf_new))
+                queue.append(conf_new)
+        self.configurations = visited
+
+    def is_configuration(self, x: Set[Event]):
+        return frozenset(x) in self.configurations
 
     def __eq__(self, other):
         if not isinstance(other, EventStructure):
