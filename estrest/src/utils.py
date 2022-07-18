@@ -1,3 +1,4 @@
+from itertools import chain, combinations
 from typing import Set, List
 
 from event import Event, SyncedEvent, STAR
@@ -64,3 +65,13 @@ def async_event(e, i):
         return SyncedEvent(e, STAR)
     else:
         return SyncedEvent(STAR, e)
+
+
+def powerset(iterable):
+    s = set(iterable)
+    return map(
+        set,
+        chain.from_iterable(
+            combinations(s, r) for r in range(len(s) + 1)
+        )
+    )
