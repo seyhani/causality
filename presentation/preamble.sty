@@ -1,0 +1,37 @@
+\ProvidesPackage{preamble}
+
+\usepackage{amsmath,amssymb}
+\usepackage{tikz} 
+\usetikzlibrary{calc}
+\usepackage{forest}
+\usepackage{stmaryrd}
+\usepackage[final]{listings} 
+\usepackage{ragged2e}
+\usetikzlibrary{positioning}
+% Inbuilt themes in beamer
+\apptocmd{\frame}{}{\justifying}{}
+\newcommand{\xrightarrowdbl}[2][]{%
+  \xrightarrow[#1]{#2}\mathrel{\mkern-14mu}\rightarrow
+}
+\newcommand{\emp}{\langle\rangle}
+\newcommand{\tail}{\!\!::\!\!\emp}
+\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
+\newcommand{\s}[1]{\{#1\}}
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
+
+% Theme choice:
+\usetheme{Boadilla}
+
+% Title page details: 
+\title{Towards Causality in DyNetKAT} 
+\date{\today}

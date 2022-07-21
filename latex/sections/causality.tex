@@ -1,39 +1,18 @@
 % Todo: find proper signs for Es
 Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure with
-$E = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $E$ where $p = 2^n$.
+$E = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $E$.
 Given an event structure $\mathrm{E}$, we define
-$\mathfrak{M}(\mathrm{E}) = (\mathcal{S},\mathcal{F},\mathcal{E})$
+$\mathfrak{M}(\mathrm{E}) = (\mathcal{S},\mathscr{F},\mathcal{E})$
 to be its causal model where
 $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$.
 We define $\mathcal{U}$ to be empty and $\mathcal{V}$ consisting
 of boolean variables as follows:
 \begin{align*}
-    \mathcal{V} = & \s{C_{i,j} | \forall 1 \leq i < j \leq n. e_i \in \mathcal{E} \amp e_j \in \mathcal{E}}                     \\
-                  & \cup \s{EN_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
-                  & \cup \s{M_{k,i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} }
+    \mathcal{V} = & \s{C_{e_i,e_j} | \forall 1 \leq i < j \leq n. e_i \in \mathcal{E} \amp e_j \in \mathcal{E}}                     \\
+                  & \cup \s{EN_{s_k,e_i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} } \\
+                  & \cup \s{M_{s_k,e_i} | \forall 1 \leq k \leq p , \forall 1 \leq i \leq n . s_k \in P \amp e_i \in \mathcal{E} }
 \end{align*}
-% We define $\mathcal{E}$ to be the set of all settings
-% $(x_1,x_2,...,x_{|\mathcal{V}|})$ of the endogenous variables satisfying
-% the following conditions:
-% \begin{align*}
-%      & \forall_{k,i}.
-%     \left(
-%     M_{k,i} \Rightarrow EN_{k,i}
-%     \right)
-%     \wedge
-%     \left(
-%     EN_{k,i} \Rightarrow Con(k)
-%     \right)
-%     \\
-%      & \wedge \left(EN_{k,i} \Rightarrow
-%     \forall k'. (s_k \subset s_{k'} \wedge Con(k')) \Rightarrow EN_{k',i}
-%     \right)                             \\
-%      & \wedge \left(
-%     M_{k,i} \Rightarrow \forall k'.
-%     (s_{k'} \subset s_k) \Rightarrow \neg M_{k',i}
-%     \right)
-% \end{align*}
-For $x,y \in \mathcal{P}(\mathcal{E})$ we say $x$ is covered by $y$ written $ x \prec y$ iff:
+For $x,y \in \mathcal{P}(E)$ we say $x$ is covered by $y$ written $ x \prec y$ iff:
 \begin{align*}
     x \subseteq y \amp x \neq y \amp
     (\forall z. x \subseteq z \subseteq y \Rightarrow x = z
@@ -41,79 +20,104 @@ For $x,y \in \mathcal{P}(\mathcal{E})$ we say $x$ is covered by $y$ written $ x 
 \end{align*}
 For each variable $x \in \mathcal{V}$ we define $\vec V_x$ as a vector
 of all variables in $\mathcal{V}$ excluding $x$.
-Since $\mathcal{U} = \emptyset$ we omit $\vec u$ from the
-signature of methods in $\mathcal{F}$.
-We define the functions in $\mathcal{F}$ as follows:
+We define the functions in $\mathscr{F}$ as follows:
 \begin{align*}
-    Con(k) & =   \left(
-    \bigwedge_{\forall j,j'. j<j' \amp e_j,e_{j'} \in s_k}
-    \neg C_{j,j'}
-    \right)             \\
-    Min(k,i) & = \left(
-        \bigwedge_{\forall k'. (s_{k'} \subset s_k \text{ or } s_k \subset s_{k'}) 
-        \text{ and } i \notin s_{k'}}
-        \neg M(k',i)
+    Con(s)   & =   \left(
+    \bigwedge_{ 1\leq j<j' \leq n \wedge e_j,e_{j'} \in s}
+    \neg C_{e_j,e_{j'}}
+    \right)               \\
+    Min(s,e) & = \left(
+    \bigwedge_{s'. (s' \subset s \vee s \subset s')
+        \wedge e \notin s'}
+    \neg M(k',i)
     \right)
 \end{align*}
 $$
-    F_{C_{i,j}}(\vec V_{C_{i,j}}) = \begin{cases}
-        true  & \text{ if } e_i \# e_j \amp e_j \# e_i \\
+    \f{C_{e,e'}} = \begin{cases}
+        true  & \text{ if } e \# e' \amp e' \# e \\
         false & \text{ otherwise }
     \end{cases}
 $$
 $$
-    F_{M_{k,i}}(\vec V_{M_{k,i}}) = \begin{cases}
-       Min(k,i) \wedge Con(k) & \text{ if } s_k \vdash_{min} e_i \\
-        false  & \text{ otherwise }
+    \f{M_{s,e}} = \begin{cases}
+        Min(s,e) \wedge Con(s) & \text{ if } s \vdash_{min} e \\
+        false                  & \text{ otherwise }
     \end{cases}
 $$
 \begin{align*}
-    \f{EN_{k,i}} & =
+    \f{EN_{s,e}} & =
     \left(
-    M_{k,i} \vee
+    M_{s,e} \vee
     \left(
-    \bigvee_{\forall l. s_l  \prec s_k}EN_{l,i}
+    \bigvee_{s'\prec s}EN_{s',e}
     \right)
     \right)
     \bigwedge
-    Con(k)
-\end{align*}
-We also define the following auxiliary functions:
-\begin{align*}
-    C(e,e') = C_{i,j}    & \iff e = e_i \wedge e' = e_j \\
-    M(s,e)  = M_{k,i}    & \iff s = s_k \wedge e = e_i  \\
-    EN(s,e)  = EN_{k,i}  & \iff s = s_k \wedge e = e_i  \\
-    Con(e,e') = Con(i,j) & \iff e = e_i \wedge e' = e_j
+    Con(s)
 \end{align*}
 Note that since we have defined $\mathcal{U}$ to be empty and
 \textcolor{red}{the model is recursive}, the values of all variables in
 $\mathcal{V}$ can be uniquely determined in the model.
 
-Given a set of events $E$, let $\mathbb{E}$ be the set of all
-triples of the form $(E,\#,\vdash)$ where $\# \subseteq E \times E$ 
+Let $\mathcal{M}$ be a causal model and $\mathcal{V}$ be its set of
+endogenous variables.
+Let $E = \s{e|\exists e'. C_{e,e'} \in \mathcal{V} \vee C_{e',e} \in \mathcal{V} }$.
+We define $\mathbb{E}$ be the set of all
+triples of the form $(E,\#,\vdash)$ where $\# \subseteq E \times E$
 and $\vdash \subseteq \mathcal{P}(E) \times E$.
 Let $\m = \mathfrak{M}(\mathrm{E})$ for some event structure
 $\mathrm{E}$ on the set $E$.
-We define $\mathfrak{E}: (\times_{V \in \mathcal{V}}\mathcal{R}(V)) \rightarrow \mathbb{E}$
-to be a function that returns a triple in $\mathbb{E}$ given the
-values of endogenous variables in the causal model.
-Let $\vec V$ be the vector of endogenous variables in $\m$.
+We define $\mathfrak{E}: \times_{V \in \mathcal{V}} \mathcal{R}(V) \rightarrow \mathbb{E}$
+to be a function that returns a triple in $\mathbb{E}$ given a set of
+endogenous variables.
+Given a causal model $\mathcal{M}$, let $\vec C$ be the vector of all
+variables of the form $C_{e,e'}$ and $\vec{EN}$ be the vector of all
+variables of the form $EN_{s,e}$.
 We define $\mathfrak{E}$ such that if
-$\mathfrak{E}(\vec V) = (E,\#',\vdash')$ then we have:
+$\vte = (E, \#',\vdash')$ we have:
 \begin{align*}
-    e \#' e' \amp e' \#' e \iff C(e,e') \\
-    s \vdash' e \iff EN(s,e)
+    \forall e,e' \in E. e \#' e' \wedge e' \#' e
+     & \iff C_{e,e'} = \T \\
+    \forall s \in \mathcal{P}(E), e \in E.  s \vdash' e
+     & \iff EN_{s,e} = \T
 \end{align*}
 We define $\mathcal{E}$ to be the set of all allowable
-settings of the endogenous variables such as $\vec v'$ 
-for which if $\vec V = \vec v'$ then the triple 
-$\mathfrak{E}(\vec V)$ is an event structure.
+settings of the endogenous variables such as $\vec v'$
+for which if $M \vDash \vec V = \vec v'$ then the triple $\vte$ is an event structure 
 
-Finally, for a given configuration $\sigma = \s{e_1,e_2,...,e_m}$ 
-as a counterexample we define the effect, or $\varphi$, for which 
-we want to find the cause as 
-$\sigma \in \mathcal{F}(\mathfrak{E}(\vec V))$ where $\mathcal{F}$ 
+Finally, for a given configuration $\sigma = \s{e_{i_1},e_{i_2},...,e_{i_m}}$
+we want to find the cause of
+$\sigma \in \mathcal{F}(\mathrm{E})$ where $\mathcal{F}$
 is the set of the configurations of a given event structure.
+
+\begin{definition}
+    Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure and
+    $\mathcal{M} = \mathfrak{M}(\mathrm{E})$ be its causal model.
+    For a $\sigma \in \mathcal{F}(\mathrm{E})$ given as a counterexample,
+    $\vec X = \vec x$ is an actual cause of
+    $\sigma \in \mathcal{F}(\mathrm{E})$ in $\mathcal{M}$ if the following three conditions hold:
+    \begin{itemize}
+        \item  \textbf{AC1.} $M\models \vec X = \vec x \wedge
+                  \sigma \in \mathcal{F}(\mathrm{E})
+                  \wedge \vec V = \vec v
+                  \wedge \vec v \in \mathcal{E}$.
+        \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
+
+              (a) $M \models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']
+                  \sigma \notin \mathcal{F}(\vte)
+                  \wedge \vec V = \vec v
+                  \wedge  \vec v \in \mathcal{E}$.
+
+              (b) $M \models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
+                  \sigma \in \mathcal{F}(\vte) 
+                  \wedge \vec V = \vec v
+                  \wedge \vec v \in \mathcal{E}$ 
+                  for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+
+        \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
+    \end{itemize}
+    Where $\vec v$ is the value of endogenous variables.
+\end{definition}
 \pagebreak
 \subsection{Examples}
 \input{sections/examples}

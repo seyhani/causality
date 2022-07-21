@@ -1,3 +1,5 @@
+In the following, we write $C(e,e'),M(s,e),EN(s,e)$ to indicate variables
+$C_{e,e'},M_{s,e},$ and $EN_{s,e}$ respectively.
 \begin{example}
     Consider a firewall where we initially allow all outgoing packets and block all incoming packets.
     We want to allow incoming packets once a packet is sent outside.
@@ -8,8 +10,9 @@
             \draw (s) -- node[above]{$o$} (1,0);
         \end{tikzpicture}
     \end{center}
-    We may represent this network with an event structure of
-    events $o,i$ for incoming and outgoing packets respectively.
+    We may represent this network with an event structure 
+    $\mathrm{E} = (\s{i,o},\e,\vdash)$ where events $o,i$ for incoming 
+    and outgoing packets respectively.
     We assume an empty conflict relation and enabling relation
     $\vdash$ the least one that satisfies:
     \begin{align*}
@@ -17,21 +20,29 @@
     \end{align*}
     The functions of the causal model are as follows:
     \begin{align*}
-        \f{M(\e,i)}    & = Min(\e,i) \wedge Con(\e) = Min(\e,i)   \\
-                       & = \neg M(\s{o},i)                        \\
-        \f{M(\e,o)}    & = Min(\e,o) \wedge Con(\e) =  Min(\e,o)   \\
-                       & = \neg M(\s{i},o) \\
-        \f{M(\s{i},o)} & = \F                                     \\
-        \f{M(\s{o},i)} & = \F                                     \\
+        \f{M(\e,i)}     & = Min(\e,i) \wedge Con(\e) = Min(\e,i)   \\
+                        & = \neg M(\s{o},i)                        \\
+        \f{M(\e,o)}     & = Min(\e,o) \wedge Con(\e) =  Min(\e,o)  \\
+                        & = \neg M(\s{i},o)                        \\
+        \f{M(\s{i},o)}  & = \F                                     \\
+        \f{M(\s{o},i)}  & = \F                                     \\
         \f{EN(\e,i)}    & = M(\e,i) \wedge Con(\e) = M(\e,i)       \\
         \f{EN(\e,o)}    & = M(\e,o) \wedge Con(\e) = M(\e,o)       \\
         \f{EN(\s{o},i)} & =
         \left( M(\s{o},i) \vee EN(\e,i)  \right) \wedge Con(\s{o}) \\
-                       & = M(\s{o},i) \vee EN(\e,i)                \\
+                        & = M(\s{o},i) \vee EN(\e,i)               \\
         \f{EN(\s{i},o)} & =
         \left( M(\s{i},o) \vee EN(\e,o) \right)
-        \wedge Con(\s{i})                                         \\
-                       & = M(\s{i},o) \vee EN(\e,o)                \\
+        \wedge Con(\s{i})                                          \\
+                        & = M(\s{i},o) \vee EN(\e,o)               
+    \end{align*}
+    Now let $\sigma = \s{o}$ be a counterexample.
+    Assume that we want to declare $M(\s{i},o) = \F$ as a cause of
+    $\sigma \in \mathcal{F}(\mathrm{E})$ using $(\e,\e,\T)$ as a witness.
+    First, we need to verify the AC1 condition:
+    \begin{align*}
+        \m \vDash M(\s{i},o) = \F \wedge \sigma
+        \in \mathcal{F}(\vte) \wedge \vec v \in \mathcal{E}
     \end{align*}
     In the actual context we have:
     \begin{align*}
@@ -39,10 +50,10 @@
         \m & \vDash EN(\s{o},i) = \T \\
         \m & \vDash EN(\e,o) = \T    \\
         \m & \vDash EN(\s{i},o) = \T \\
-        \m & \vDash Con(i,o) = \F    \\
+        \m & \vDash Con(i,o) = \F    
     \end{align*}
-    Let $\mathrm{E'} = \mathfrak{E}(\vec V) = (\s{i,o},\e,\vdash')$
-    in the actual context where we have:
+    Let $\mathrm{E'} = \vte = (\s{i,o},\e,\vdash')$
+    in the actual context so we have:
     \begin{align*}
         \e \vdash' o, \s{i} \vdash' o, \e \vdash' i,
         \s{o} \vdash' i
@@ -60,29 +71,24 @@
             \draw [ultra thick] (2,1) -- (0,2);
         \end{tikzpicture}
     \end{center}
-    Now let $\sigma = \s{o}$ be a counterexample.
-    Assume that we want to declare $M(\s{i},o) = \F$ as a cause of
-    $\sigma \in \mathcal{F}(\mathrm{E'})$ using $(\e,\e,\T)$ as a witness.
-    It is easy to verify that $\mathrm{E'}$ is an event structure.
-    To check whether $\sigma$ is a configuration of $\mathrm{E'}$ we need
-    to have $\e \vdash' o$ which is satisfied.
+    It is easy to verify that $\mathrm{E'}$ is an event structure and
+    $\sigma$ is a configuration of $\mathrm{E'}$.  
+    So, the AC1 condition is satisfied.
+    Next, we need to verify the AC2(a) condition:
+    \begin{align*}
+        \m \vDash [M(\s{i},o) \la T] \sigma \not \in \mathcal{F}(\vte)
+        \wedge \vec v \in \mathcal{E}
+    \end{align*}
+    Assume that we set $M(\s{i},o)$ to true.
+    $M(\e,o)$ depends on $M(\s{i},o)$, $E(\e,o)$ depends on $M(\e,o)$, and
+    $E(\s{i},o)$ depends on both $M(\s{o},i)$ and $E(\e,i)$
+    and these are the only variables that are affected by changing
+    $M(\s{i},o)$.
     Thus we have:
     \begin{align*}
-        \m \vDash M(\e,o) = \T \wedge \sigma
-        \in \mathcal{F}(\mathfrak{E}(\vec V)) \wedge \vec v \in \mathcal{E}
-    \end{align*}
-    Thus, the AC1 condition is satisfied.
-    Next, we need to verify the AC2 conditions.
-    Assume that we set $M(\s{i},o)$ to true.
-    $M(\e,o)$ depends on $M(\s{i},o)$, $E(\e,o)$ depends on $M(\e,o)$, and 
-    $E(\s{i},o)$ depends on both $M(\s{o},i)$ and $E(\e,i)$
-    and these are the only variables that are affected by changing 
-    $M(\s{i},o)$.
-    Thus, we have:
-    \begin{align*}
-        \m & \vDash [M(\s{i},o)\la \T] M(\e,o) = \F    \\
+        \m & \vDash [M(\s{i},o)\la \T] M(\e,o) = \F     \\
         \m & \vDash [M(\s{i},o)\la \T] EN(\e,o) = \F    \\
-        \m & \vDash [M(\s{i},o)\la \T] EN(\s{i},o) = \T    
+        \m & \vDash [M(\s{i},o)\la \T] EN(\s{i},o) = \T
     \end{align*}
     Thus we have:
     \begin{align*}
@@ -90,13 +96,15 @@
         \m & \vDash [M(\s{i},o)\la \T]EN(\s{o},i) = \T \\
         \m & \vDash [M(\s{i},o)\la \T]EN(\e,o) = \F    \\
         \m & \vDash [M(\s{i},o)\la \T]EN(\s{i},o) = \T \\
-        \m & \vDash [M(\s{i},o)\la \T]Con(i,o) = \F   
-    \end{align*}    
-    So, if $\mathrm{E}'' = \mathfrak{E}(\vec V) = (\s{i,o},\e, \vdash'')$
+        \m & \vDash [M(\s{i},o)\la \T]Con(i,o) = \F
+    \end{align*}
+    So, if $\mathrm{E}'' = \vte = (\s{i,o},\e, \vdash'')$
     after we have set $M(\s{i},o)$ to true we have:
     \begin{align*}
         \e \vdash'' i, \s{o} \vdash'' i, \s{i} \vdash '' o
     \end{align*}
+    Thus configurations of the $\mathrm{E''}$ would be as the right figure
+    below:
     \begin{center}
         \begin{tikzpicture}[scale=0.8]
             \crd{0}{0}{$\emptyset$}
@@ -111,22 +119,15 @@
         \begin{tikzpicture}[scale=0.8]
             \crd{0}{0}{$\emptyset$}
             \crd[left]{-2}{1}{$\s{i}$}
-            \crd[right]{2}{1}{$\s{o}$}
             \crd[right]{0}{2}{$\s{i,o}$}
             \draw [ultra thick] (0,0) -- (-2,1);
             \draw [ultra thick] (-2,1) -- (0,2);
-            \draw [ultra thick] (2,1) -- (0,2);
         \end{tikzpicture}
     \end{center}
     We can easily verify that $\mathrm{E}''$ is an event structure.
-    Now, since $\e \not \vdash'' o$, thus $\sigma$ is not a configuration of
-    So, if $\vec v'$ be the value of endogenous variables after setting
-    $M(\s{i},o)$ to true we have:
-    \begin{align*}
-        \m \vDash [M(\e,o) \la T] \sigma \not \in \mathcal{F}(\mathfrak{E}(\vec V))
-        \wedge \vec v' \in \mathcal{E}
-    \end{align*}
-    Which satisfies the AC2(a) condition.
+    Now, since $\e \not \vdash'' o$, thus $\sigma$ is not a configuration
+    of $\mathrm{E}''$.
+    So the AC2(a) condition is also satisfied.
     Since we have used an empty $\vec W$ set for the witness, and AC2(a)
     condition is satisfied, thus we can conclude that $M(\s{i},o) = \F$ is a
     cause of $\sigma \in \mathcal{F}(\mathrm{\mathfrak{E}( \vec V)})$.
@@ -164,8 +165,7 @@
         \s{a,x} \vdash c
     \end{align*}
     Assume that $\sigma = \s{a,x,c}$ is given as a counterexample.
-    We wish to find the cause of 
-    Let $\mathrm{E'} = \mathfrak{E}(\vec V)$, so we wish to find the cause of
+    Let $\mathrm{E'} = \vte$, so we wish to find the cause of
     $ \sigma \in \mathcal{F}(E')$.
     Configurations of $\mathrm{E'}$ are as follows:
     \begin{center}
@@ -187,9 +187,23 @@
         \end{tikzpicture}
     \end{center}
     Obviously, $\sigma$ is a configuration of $\mathrm{E'}$.
-    Now, let's consider $C(a,x) = \F$ as a cause using the witness 
+    Now, let's consider $C(a,x) = \F$ as a cause using the witness
     $(\e,\e,\T)$.
-    Now let $\mathrm{E}'' = \mathfrak{E}(\vec V) = (E, \#'',\vdash'')$ after we set $C(a,x)$ to true. So we have $a\#''x$ and $x\#''a$.
+    Now let $\mathrm{E}'' = \vte = (E, \#'',\vdash'')$ after we set $C(a,x)$ to true. So we have $a\#''x$ and $x\#''a$.
+    First, note that $C(a,x)$ only affects terms like $Con(s)$ 
+    where $ \s{a,x} \subseteq s$ which in turn only affects 
+    variables of the form $M(s,e)$ or $EN(s,e)$.
+    So, we can safely conclude that changing $C(a,x)$ has no effect
+    on $M_{\e,a},M_{\e,x},M_{\s{a},b},M_{\s{b},a}$ as well as
+    $EN_{\e,a},EN_{\e,x},EN_{\s{a},b},EN_{\s{b},a}$.
+    Thus we have:
+    \begin{align*}
+        \e \vdash'' a, 
+        \e \vdash'' x, 
+        \s{a} \vdash'' b, 
+        \s{x} \vdash'' y \\
+        a\#''y,y\#''a,x\#''b,b\#''x,a\#''x, x\#''a
+    \end{align*}
     So, the configurations of $\mathrm{E}''$ have the form:
     \begin{center}
         \begin{tikzpicture}[scale=0.8]
@@ -204,9 +218,9 @@
             \draw [ultra thick] (2,1) -- (4,2);
         \end{tikzpicture}
     \end{center}
-    In the new event structure, $\sigma$ is no longer a configuration, thus $AC2(a)$ is satisfied. 
+    In the new event structure, $\sigma$ is no longer a configuration, thus $AC2(a)$ is satisfied.
     Since we have used an empty $\vec W$ in the witness and AC1 and AC2(a)
-    are satisfied, thus we can conclude that $C(a,x) = \F$ is a cause of 
+    are satisfied, thus we can conclude that $C(a,x) = \F$ is a cause of
     $\sigma \in \mathcal{F}(\mathrm{E}')$
 
 
@@ -246,57 +260,4 @@
     \end{align*}
     We may consider the configuration $\sigma = \s{b,c,i}$ as a
     counterexample since $i$ is happened while $a$ has not been happened yet.
-    \begin{center}
-        \begin{tikzpicture}[scale=0.8]
-            \crd{0}{0}{$\emptyset$}
-            \crd[left]{-8}{3}{$\s{i}$}
-            \crd[left]{-6}{2}{$\s{i}$}
-            \crd[left]{-2}{2}{$\s{i}$}
-            \crd[left]{0}{3}{$\s{i}$}
-            \crd[left]{-4}{3}{$\s{i}$}
-            \crd[left]{-4}{1}{$\s{i}$}
-            \crd[right]{2}{1}{$\s{o}$}
-            \crd[right]{0}{2}{$\s{i,o}$}
-            \draw [ultra thick] (0,0) -- (2,1);
-        \end{tikzpicture}
-    \end{center}
-    Regarding this event structure we have:
-    Let $\pi = b,c,i$ be a permutation of $\sigma$, we have:
-    \begin{align*}
-        \varphi_{\pi} & =
-        E(\e,b) \wedge E(\s{b},c) \wedge E(\s{b,c},i)
-        \wedge Con(\sigma)                            \\
-        \varphi       & = \varphi_{\pi} \vee \varphi'
-    \end{align*}
-    Here we can declare $M(\s{b},i) = \T$ as a cause of $\varphi$.
-    Let $(M(\s{c},i),\F,\F)$ be the witness.
-    We need to verify the following conditions:
-    \begin{itemize}
-        \item AC1:  $\m \vDash M(\s{b},i) = \T \wedge \varphi$
-        \item AC2(a): $\m\vDash [M(\s{b},i)\la \F,M(\s{c},i)\leftarrow \F] \neg \varphi$
-        \item AC2(b): $\m \vDash [\vec W' \la \vec w', \vec Z' \la \vec z^* ]\varphi$
-              for all subsets
-              $\vec W'$ of $\vec W$ and $\vec Z'$ of $\vec Z$.
-    \end{itemize}
-    First, observe that since $M(\e,b)$ is true thus $E(\e,b)$ is true.
-    Also, since $M(\e,c)$ is true, so $E(\s{b},c)$ is true too.
-    Finally, $M(\s{b},i)$ and subsequently $E(\s{b},i)$ is true which makes
-    $E(\s{b,c},i)$ true.
-    So we can conclude that $\varphi$ is true in the actual context and
-    AC1 is satisfied.
-
-    For verifying the AC2(a) condition notice that setting both of
-    $M(\s{b},i)$ and $M(\s{c},i)$ to false results in
-    $E(\s{b},i)$ and $E(\s{c},i)$ become false.
-    Now, since $M(\s{b,c},i)$ is false too, all three terms of the first
-    conjunction of $\f{E(\s{b,c},i)}$ are false so $E(\s{b,c},i)$ becomes false.
-    We can finally conclude that $\varphi$ becomes false too.
-    To verify the AC2(b) condition, first we need to set $M(\s{c},i)$ to false.
-    This setting has no effect on $E(\e,b)$, $E(\s{b},c)$ and $E(\s{b},i)$.
-    Also note that $E(\s{b},i)$ is true in the actual context and it is
-    not affected by $M(\s{c},i)$, so it remains true by setting
-    any $\vec Z'$ to $\vec z^*$.
-    Thus, the disjunction of $E(\s{b,c},i)$ has a true value and thus it
-    remains true even if we set $E(\s{c},i)$ to false.
-    We can conclude that $\varphi$ remains true and AC2(b) is satisfied.
 \end{example}
