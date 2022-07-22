@@ -271,16 +271,6 @@ $C_{e,e'},M_{s,e},$ and $EN_{s,e}$ respectively.
     The goal of the firewall is to simply block all incoming packets.
     We define two events $a$ and $b$ representing the arrival of a packet
     on the switch from the hosts $a$ and $b$ respectively.
-    Assume that switch forwards all packets it received.
-    We use an event $i$ to represent the forwarding of an arbitrary packet
-    to $i$.
-    So, we can represent this setting with an event structure $\mathrm{E}$
-    with events $\s{a,b,i}$, an empty conflict relation and enabling relation
-    the least one that satisfies:
-    \begin{align*}
-        \e \vdash a, \e \vdash b, \s{a} \vdash i, \s{b} \vdash i
-    \end{align*}
-    
     \begin{center}
         \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
             \node[main] (s) {$s$};
@@ -292,19 +282,34 @@ $C_{e,e'},M_{s,e},$ and $EN_{s,e}$ respectively.
             \draw (s) -- (i);
         \end{tikzpicture}
     \end{center}
-    We define an event structure where
-    $\mathcal{E} = \s{a,b,c,i}$.
-    We let $a,b,c$ to represent the events of sending
-    a packet from $a$,$b$ and $c$ to $s$ respectively.
-    Let $i$ indicate the event of the forwarding of
-    an arbitrary packet from $s$ to $a$ (this may coming
-    from either $b$ or $c$).
-    We consider an empty conflict relation and enabling
-    relation the least one for which we have:
+    Assume that switch forwards all packets it received.
+    We use an event $i$ to represent the forwarding of an arbitrary packet
+    to $i$.
+    So, we can represent this setting with an event structure $\mathrm{E}$
+    with events $\s{a,b,i}$, an empty conflict relation and enabling relation
+    the least one that satisfies:
     \begin{align*}
-        \e \vdash a,\e \vdash b, \e \vdash c,
-        \s{b} \vdash i, \s{c} \vdash i
+        \e \vdash a, \e \vdash b, \s{a} \vdash i, \s{b} \vdash i
     \end{align*}
-    We may consider the configuration $\sigma = \s{b,c,i}$ as a
-    counterexample since $i$ is happened while $a$ has not been happened yet.
+    The causal model for this event structure has the following functions:
+    \begin{align*}
+        \f{M(\e,a)}       & = Min(\e,a)                              \\
+                          & = \neg M(\s{i},a) \wedge \neg M(\s{b},a)
+        \wedge \neg M(\s{b,i},a)                                     \\
+        \f{M(\e,b)}       & = Min(\e,b)                              \\
+                          & = \neg M(\s{i},b) \wedge \neg M(\s{a},b)
+        \wedge \neg M(\s{a,i},b)                                     \\
+        \f{M(\s{a},i)}    & = Min(\s{a},i)                           \\
+                          & = \neg M(\e,i) \wedge \neg M(\s{a,b},i)  \\
+        \f{M(\s{b},i)}    & = Min(\s{b},i)                           \\
+                          & = \neg M(\e,i) \wedge \neg M(\s{a,b},i)  \\
+        \f{EN(\e,i)}      & = M(\e,i)                                \\
+        \f{EN(\s{a},i)}   & = M(\s{a},i) \vee EN(\e,i)               \\
+        \f{EN(\s{b},i)}   & = M(\s{b},i) \vee EN(\e,i)               \\
+        \f{EN(\s{a,b},i)} & = (M(\s{a,b},i) \vee EN(\s{a},i)
+        \vee EN(\s{b},i) ) \wedge \neg C(a,b)                        \\
+    \end{align*}
+
+
+
 \end{example}
