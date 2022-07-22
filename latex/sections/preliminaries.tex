@@ -336,6 +336,47 @@ For example, the equation above claims that in the context $U=u$, if $Y$ were 4,
 
 The function $\mathcal{F}$ defines a set of (\textit{modifiable}) \textit{structural equations} relating to the values of the variables.
 
+\begin{example}
+    Suppose that we want to reason about a forest fire that could
+    be caused by either lightning or a match lit by an arsonist.
+    Then the causal model would have the following endogenous variables :
+    \begin{itemize}
+        \item $F$ for fire
+        \item $L$ for lighting
+        \item $ML$ for match lit
+    \end{itemize}
+    The set $\mathcal{U}$ of exogenous variables includes conditions
+    that suffice to render all relationships deterministic (such as
+    whether the wood is dry, whether there is enough oxygen in the air
+    for the match to light, etc.).
+    Suppose that $\vec u$ is a setting of the exogenous variables that
+    makes a forest fire possible (i.e., the wood is sufficiently dry,
+    there is oxygen in the air, and so on).
+    Then, for example, $F_F(\vec u, L, ML)$ is such that $F=1$ if either
+    $L=1$ or $ML=1$.
+    Note that although the value of $F$ depends on the value $L$ and $ML$, the value of $L$ does not depend on the values of $F$ and $ML$.
+\end{example}
+
+\subsection{Causal Network}
+We can describe a causal model $\m$ using a causal network.
+This is a graph with nodes corresponding to the random variables
+in $\mathcal{V}$ and an edge from a node labeled $X$ to one
+labeled $Y$ if $F_Y$ depends on the value of $X$.
+This graph is a dag that follows from the assumption that the
+equations are recursive.
+We occasionally omit the exogenous variables $\vec U$ from the causal network.
+For example, the causal network for example 2.2.1 has the following
+form:
+
+\begin{center}
+    \begin{tikzpicture}[node distance={15mm}]
+        \node (l) {L};
+        \node (ml) [below right of=l]  {ML};
+        \node (f) [above right of=ml] {F};
+        \draw [->] (l) -- (ml);
+        \draw [->] (f) -- (ml);
+    \end{tikzpicture}
+\end{center}
 
 \subsection{Definition of Actual Cause}
 Given a signature $S= (\mathcal{U},\mathcal{V},\mathcal{R})$, a formula of the form $X =x$, for $X \in \mathcal{V}$ and $x \in \mathcal{R}(X)$, is called a \textit{primitive event}.
@@ -466,7 +507,7 @@ We then modify the clauses AC2(a) and (b) in the definition of causality to rest
               (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi \wedge  \vec v \in \mathcal{E}$.
 
               (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]\varphi \wedge
-              \vec v \in \mathcal{E}$ for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+                  \vec v \in \mathcal{E}$ for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
 
         \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
     \end{itemize}
