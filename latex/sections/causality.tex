@@ -70,14 +70,20 @@ triples of the form $(E,\#,\vdash)$ where $\# \subseteq E \times E$
 and $\vdash \subseteq \mathcal{P}(E) \times E$.
 Let $\m = \mathfrak{M}(\mathrm{E})$ for some event structure
 $\mathrm{E}$ on the set $E$.
+We add an additional endogenous variable $IC$ indicating 
+whether $\sigma$ is a configuration of the event structure resulting from
+the current setting of endogenous variables.
+More specifically, we define:
+\begin{align*}
+    \f{IC} = \sigma \in \mathcal{F}(\mathfrak{E}(\vec C, \vec {EN}))
+\end{align*}
 We define $\mathfrak{E}: \times_{V \in \mathcal{V}} \mathcal{R}(V) \rightarrow \mathbb{E}$
 to be a function that returns a triple in $\mathbb{E}$ given a set of
 endogenous variables.
-Given a causal model $\mathcal{M}$, let $\vec C$ be the vector of all
-variables of the form $C_{e,e'}$ and $\vec{EN}$ be the vector of all
-variables of the form $EN_{s,e}$.
+Let $\vec C$ be the vector of all variables of the form $C_{e,e'}$ 
+and $\vec{EN}$ be the vector of all variables of the form $EN_{s,e}$.
 We define $\mathfrak{E}$ such that if
-$\vte = (E, \#',\vdash')$ we have:
+$\vte = (E, \#',\vdash')$ then we have:
 \begin{align*}
     \forall e,e' \in E. e \#' e' \wedge e' \#' e
      & \iff C_{e,e'} = \T \\

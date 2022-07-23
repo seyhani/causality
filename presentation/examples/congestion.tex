@@ -10,8 +10,12 @@
             \draw (s) --  node[right]{3}(h);
         \end{tikzpicture}
     \end{center}
-    Consider a network where wish to forward traffic from $a$ and $b$ to $c$, while limiting the traffic on link 3 so that
-    at any moment there must be at most one packet traversing this link.
+    Correct Behavior:
+    \begin{itemize}
+        \item Forwarding from $a$ to $h$
+        \item Forwarding from $b$ to $h$
+        \item Limit traffic on link 3 (at most one packet)
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -26,12 +30,13 @@
             \draw (s) --  node[right]{3}(h);
         \end{tikzpicture}
     \end{center}
-    We define events $a,b$ representing the forwarding of a packet from
-    1 to 3 and 2 to 3 respectively.
-    We define an event $c$ when congestion is detected on link 3 (at least two packets are being traversed through the link).
-    For this network, we can define an event structure $\mathrm{E}$
-    with an empty conflict relation and an enabling relation the least
-    one for which we have:
+    Events:
+    \begin{itemize}
+        \item $a$: forwarding packet from 1 to 3
+        \item $b$: forwarding packet from 2 to 3
+        \item $c$: detecting congestion on link 3
+    \end{itemize}
+    Event Structure:
     \begin{align*}
         \e \vdash a, \e \vdash b, \s{a,b} \vdash c
     \end{align*}
@@ -48,9 +53,6 @@
             \draw (b) --  node[above]{2}(s);
             \draw (s) --  node[right]{3}(h);
         \end{tikzpicture}
-    \end{center}
-    Event structure of this network has configurations of the form:
-    \begin{center}
         \begin{tikzpicture}[scale=0.8]
             \crd{0}{0}{$\emptyset$}
             \crd[above]{-2}{1}{$\s{a}$}
@@ -64,34 +66,18 @@
             \draw [ultra thick] (0,2) -- (0,3);
         \end{tikzpicture}
     \end{center}
-\end{frame}
-
-\begin{frame}
-    \begin{center}
-        \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
-            \node[main] (s) {$s_1$};
-            \node[main] (h) [below of=s] {$h$};
-            \node[main] (a) [above left of=s]{$a$};
-            \node[main] (b) [above right of=s]{$b$};
-            \draw (a) --  node[above]{1}(s);
-            \draw (b) --  node[above]{2}(s);
-            \draw (s) --  node[right]{3}(h);
-        \end{tikzpicture}
-        \begin{tikzpicture}[scale=0.8]
-            \crd{0}{0}{$\emptyset$}
-            \crd[above]{-2}{1}{$\s{a}$}
-            \crd[above]{2}{1}{$\s{b}$}
-            \crd[left]{0}{2}{$\s{a,b}$}
-            \crd[left]{0}{3}{$\s{a,b,c}$}
-            \draw [ultra thick] (0,0) -- (-2,1);
-            \draw [ultra thick] (0,0) -- (2,1);
-            \draw [ultra thick] (-2,1) -- (0,2);
-            \draw [ultra thick] (2,1) -- (0,2);
-            \draw [ultra thick] (0,2) -- (0,3);
-        \end{tikzpicture}
-    \end{center}
-    Assume that we consider $\sigma = \s{a,bc}$ as a counterexample.
-    We may declare $C(a,b) = \F$ as a cause of $\sigma \in \mathcal{F}(\mathrm{E})$.
+    \begin{itemize}
+        \item Counterexample: $\sigma = \s{a,b,c}$
+        \item Cause: $C(a,b) = \F$
+        \item Conditions:
+              \begin{align*}
+                  \m & \vDash C(a,b) = \F \wedge \sigma \in
+                  \mathcal{F}(\mathrm{E})                    \\
+                  \m & \vDash [C(a,b)\la \T] \sigma \not \in
+                  \mathcal{F}(\mathfrak{E}(\vec V)) \wedge \vec V = \vec v
+                  \wedge \vec v \in \mathcal{E}
+              \end{align*}
+    \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -220,30 +206,31 @@
 
 \begin{frame}
     \begin{align*}
-        M & \vDash EN(\e,a)       = \T              &
-        M & \vDash[C(a,b)\la T] EN(\e,a)       = \T   \\
-        M & \vDash EN(\s{b},a)    = \T              &
-        M & \vDash[C(a,b)\la T] EN(\s{b},a)    = \T   \\
-        M & \vDash EN(\s{c},a)    = \T              &
-        M & \vDash[C(a,b)\la T] EN(\s{c},a)    = \T   \\
-        M & \vDash EN(\s{b,c},a)  = \T              &
-        M & \vDash[C(a,b)\la T] EN(\s{b,c},a)  = \T   \\
-        M & \vDash EN(\e,b)       = \T              &
-        M & \vDash[C(a,b)\la T] EN(\e,b)       = \T   \\
-        M & \vDash EN(\s{a},b)    = \T              &
-        M & \vDash[C(a,b)\la T] EN(\s{a},b)    = \T   \\
-        M & \vDash EN(\s{c},b)    = \T              &
-        M & \vDash[C(a,b)\la T] EN(\s{c},b)    = \T   \\
-        M & \vDash EN(\s{a,c},b)  = \T              &
-        M & \vDash[C(a,b)\la T] EN(\s{a,c},b)  = \T   \\
-        M & \vDash EN(\e,c)       = \F              &
-        M & \vDash[C(a,b)\la T] EN(\e,c)       = \F   \\
-        M & \vDash EN(\s{a},c)    = \F              &
-        M & \vDash[C(a,b)\la T] EN(\s{a},c)    = \F   \\
-        M & \vDash EN(\s{b},c)    = \F              &
-        M & \vDash[C(a,b)\la T] EN(\s{b},c)    = \F   \\
-        M & \vDash EN(\s{a,b},c)  = \T              &
-        M & \vDash[C(a,b)\la T] EN(\s{a,b},c)  = \F   \\
+        \m & \vDash EN(\e,a)       = \T              &
+        \m & \vDash[C(a,b)\la T] EN(\e,a)       = \T   \\
+        \m & \vDash EN(\s{b},a)    = \T              &
+        \m & \vDash[C(a,b)\la T] EN(\s{b},a)    = \T   \\
+        \m & \vDash EN(\s{c},a)    = \T              &
+        \m & \vDash[C(a,b)\la T] EN(\s{c},a)    = \T   \\
+        \m & \vDash EN(\s{b,c},a)  = \T              &
+        \m & \vDash[C(a,b)\la T] EN(\s{b,c},a)  = \T   \\
+        \m & \vDash EN(\e,b)       = \T              &
+        \m & \vDash[C(a,b)\la T] EN(\e,b)       = \T   \\
+        \m & \vDash EN(\s{a},b)    = \T              &
+        \m & \vDash[C(a,b)\la T] EN(\s{a},b)    = \T   \\
+        \m & \vDash EN(\s{c},b)    = \T              &
+        \m & \vDash[C(a,b)\la T] EN(\s{c},b)    = \T   \\
+        \m & \vDash EN(\s{a,c},b)  = \T              &
+        \m & \vDash[C(a,b)\la T] EN(\s{a,c},b)  = \T   \\
+        \m & \vDash EN(\e,c)       = \F              &
+        \m & \vDash[C(a,b)\la T] EN(\e,c)       = \F   \\
+        \m & \vDash EN(\s{a},c)    = \F              &
+        \m & \vDash[C(a,b)\la T] EN(\s{a},c)    = \F   \\
+        \m & \vDash EN(\s{b},c)    = \F              &
+        \m & \vDash[C(a,b)\la T] EN(\s{b},c)    = \F   \\
+        \m & \vDash EN(\s{a,b},c)  = \T              &
+        \m & \vDash[C(a,b)\la T] EN(\s{a,b},c)
+        = \textcolor{orange}{\F}                      \\
     \end{align*}
 \end{frame}
 
@@ -260,16 +247,13 @@
             \draw [ultra thick] (-2,1) -- (0,2);
             \draw [ultra thick] (2,1) -- (0,2);
             \draw [ultra thick] (0,2) -- (0,3);
-        \end{tikzpicture} 
+        \end{tikzpicture}
         \begin{tikzpicture}[scale=0.8]
             \crd{0}{0}{$\emptyset$}
             \crd[above]{-2}{1}{$\s{a}$}
             \crd[above]{2}{1}{$\s{b}$}
-            \crd[left]{0}{2}{$\s{a,b}$}
             \draw [ultra thick] (0,0) -- (-2,1);
             \draw [ultra thick] (0,0) -- (2,1);
-            \draw [ultra thick] (-2,1) -- (0,2);
-            \draw [ultra thick] (2,1) -- (0,2);
-        \end{tikzpicture} 
+        \end{tikzpicture}
     \end{center}
 \end{frame}
