@@ -1,0 +1,315 @@
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance={20mm},main/.style = {draw, circle}]
+            \node[main] (s1)  {$s_1$};
+            \node[main] (s2) [below left of=s1]{$s_2$};
+            \node[main] (h) [below right of=s1]{$h$};
+            \node[main] (a) [left of=s2]{$a$};
+            \draw[->] (s1) -- node[above]{1} (h);
+            \draw[->] (s2) --  node[above]{3} (a);
+            \draw[dotted,->] (s1) -- node[above]{2} (s2);
+            \draw[dotted,->] (s2) --  node[below]{4} (h);
+        \end{tikzpicture}
+    \end{center}
+    Property:
+    \begin{itemize}
+        \item Property: $a$ not being reachable from $s_1$
+    \end{itemize}
+    Current Behavior:
+    \begin{enumerate}
+        \item Replace path 1 with 2
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance={20mm},main/.style = {draw, circle}]
+            \node[main] (s1)  {$s_1$};
+            \node[main] (s2) [below left of=s1]{$s_2$};
+            \node[main] (h) [below right of=s1]{$h$};
+            \node[main] (a) [left of=s2]{$a$};
+            \draw[->] (s1) -- node[above]{1} (h);
+            \draw[->] (s2) --  node[above]{3} (a);
+            \draw[dotted,->] (s1) -- node[above]{2} (s2);
+            \draw[dotted,->] (s2) --  node[below]{4} (h);
+        \end{tikzpicture}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{a}$}
+            \crd[right]{2}{1}{$\s{b}$}
+            \crd[right]{0}{2}{$\s{a,b}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+    Events:
+    \begin{itemize}
+        \item $a$: Replace path 1 with 2
+        \item $b$: Replace path 3 with 4
+    \end{itemize}
+    Counterexample: $\sigma = \s{a}$
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance=15mm]
+            \node (mab) {$M_{\s{a},b}$};
+            \node (mea) [below left of=mab] {$M_{\e,b}$};
+            \node (eea) [below of=mea] {$EN_{\e,b}$};
+            \node (eab) [below right of=eea]{$EN_{\s{a},b}$};
+            \draw[->] (mab) -- (mea);
+            \draw[->] (mea) -- (eea);
+            \draw[->] (eea) -- (eab);
+            \draw[->] (mab) -- (eab);
+
+            \node (mba) [right of=mab] {$M_{\s{b},a}$};
+            \node (meb) [below right of=mba] {$M_{\e,a}$};
+            \node (eeb) [below of=meb] {$EN_{\e,a}$};
+            \node (eba) [below left of=eeb]{$EN_{\s{b},a}$};
+            \draw[->] (mba) -- (meb);
+            \draw[->] (meb) -- (eeb);
+            \draw[->] (eeb) -- (eba);
+            \draw[->] (mba) -- (eba);
+
+            \node (cab) [left of=mab] {$C_{a,b}$};
+
+        \end{tikzpicture}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{a}$}
+            \crd[right]{2}{1}{$\s{b}$}
+            \crd[right]{0}{2}{$\s{a,b}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+    \begin{itemize}
+        \item Counterexample: $\sigma = \s{a}$
+        \item Cause: $M(\s{b},a) = \F$
+        \item Witness: $(\e,\e, \T)$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance=15mm]
+            \node[r,label=$\F$] (mab) {$M_{\s{a},b}$};
+            \node[g,label=$\T$](mea) [below left of=mab] {$M_{\e,b}$};
+            \node[g,label=$\T$](eea) [below of=mea] {$EN_{\e,b}$};
+            \node[g,label=$\T$](eab) [below right of=eea]{$EN_{\s{a},b}$};
+            \draw[->] (mab) -- (mea);
+            \draw[->] (mea) -- (eea);
+            \draw[->] (eea) -- (eab);
+            \draw[->] (mab) -- (eab);
+
+            \node [r,label=$\F$](mba) [right of=mab] {$M_{\s{b},a}$};
+            \node [g,label=$\T$](meb) [below right of=mba] {$M_{\e,a}$};
+            \node [g,label=$\T$](eeb) [below of=meb] {$EN_{\e,a}$};
+            \node [g,label=$\T$](eba) [below left of=eeb]{$EN_{\s{b},a}$};
+            \draw[->] (mba) -- (meb);
+            \draw[->] (meb) -- (eeb);
+            \draw[->] (eeb) -- (eba);
+            \draw[->] (mba) -- (eba);
+
+            \node [r,label=$\F$] (cab) [left of=mab] {$C_{a,b}$};
+
+        \end{tikzpicture}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{a}$}
+            \crd[right]{2}{1}{$\s{b}$}
+            \crd[right]{0}{2}{$\s{a,b}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance=15mm]
+            \node [r,label=$\F$](mab) {$M_{\s{a},b}$};
+            \node[g,label=$\T$](mea)     [below left of=mab] {$M_{\e,b}$};
+            \node[g,label=$\T$](eea)    [below of=mea] {$EN_{\e,b}$};
+            \node[g,label=$\T$](eab)    [below right of=eea]{$EN_{\s{a},b}$};
+            \draw[->] (mab) -- (mea);
+            \draw[->] (mea) -- (eea);
+            \draw[->] (eea) -- (eab);
+            \draw[->] (mab) -- (eab);
+
+            \node [o,label=$\not \F \T$](mba) [right of=mab] {$M_{\s{b},a}$};
+            \node [g,label=$\T$](meb) [below right of=mba] {$M_{\e,a}$};
+            \node [g,label=$\T$](eeb) [below of=meb] {$EN_{\e,a}$};
+            \node [g,label=$\T$](eba) [below left of=eeb]{$EN_{\s{b},a}$};
+            \draw[->] (mba) -- (meb);
+            \draw[->] (meb) -- (eeb);
+            \draw[->] (eeb) -- (eba);
+            \draw[->] (mba) -- (eba);
+
+            \node [r,label=$\F$] (cab) [left of=mab] {$C_{a,b}$};
+
+        \end{tikzpicture}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{a}$}
+            \crd[right]{2}{1}{$\s{b}$}
+            \crd[right]{0}{2}{$\s{a,b}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance=15mm]
+            \node[r,label=$\F$](mab) {$M_{\s{a},b}$};
+            \node[g,label=$\T$](mea) [below left of=mab] {$M_{\e,b}$};
+            \node[g,label=$\T$](eea) [below of=mea] {$EN_{\e,b}$};
+            \node[o,label=$\T$](eab) [below right of=eea]{$EN_{\s{a},b}$};
+            \draw[->] (mab) -- (mea);
+            \draw[->] (mea) -- (eea);
+            \draw[->] (eea) -- (eab);
+            \draw[->] (mab) -- (eab);
+
+            \node [g,label=$\T$](mba) [right of=mab] {$M_{\s{b},a}$};
+            \node [o,label=$\not \T \F$](meb) [below right of=mba] {$M_{\e,a}$};
+            \node [g,label=$\T$](eeb) [below of=meb] {$EN_{\e,a}$};
+            \node [g,label=$\T$](eba) [below left of=eeb]{$EN_{\s{b},a}$};
+            \draw[->] (mba) -- (meb);
+            \draw[->] (meb) -- (eeb);
+            \draw[->] (eeb) -- (eba);
+            \draw[->] (mba) -- (eba);
+
+            \node [r,label=$\F$] (cab) [left of=mab] {$C_{a,b}$};
+
+        \end{tikzpicture}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{a}$}
+            \crd[right]{2}{1}{$\s{b}$}
+            \crd[right]{0}{2}{$\s{a,b}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance=15mm]
+            \node [r,label=$\F$](mab) {$M_{\s{a},b}$};
+            \node[g,label=$\T$](mea) [below left of=mab] {$M_{\e,b}$};
+            \node[g,label=$\T$](eea) [below of=mea] {$EN_{\e,b}$};
+            \node[g,label=$\T$](eab) [below right of=eea]{$EN_{\s{a},b}$};
+            \draw[->] (mab) -- (mea);
+            \draw[->] (mea) -- (eea);
+            \draw[->] (eea) -- (eab);
+            \draw[->] (mab) -- (eab);
+
+            \node [g,label=$\T$](mba) [right of=mab] {$M_{\s{b},a}$};
+            \node [r,label=$\F$](meb) [below right of=mba] {$M_{\e,a}$};
+            \node [o,label=$\not \T \F$](eeb) [below of=meb] {$EN_{\e,a}$};
+            \node [g,label=$\T$](eba) [below left of=eeb]{$EN_{\s{b},a}$};
+            \draw[->] (mba) -- (meb);
+            \draw[->] (meb) -- (eeb);
+            \draw[->] (eeb) -- (eba);
+            \draw[->] (mba) -- (eba);
+
+            \node [r,label=$\F$] (cab) [left of=mab] {$C_{a,b}$};
+
+        \end{tikzpicture}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{a}$}
+            \crd[right]{2}{1}{$\s{b}$}
+            \crd[right]{0}{2}{$\s{a,b}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance=15mm]
+            \node[r,label=$\F$] (mab) {$M_{\s{a},b}$};
+            \node[g,label=$\T$](mea) [below left of=mab] {$M_{\e,b}$};
+            \node[g,label=$\T$](eea) [below of=mea] {$EN_{\e,b}$};
+            \node[g,label=$\T$](eab) [below right of=eea]{$EN_{\s{a},b}$};
+            \draw[->] (mab) -- (mea);
+            \draw[->] (mea) -- (eea);
+            \draw[->] (eea) -- (eab);
+            \draw[->] (mab) -- (eab);
+
+            \node [g,label=$\T$](mba) [right of=mab] {$M_{\s{b},a}$};
+            \node [r,label=$\F$](meb) [below right of=mba] {$M_{\e,a}$};
+            \node [r,label=$\F$](eeb) [below of=meb] {$EN_{\e,a}$};
+            \node [o,label=$\T$](eba) [below left of=eeb]{$EN_{\s{b},a}$};
+            \draw[->] (mba) -- (meb);
+            \draw[->] (meb) -- (eeb);
+            \draw[->] (eeb) -- (eba);
+            \draw[->] (mba) -- (eba);
+
+            \node [r,label=$\F$] (cab) [left of=mab] {$C_{a,b}$};
+
+        \end{tikzpicture}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[right]{2}{1}{$\s{b}$}
+            \crd[right]{0}{2}{$\s{a,b}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance=15mm]
+            \node[r,label=$\F$](mab) {$M_{\s{a},b}$};
+            \node[g,label=$\T$](mea) [below left of=mab] {$M_{\e,b}$};
+            \node[g,label=$\T$](eea) [below of=mea] {$EN_{\e,b}$};
+            \node[g,label=$\T$](eab) [below right of=eea]{$EN_{\s{a},b}$};
+            \draw[->] (mab) -- (mea);
+            \draw[->] (mea) -- (eea);
+            \draw[->] (eea) -- (eab);
+            \draw[->] (mab) -- (eab);
+
+            \node [g,label=$\T$](mba) [right of=mab] {$M_{\s{b},a}$};
+            \node [r,label=$\F$](meb) [below right of=mba] {$M_{\e,a}$};
+            \node [r,label=$\F$](eeb) [below of=meb] {$EN_{\e,a}$};
+            \node [g,label=$\T$](eba) [below left of=eeb]{$EN_{\s{b},a}$};
+            \draw[->] (mba) -- (meb);
+            \draw[->] (meb) -- (eeb);
+            \draw[->] (eeb) -- (eba);
+            \draw[->] (mba) -- (eba);
+
+            \node [r,label=$\F$] (cab) [left of=mab] {$C_{a,b}$};
+
+        \end{tikzpicture}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[right]{2}{1}{$\s{b}$}
+            \crd[right]{0}{2}{$\s{a,b}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+

@@ -12,25 +12,26 @@
     \tableofcontents
 \end{frame}
 
-\tikzset{
-    r/.style={text=red},
-    b/.style={text=blue},
-    o/.style={text=orange}
+\tikzset{g/.style={
+            prefix after command= {\pgfextra{\tikzset{every label/.style={color=green,above left}}}}
+}
+}
+
+\tikzset{r/.style={
+            prefix after command= {\pgfextra{\tikzset{every label/.style={red,above left}}}}
+}
+}
+
+\tikzset{o/.style={
+            prefix after command= {\pgfextra{\tikzset{every label/.style={orange,above left}}}}
+}
 }
 
 \section{Examples}
 
-\subsection{Stateful Firewall}
+\input{network/sync.tex}
 
-\input{examples/firewall.tex}
-
-\subsection{Congestion Control}
-
-\input{examples/congestion.tex}
-
-\subsection{Illegal Access}
-
-\input{examples/intrusion.tex}
+\input{network/congestion.tex}
 
 
 \end{document}
