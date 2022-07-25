@@ -1,0 +1,62 @@
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance={20mm},main/.style = {draw, circle,minimum size=8mm}]
+            \node[main] (h1)  {$h_1$};
+            \node[main] (w) [right of=h1]  {$w$};
+            \node[main] (s)  [above of=h1] {$s$};
+            \node[main] (h2) [right of=s2]  {$h_2$};
+            \draw[->] (h1) -- node[above]{1} (w);
+            \draw[->] (w) --   (h2);
+            \draw[->] (s) --  node[above]{3} (h2);
+        \end{tikzpicture}
+        \begin{tikzpicture}[node distance={20mm},main/.style = {draw, circle,minimum size=8mm}]
+            \node[main] (h1)  {$h_1$};
+            \node[main] (w) [right of=h1]  {$w$};
+            \node[main] (s)  [above of=h1] {$s$};
+            \node[main] (h2) [right of=s2]  {$h_2$};
+            \draw[->] (h1) -- node[left]{2} (s);
+            \draw[->] (s) --   node[above]{4}(w);
+            \draw[->] (w) --   (h2);
+        \end{tikzpicture}
+    \end{center}
+    Property:
+    \begin{itemize}
+        \item Property: no forwarding loop
+    \end{itemize}
+    Current Behavior:
+    \begin{enumerate}
+        \item Replace path 1 with 2
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance={20mm},main/.style = {draw, circle,minimum size=8mm}]
+            \node[main] (h1)  {$h_1$};
+            \node[main] (w) [right of=h1]  {$w$};
+            \node[main] (s)  [above of=h1] {$s$};
+            \node[main] (h2) [right of=s2]  {$h_2$};
+            \draw[->] (h1) -- node[above]{1} (w);
+            \draw[->,dashed] (h1) -- node[left]{2} (s);
+            \draw[->] (w) --   (h2);
+            \draw[->] (s) --  node[above]{3} (h2);
+            \draw[->,dashed] (s) --  node[above]{4} (w);
+        \end{tikzpicture}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{a}$}
+            \crd[right]{2}{1}{$\s{b}$}
+            \crd[right]{0}{2}{$\s{a,b}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+    Events:
+    \begin{itemize}
+        \item $a$: Replace path 1 with 2
+        \item $b$: Replace path 3 with 4
+    \end{itemize}
+    Counterexample: $\sigma = \s{a}$
+\end{frame}
