@@ -1,31 +1,81 @@
 \begin{frame}
     \begin{center}
         \begin{tikzpicture}[node distance={20mm},main/.style = {draw, circle,minimum size=8mm}]
-            \node[main] (h1)  {$h_1$};
-            \node[main] (w) [right of=h1]  {$w$};
-            \node[main] (s)  [above of=h1] {$s$};
-            \node[main] (h2) [right of=s2]  {$h_2$};
-            \draw[->] (h1) -- node[above]{1} (w);
-            \draw[->] (w) --   (h2);
-            \draw[->] (s) --  node[above]{3} (h2);
+            \node[main] (s2)  {$s_2$};
+            \node[main] (d1) [above left of=s2]  {$d_1$};
+            \node[main] (d2) [above right of=s2] {$d_2$};
+            \node[main] (v)  [below left of=s2] {$v$};
+            \node[main] (s1) [below right of=s2] {$s_1$};
+            \draw [->,green,thick] (s1) -- (v);
+            \draw [->,green,thick] (v) -- (d1);
+            \draw [->,orange,thick] (s2) -- (s1);
+            \draw [->,orange,thick] (s1) -- (d2);
+
         \end{tikzpicture}
         \begin{tikzpicture}[node distance={20mm},main/.style = {draw, circle,minimum size=8mm}]
-            \node[main] (h1)  {$h_1$};
-            \node[main] (w) [right of=h1]  {$w$};
-            \node[main] (s)  [above of=h1] {$s$};
-            \node[main] (h2) [right of=s2]  {$h_2$};
-            \draw[->] (h1) -- node[left]{2} (s);
-            \draw[->] (s) --   node[above]{4}(w);
-            \draw[->] (w) --   (h2);
+            \node[main] (s2)  {$s_2$};
+            \node[main] (d1) [above left of=s2]  {$d_1$};
+            \node[main] (d2) [above right of=s2] {$d_2$};
+            \node[main] (v)  [below left of=s2] {$v$};
+            \node[main] (s1) [below right of=s2] {$s_1$};
+            \draw [->,green,thick] (s1) -- (d2);
+            \draw [->,green,thick] (d2) -- (d1);
+            \draw [->,orange,thick] (s2) -- (d1);
+            \draw [->,orange,thick] (d1) edge[bend right] (d2);
+
         \end{tikzpicture}
     \end{center}
     Property:
     \begin{itemize}
-        \item Property: congestion
+        \item Property: avoid congestion on the link $s_1-d_2$ 
     \end{itemize}
     Current Behavior:
     \begin{enumerate}
-        \item Replace path 1 with 2
+        \item Migrate the green path
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \begin{center}
+        \begin{tikzpicture}[node distance={20mm},main/.style = {draw, circle,minimum size=8mm}]
+            \node[main] (s2)  {$s_2$};
+            \node[main] (d1) [above left of=s2]  {$d_1$};
+            \node[main] (d2) [above right of=s2] {$d_2$};
+            \node[main] (v)  [below left of=s2] {$v$};
+            \node[main] (s1) [below right of=s2] {$s_1$};
+            \draw [->,green,thick] (s1) -- (v);
+            \draw [->,green,thick] (v) -- (d1);
+            \draw [->,orange,thick] (s2) -- (s1);
+            \draw [->,orange,thick] (s1) -- (d2);
+
+            \draw [->,green,thick,dashed] (s1) edge[bend right] (d2);
+            \draw [->,green,thick,dashed] (d2) -- (d1);
+            \draw [->,orange,thick,dashed] (s2) -- (d1);
+            \draw [->,orange,thick,dashed] (d1) edge[bend left] (d2);
+            % \draw [->,green,dashed] (v) -- (d1);
+            % \draw [->,orange,dashed] (s2) -- (s1);
+            % \draw [->,orange,dashed] (s1) -- (d2);
+
+        \end{tikzpicture}
+        \begin{tikzpicture}[scale=0.8]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{o}$}
+            \crd[right]{2}{1}{$\s{g}$}
+            \crd[right]{0}{2}{$\s{o,g}$}
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (2,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+    Events:
+    \begin{itemize}
+        \item $g$: migrating the green path 
+        \item $o$: migrating the orange path 
+    \end{itemize}
+    Counterexample:
+    \begin{enumerate}
+        \item $\sigma = \s{g}$
     \end{enumerate}
 \end{frame}
 
