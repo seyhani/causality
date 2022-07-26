@@ -70,29 +70,28 @@ triples of the form $(E,\#,\vdash)$ where $\# \subseteq E \times E$
 and $\vdash \subseteq \mathcal{P}(E) \times E$.
 Let $\m = \mathfrak{M}(\mathrm{E})$ for some event structure
 $\mathrm{E}$ on the set $E$.
-We add an additional endogenous variable $IC$ indicating 
-whether $\sigma$ is a configuration of the event structure resulting from
-the current setting of endogenous variables.
-More specifically, we define:
+We add two additional endogenous variables $ES$ and $IC$
+where $\mathcal{R}(ES) = \mathbb{E}$ and $IC$ is boolean.
+We define
 \begin{align*}
-    \f{IC} = \sigma \in \mathcal{F}(\mathfrak{E}(\vec C, \vec {EN}))
+    \f{ES} = (E,\#,\vdash)
 \end{align*}
-We define $\mathfrak{E}: \times_{V \in \mathcal{V}} \mathcal{R}(V) \rightarrow \mathbb{E}$
-to be a function that returns a triple in $\mathbb{E}$ given a set of
-endogenous variables.
-Let $\vec C$ be the vector of all variables of the form $C_{e,e'}$ 
-and $\vec{EN}$ be the vector of all variables of the form $EN_{s,e}$.
-We define $\mathfrak{E}$ such that if
-$\vte = (E, \#',\vdash')$ then we have:
+where we have:
 \begin{align*}
     \forall e,e' \in E. e \#' e' \wedge e' \#' e
      & \iff C_{e,e'} = \T \\
     \forall s \in \mathcal{P}(E), e \in E.  s \vdash' e
      & \iff EN_{s,e} = \T
 \end{align*}
+We define the function of $IC$ to determine whether $\sigma$
+is a configuration of the event structure derived from current
+settings of variables:
+\begin{align*}
+    \f{IC} = \sigma \in \mathcal{F}(ES)
+\end{align*}
 We define $\mathcal{E}$ to be the set of all allowable
 settings of the endogenous variables such as $\vec v'$
-for which if $M \vDash \vec V = \vec v'$ then the triple $\vte$ is an event structure
+for which if $M \vDash \vec V = \vec v' \wedge ES = \mathrm{E}$ then $\mathrm{E}$ be an event structure.
 
 Finally, for a given configuration $\sigma = \s{e_{i_1},e_{i_2},...,e_{i_m}}$
 we want to find the cause of
@@ -111,12 +110,12 @@ is the set of the configurations of a given event structure.
         \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
 
               (a) $M \models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']
-                  \sigma \notin \mathcal{F}(\vte)
+                    IC = \F
                   \wedge \vec V = \vec v
                   \wedge  \vec v \in \mathcal{E}$.
 
               (b) $M \models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
-                  \sigma \in \mathcal{F}(\vte)
+                IC = \T
                   \wedge \vec V = \vec v
                   \wedge \vec v \in \mathcal{E}$
               for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
