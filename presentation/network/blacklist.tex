@@ -1,4 +1,4 @@
-\begin{frame}
+\begin{frame}{Blacklist}
     \begin{center}
         \begin{tikzpicture}[node distance={20mm},main/.style = {draw, circle}]
             \node[main] (s1)  {$s_1$};
@@ -175,7 +175,7 @@
             \node[r,label=$\F$](mab) {$M_{\s{a},b}$};
             \node[g,label=$\T$](mea) [below left of=mab] {$M_{\e,b}$};
             \node[g,label=$\T$](eea) [below of=mea] {$EN_{\e,b}$};
-            \node[o,label=$\T$](eab) [below right of=eea]{$EN_{\s{a},b}$};
+            \node[g,label=$\T$](eab) [below right of=eea]{$EN_{\s{a},b}$};
             \draw[->] (mab) -- (mea);
             \draw[->] (mea) -- (eea);
             \draw[->] (eea) -- (eab);
@@ -184,7 +184,7 @@
             \node [g,label=$\T$](mba) [right of=mab] {$M_{\s{b},a}$};
             \node [o,label=$\not \T \F$](meb) [below right of=mba] {$M_{\e,a}$};
             \node [g,label=$\T$](eeb) [below of=meb] {$EN_{\e,a}$};
-            \node [g,label=$\T$](eba) [below left of=eeb]{$EN_{\s{b},a}$};
+            \node [o,label=$\T$](eba) [below left of=eeb]{$EN_{\s{b},a}$};
             \draw[->] (mba) -- (meb);
             \draw[->] (meb) -- (eeb);
             \draw[->] (eeb) -- (eba);

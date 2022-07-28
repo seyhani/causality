@@ -83,20 +83,19 @@ where we have:
     \forall s \in \mathcal{P}(E), e \in E.  s \vdash' e
      & \iff EN_{s,e} = \T
 \end{align*}
-We define the function of $IC$ to determine whether $\sigma$
-is a configuration of the event structure derived from current
-settings of variables:
+We define the function of $IC$ to determine whether $ES$
+contains any configurations of a set of configurations 
+$\mathcal{C}$:
 \begin{align*}
-    \f{IC} = \sigma \in \mathcal{F}(ES)
+    \f{IC} = \bigvee_{c \in \mathcal{C}}c \in \mathcal{F}(ES)
 \end{align*}
 We define $\mathcal{E}$ to be the set of all allowable
 settings of the endogenous variables such as $\vec v'$
 for which if $M \vDash \vec V = \vec v' \wedge ES = \mathrm{E}$ then $\mathrm{E}$ be an event structure.
 
-Finally, for a given configuration $\sigma = \s{e_{i_1},e_{i_2},...,e_{i_m}}$
-we want to find the cause of
-$\sigma \in \mathcal{F}(\mathrm{E})$ where $\mathcal{F}$
-is the set of the configurations of a given event structure.
+Finally, for a given set of configurations $\mathcal{C}$
+we want to find the cause of 
+$\bigvee_{c \in \mathcal{C}}c \in \mathcal{F}(\mathrm{E})$.
 
 \begin{definition}
     Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure and
@@ -106,7 +105,7 @@ is the set of the configurations of a given event structure.
     $\sigma \in \mathcal{F}(\mathrm{E})$ in $\mathcal{M}$ if the following three conditions hold:
     \begin{itemize}
         \item  \textbf{AC1.} $M\models \vec X = \vec x
-                  \wedge \sigma \in \mathcal{F}(\mathrm{E})$.
+                  \wedge \bigvee_{c \in \mathcal{C}}c \in \mathcal{F}(\mathrm{E})$.
         \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
 
               (a) $M \models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']
