@@ -1,6 +1,6 @@
-% Todo: find proper signs for Es
 Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure with
 $E = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $E$.
+
 Given an event structure $\mathrm{E}$, we define
 $\mathfrak{M}(\mathrm{E}) = (\mathcal{S},\mathscr{F},\mathcal{E})$
 to be its causal model where
@@ -9,11 +9,9 @@ We define $\mathcal{U}$ to be empty and $\mathcal{V}$ consisting
 of boolean variables as follows:
 \begin{align*}
     \mathcal{V} = & \s{C_{e_i,e_j} |  1 \leq i < j \leq n.
-    e_i \in E \amp e_j \in E}                                    \\
+    e_i \in E \amp e_j \in E}                                \\
                   & \cup \s{EN_{s,e} | s \in \mathcal{P}(E),
-    e \in E. e \not \in s }                                      \\
-                  & \cup \s{M_{s,e} | s \in \mathcal{P}(E),
-    e \in E. e \not \in s }                                      \\
+    e \in E. e \not \in s }                                  \\
 \end{align*}
 For $x,y \in \mathcal{P}(E)$ we say $x$ is covered by $y$ written $ x \prec y$ iff:
 \begin{align*}
@@ -25,14 +23,9 @@ For each variable $x \in \mathcal{V}$ we define $\vec V_x$ as a vector
 of all variables in $\mathcal{V}$ excluding $x$.
 We define the functions in $\mathscr{F}$ as follows:
 \begin{align*}
-    Con(s)   & =   \left(
+    Con(s) & =   \left(
     \bigwedge_{ 1\leq j<j' \leq n \wedge e_j,e_{j'} \in s}
     \neg C_{e_j,e_{j'}}
-    \right)               \\
-    Min(s,e) & = \left(
-    \bigwedge_{s'. (s' \subset s \vee s \subset s')
-        \wedge e \notin s'}
-    \neg M(k',i)
     \right)
 \end{align*}
 $$
@@ -42,22 +35,13 @@ $$
     \end{cases}
 $$
 $$
-    \f{M_{s,e}} = \begin{cases}
-        Min(s,e) \wedge Con(s) & \text{ if } s \vdash_{min} e \\
-        false                  & \text{ otherwise }
+    \f{EN_{s,e}} = \begin{cases}
+        \bigwedge_{s\prec s'} EN_{s',e} 
+        \bigwedge Con(s) & \text{ if } s \vdash e \\
+        \left( \bigvee_{s'\prec s}EN_{s',e} \right)
+        \bigwedge Con(s) & \text{ otherwise }
     \end{cases}
 $$
-\begin{align*}
-    \f{EN_{s,e}} & =
-    \left(
-    M_{s,e} \vee
-    \left(
-    \bigvee_{s'\prec s}EN_{s',e}
-    \right)
-    \right)
-    \bigwedge
-    Con(s)
-\end{align*}
 Note that since we have defined $\mathcal{U}$ to be empty and
 \textcolor{red}{the model is recursive}, the values of all variables in
 $\mathcal{V}$ can be uniquely determined in the model.
@@ -84,7 +68,7 @@ where we have:
      & \iff EN_{s,e} = \T
 \end{align*}
 We define the function of $IC$ to determine whether $ES$
-contains any configurations of a set of configurations 
+contains any configurations of a set of configurations
 $\mathcal{C}$:
 \begin{align*}
     \f{IC} = \bigvee_{c \in \mathcal{C}}c \in \mathcal{F}(ES)
@@ -94,7 +78,7 @@ settings of the endogenous variables such as $\vec v'$
 for which if $M \vDash \vec V = \vec v' \wedge ES = \mathrm{E}$ then $\mathrm{E}$ be an event structure.
 
 Finally, for a given set of configurations $\mathcal{C}$
-we want to find the cause of 
+we want to find the cause of
 $\bigvee_{c \in \mathcal{C}}c \in \mathcal{F}(\mathrm{E})$.
 
 \begin{definition}
@@ -109,12 +93,12 @@ $\bigvee_{c \in \mathcal{C}}c \in \mathcal{F}(\mathrm{E})$.
         \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
 
               (a) $M \models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']
-                    IC = \F
+                  IC = \F
                   \wedge \vec V = \vec v
                   \wedge  \vec v \in \mathcal{E}$.
 
               (b) $M \models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
-                IC = \T
+                  IC = \T
                   \wedge \vec V = \vec v
                   \wedge \vec v \in \mathcal{E}$
               for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
@@ -124,5 +108,14 @@ $\bigvee_{c \in \mathcal{C}}c \in \mathcal{F}(\mathrm{E})$.
     Where $\vec v$ is the value of endogenous variables.
 \end{definition}
 \pagebreak
+
+\subsection{Causality in DyNetKAT}
+We describe how to use causality for a given DyNetKAT expression.
+
+\begin{definition}
+    
+\end{definition}
+
+
 \subsection{Examples}
 \input{sections/examples}

@@ -1,0 +1,6 @@
+\beamer@sectionintoc {1}{Examples}{3}{0}{1}
+\beamer@subsectionintoc {1}{1}{blacklist}{3}{0}{1}
+\beamer@subsectionintoc {1}{2}{loop freedom}{12}{0}{1}
+\beamer@subsectionintoc {1}{3}{waypoint enforcement}{14}{0}{1}
+\beamer@subsectionintoc {1}{4}{invalid drop}{16}{0}{1}
+\beamer@subsectionintoc {1}{5}{congestion}{18}{0}{1}
