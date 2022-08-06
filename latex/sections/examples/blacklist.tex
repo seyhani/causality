@@ -42,73 +42,83 @@
     denote the actions $u?S_{ac},u!S_{ac},u?S_{cd},u!S_{cd}$.
     Thus we have:
     \begin{align*}
-        SDN & = N'_{ab,cb} \parallel P \parallel Q \\
-        P & = p' \\
-        Q & = q' \\
+        SDN' & = N'_{ab,cb} \parallel P \parallel Q \\
+        P' & = p' \\
+        Q' & = q' \\
         N'_{ab,cb} & = ab \oplus p;N'_{ac,cb} \oplus q;N'_{ab,cd} \\
         N'_{ac,cb} & = ac \oplus ab \oplus q;N'_{ac,cd}   \\
         N'_{ab,cd} & = ab \oplus p;N'_{ac,cd}             \\
         N'_{ac,cd} & = ac \oplus ad 
     \end{align*}
-    Now, we wish to derive the event structure of the $SDN$.
-    We consider $\oplus, ;, \parallel$ operators in DyNetKAT as 
-    $+,\cdot,\times$ operators in the language respectively.
-
+    \begin{center}
+        \begin{tikzpicture}[node distance={20mm},
+                main/.style = {draw, circle,minimum width=5mm},
+                s/.style = {->,thick}]
+            \node[main] (s1) {};
+            \node[main] (s3) [below left of=s1] {};
+            \node[main] (s2) [left of=s3] {};
+            \node[main] (s4) [right of=s3] {};
+            \node[main] (s5) [below left of=s2] {};
+            \node[main] (s6) [right of=s5] {};
+            \node[main] (s7) [right of=s6] {};
+            \node[main] (s8) [right of=s7] {};
+            \node[main] (s9) [below left of=s7] {};
+            \node[main] (s10) [right of=s9] {};
+            \draw[s] (s1) -- node[above]{$ab_1$} (s2);
+            \draw[s] (s1) -- node[above]{$p_1$}(s3);
+            \draw[s] (s1) -- node[above]{$q_2$}(s4);
+            \draw[s] (s3) -- node[above]{$ac_1$}(s5);
+            \draw[s] (s3) -- node[above]{$ab_2$}(s6);
+            \draw[s] (s3) -- node[above]{$q_1$}(s7);
+            \draw[s] (s4) -- node[above]{$p_2$}(s7);
+            \draw[s] (s4) -- node[above]{$ab_3$}(s8);
+            \draw[s] (s7) -- node[above]{$ac_2$}(s9);
+            \draw[s] (s7) -- node[above]{$ad$}(s10);
+        \end{tikzpicture}
+    \end{center}
+    We may define the event structure $\mathrm{E} = (E,\#,\vdash)$ for $SDN'$ 
+    where we have:
     \begin{align*}
-        \sem{P} & = (\s{p'},\e,\s{\e \vdash p'}) \\
-        \sem{Q} & = (\s{q'},\e,\s{\e \vdash q'}) \\
-        \sem{P \parallel Q} & = (\s{p',q'},\e, \s{\e \vdash p',\e \vdash q'}) \\
-        \sem{N'_{ac,cd}} &= 
-        (\s{ac,ad},\s{ac \# ad}, \s{\e \vdash ac, \e \vdash ad}) \\
-        \sem{p;N'_{ac,cd}} & = 
-        (\s{p,ac,ad},\s{ac \# ad},\s{\e \vdash p, p \vdash ac, p \vdash ad}) \\
-        \sem{ab\oplus p;N'_{ac,cd}} & =
-        (\s{p,ab,ac,ad}, \s{ab\#p,ab\#ac,ab\#ad,ac\#ad}, \\
-        & \s{\e \vdash ab, \e \vdash p, p \vdash ac, p \vdash cd}) \\
-        \sem{q;N'_{ac,cd}} & = (\s{q,ac,ad},\s{ac\# ad},
-        \s{\e \vdash q, q \vdash ac, q \vdash ad} \\
-        \sem{ab \oplus q;N'_{ac,cd}}  & = (\s{q,ab,ac,ad},
-         \s{ac \# ad, ab\# q,ab\#ac, ab \# ad, },\\
-         & \s{\e \vdash ab, \e \vdash q, q \vdash ac, q \vdash ad} ) \\
-        \sem{ac \oplus ab \oplus q;N'_{ac,cd}}  & = (\s{q,ab,ac_1,ac_2,ad}, \\
-        & \s{ac_1 \# ad, ab\# q,ab\#ac_1, ab \# ad,
-            ac_2 \# ab, ac_2 \# q, ac_2 \# ac_1, ac_2 \# ad
-         },\\
-         & \s{\e \vdash ab, \e \vdash q, q \vdash ac_1, q \vdash ad, 
-         \e \vdash ac_2} ) \\
-        \sem{q;N'_{ab,cd}} & =
-        (\s{p,q,ab,ac,ad}, \s{ab\#p,ab\#ac,ab\#ad,ac\#ad}, \\
-        & \s{\e \vdash q, q \vdash ab, q \vdash p, \s{p,q} \vdash ac,
-        \s{p,q} \vdash cd}) \\
-        \sem{p;N'_{ac,cb}}  & = (\s{p,q,ab,ac_1,ac_2,ad}, \\
-        & \s{ac_1 \# ad, ab\# q,ab\#ac_1, ab \# ad,
-            ac_2 \# ab, ac_2 \# 1, ac_2 \# ac_1, ac_2 \# ad
-         },\\
-         & \s{\e \vdash p, \s{p} \vdash ab, \s{p} \vdash q, 
-         \s{p,q} \vdash ac_1, \s{p,q} \vdash ad, \s{p} \vdash ac_2} ) \\
-         \sem{ p;N'_{ac,cb} \oplus q;N'_{ab,cd}} & = (
-        \s{p_1,p_2,q_1,q_2,ab_1,ab_2,ac_{21},ac_{22},ac_1,ad_1,ad_2}, \\
-         & \s{ab_1\#p_1,ab_1\#ac_1,ab_1\#ad_1,ac_1\#ad_1 \\
-         & ac_{21} \# ad_2, ab_2\# q_2,ab_2\#ac_{21}, ab_2 \# ad_2, \\
-         & ac_{22} \# ab_2, ac_{22} \# q_2, ac_{22} \# ac_{21}, 
-         ac_{22} \# ad_2 } \\
-         & \cup \s{e_{i}\#e_{i'}| i \neq i' } \\
-         & \s{\e \vdash p_2, \s{p_2} \vdash ab_2, \s{p_2} \vdash q_2, 
-         \s{p_2,q_2} \vdash ac_{21}, \s{p_2,q_1} \vdash ad_2, \s{p_2} 
-         \vdash ac_{22},  \\
-        & \e \vdash q_1, q_1 \vdash ab_1, q_1 \vdash p_1, 
-        \s{p_1,q_1} \vdash ac_1, \s{p_1,q_1} \vdash cd_1}) \\
-        \sem{ab \oplus p;N'_{ac,cb} \oplus q;N'_{ab,cd}} & = (
-        \s{p_1,p_2,q_1,q_2,ab_1,ab_2,ab_3,ac_{21},ac_{22},ac_1,ad_1,ad_2}, \\
-         & \s{ab_1\#p_1,ab_1\#ac_1,ab_1\#ad_1,ac_1\#ad_1 \\
-         & ac_{21} \# ad_2, ab_2\# q_2,ab_2\#ac_{21}, ab_2 \# ad_2, \\
-         & ac_{22} \# ab_2, ac_{22} \# q_2, ac_{22} \# ac_{21}, 
-         ac_{22} \# ad_2 } \\
-         & \cup \s{e_{i}\#e_{i'}| i \neq i' } \\
-         & \s{\e \vdash p_2, \s{p_2} \vdash ab_2, \s{p_2} \vdash q_2, 
-         \s{p_2,q_2} \vdash ac_{21}, \s{p_2,q_1} \vdash ad_2, \s{p_2} 
-         \vdash ac_{22},  \\
-        & \e \vdash ab_3, \e \vdash q_1, q_1 \vdash ab_1, q_1 \vdash p_1, 
-        \s{p_1,q_1} \vdash ac_1, \s{p_1,q_1} \vdash cd_1}) \\
+        E = \s{ab_1,ab_2,ab_3,ac_1,ac_2,ad,p_1,p_2,q_1,q_2} \\
     \end{align*}
+    Enabling relation the least one that satisfies:
+    \begin{align*}
+        & \e \vdash ab_1, \e \vdash p_1, \e \vdash q_2,
+        \s{p_1} \vdash ac_1, \s{p_1} \vdash ab_2, \s{p_1} \vdash q_1,
+        \s{q_1} \vdash p_2, \s{q_1} \vdash ab_3 \\
+        & \s{p_1,q_1} \vdash ac_2, \s{p_1,q_1} \vdash ad,
+        \s{p_2,q_2} \vdash ac_2, \s{p_2,q_2} \vdash ad
+    \end{align*}
+    And conflict relation the least one where:
+    \begin{align*}
+        \forall i,j,k. j \neq k \Rightarrow e_{i,k} \# e_{j,k} \\
+    \end{align*}
+    Given an event structure $\mathrm{E} = (E,\#,\vdash)$, we define a safety
+    property $\mathcal{P}$ as a subset of $\mathcal{F}(\mathrm{E})$.
+    The safety property here is $d$ is being blacklist. 
+    Thus, we define $ p \subseteq \mathcal{F}(\mathrm{E})$ to be the set of 
+    configurations that do not contain an event of forwarding a packet to $d$.
+    More formally we define $p$ as follows:
+    \begin{align*}
+        p = \s{s \subseteq E| \forall e \in s.  l(e) = (\sigma, \sigma')
+         \Rightarrow \sigma'(l) \neq d }
+    \end{align*}
+    Finally, we can consider the set $\mathcal{P}(E) \setminus p$ as the 
+    set of configurations for which we want to find the cause.
+    Here, let $s = \mathcal{P}(E) \setminus p$.
+    For our blacklist property $s$ contains all subsets of $E$ that contain $ad$.
+    We wish to define nonexistence of a conflict between $p_1$ and $q_1$ 
+    as a cause.
+    We consider the witness $(C(p_2,q_2),\T,\T)$.
+    If we set both $C(p_1,q_1)$ and $C(p_2,q_2)$ to true, then $ES$ for any 
+    configuration $\sigma$ of $ES$ we have $\s{p_1,q_1} \not \in \sigma$ and
+    $\s{p_1,q_2} \not \in \sigma$. Now, since $ad$ is only enabled either by
+    $\s{p_1,q_1}$ or $\s{p_2,q_2}$, we can conclude that $ES$ can not have a
+    configuration containing $ad$.
+    For AC2(b), if we only set $C(p_2,q_2)$ to true, still ${p_1,q_1,ad}$ is 
+    a configuration of $ES$ under any reset of other variables to their actual 
+    values.
+    Thus AC conditions are satisfied and we can declare $C(p_1,q_1)$ as a cause of
+    the violation of the blacklist property.
+
 \end{example}
