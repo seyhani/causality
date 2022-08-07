@@ -1,0 +1,139 @@
+We describe how to use causality for a given DyNetKAT expression.
+
+\begin{definition}
+    Given sets of events $E_0$ and $E_1$ let
+    $E = \s{(0,e)|e \in E_0} \cup \s{(1,e)|e \in E_1}$.
+    We define injections $\iota_k: E_k \rightarrow E$, given by
+    $\iota_k(e) = (k,e)$, for $k = 0,1$.
+\end{definition}
+
+\begin{definition}
+    Given sets of events $E_0$ and $E_1$ let their product $E$ be:
+    \begin{align*}
+        E_0 \times_* E_1 = \s{(e_0,*)|e_0 \in E_0} \cup \s{(e_0,*)|e_0 \in E_0}
+        \cup \s{(e_0,e_1)|e_0 \in E_0 \wedge e_1 \in E_1}
+    \end{align*}
+    We define projections $\pi_i: E \rightarrow_* E_i$, given by
+    $\pi_i(e_0,e_1) = e_i$, for $i=0,1$.
+\end{definition}
+
+\begin{definition}
+    Let $\mathrm{E} = (E,\#,\vdash,L,l)$ be a labeled event structure and
+    $M = \mathfrak{M}(\mathrm{E})$ be its causal model.
+    Let $\alpha$ be a label and $\mathrm{E'} = \alpha \mathrm{E}$.
+    We define $M' = \alpha M$ to be a causal model where:
+    \begin{align*}
+        \mathcal{V'} = & \s{C'_{e_i,e_j} |  1 \leq i < j \leq n.
+        e_i \in E' \amp e_j \in E'}                                 \\
+                       & \cup \s{EN'_{s,e} | s \in \mathcal{P}(E'),
+        e \in E'. e \not \in s }                                    \\
+                       & \cup \mathcal{V}
+    \end{align*}
+    Next, we define functions of $M'$ as follows:
+    $$
+        \f{C'_{e,e'}} = \begin{cases}
+            \T       & \text{ if } e = (0,\alpha) \vee e' = (0,\alpha) \\
+            C_{e,e'} & \text{ otherwise }
+        \end{cases}
+    $$
+
+    $$
+        \f{EN'_{s,e}} = \begin{cases}
+            \T                      & \text{ if } e = (0,\alpha)             \\
+            EN_{s',e} \wedge Con(s) & \text{ if } s = s' \cup \s{(0,\alpha)} \\
+            \F                      & \text{ otherwise }
+        \end{cases}
+    $$
+\end{definition}
+
+\begin{definition}
+    Let $\mathrm{E}_0 = (E_0,\#_0,\vdash_0,L_0,l_0)$ and
+    $\mathrm{E}_1 = (E_1,\#_1,\vdash_1,L_1,l_1)$ be labeled event structures
+    and $M_0,M_1$ be their causal models.
+    Let $(E',\#',\vdash',L',l') = \mathrm{E_0} + \mathrm{E_1}$.
+    We define $M' = M_0 + M_1$ to be a causal model where we have:
+    \begin{align*}
+        \mathcal{V} = & \s{C_{e_i,e_j} |  1 \leq i < j \leq n.
+        e_i \in E' \amp e_j \in E'}                               \\
+                      & \cup \s{EN_{s,e} | s \in \mathcal{P}(E'),
+        e \in E'. e \not \in s }                                  \\
+                      & \cup \mathcal{V}_0 \cup \mathcal{V}_1
+    \end{align*}
+    We define the functions of $M'$ as follows:
+    $$
+        \f{C_{e,e'}} = \begin{cases}
+            \T         & \text{ if } \exists e_0,e_1.
+            (e = \iota_0(e_0) \wedge e' = \iota_1(e_1))
+            \vee (e' = \iota_0(e_0) \wedge e = \iota_1(e_1))            \\
+            C^0_{e,e'} & \text{ if } \exists e_0,e_0'. e = \iota_0(e_0)
+            \wedge e' = \iota_0(e_0')                                   \\
+            C^1_{e,e'} & \text{ if } \exists e_1,e_1'. e = \iota_1(e_1)
+            \wedge e' = \iota_1(e_1')
+        \end{cases}
+    $$
+    $$
+        \f{EN_{s,e}} = \begin{cases}
+            Con(s) \wedge EN^0_{s_0,e_0} & \text{ if }
+            \exists s_0 \in Con_0,e_0 \in E_0. s = \iota_0(s_0) \\
+            Con(s) \wedge EN^1_{s_1,e_1} & \text{ if }
+            \exists s_1 \in Con_1,e_1 \in E_1. s = \iota_1(s_1) \\
+            \F                           & \text{ otherwise }
+        \end{cases}
+    $$
+\end{definition}
+
+\begin{definition}
+    Let $\mathrm{E}_0 = (E_0,\#_0,\vdash_0,L_0,l_0)$ and
+    $\mathrm{E}_1 = (E_1,\#_1,\vdash_1,L_1,l_1)$ be event structures and
+    $M_0,M_1$ be their causal models.
+    Let $(E',\#',\vdash',L',l') = E_0 \times E_1$.
+    We define $M' = M_0 \times M_1$ to be a causal model where we have:
+    \begin{align*}
+        \mathcal{V} = & \s{C_{e_i,e_j} |  1 \leq i < j \leq n.
+        e_i \in E' \amp e_j \in E'}                               \\
+                      & \cup \s{EN_{s,e} | s \in \mathcal{P}(E'),
+        e \in E'. e \not \in s }                                  \\
+                      & \cup \mathcal{V}_0 \cup \mathcal{V}_1
+    \end{align*}
+    We define the functions of $M'$ as follows:
+    $$
+        \f{C_{e,e'}} = \begin{cases}
+            \T & \text{ if } \pi_0(e) = \pi_0(e') \vee \pi_1(e) = \pi_1(e') \\
+            C^0(\pi_0(e),\pi_0(e')) \vee  C^1(\pi_1(e),\pi_1(e'))
+               & \text { if } \pi_0(e) \neq * \wedge \pi_1(e) \neq *        \\
+            C^0(\pi_0(e),\pi_0(e'))
+               & \text { if } \pi_1(e) = *                                  \\
+            C^1(\pi_1(e),\pi_1(e'))
+               & \text { if } \pi_0(e) = *                                  \\
+        \end{cases}
+    $$
+    $$
+        \f{EN_{s,e}} = \begin{cases}
+            EN^0(\pi_0(s),\pi_0(e)) \wedge EN^1(\pi_1(s),\pi_1(e))
+                                    & \text{ if } \pi_0(e) \neq * \wedge \pi_1(e) \neq * \\
+            EN^0(\pi_0(s),\pi_0(e)) & \text{ if } \pi_1(e) = *                           \\
+            EN^1(\pi_1(s),\pi_1(e)) & \text{ if } \pi_0(e) = *                           \\
+        \end{cases}
+    $$
+\end{definition}
+\begin{definition}
+    Let $\mathrm{E} = (E,\#,\vdash,L,l)$ be an event structure and $M$ its
+    causal model.
+    For each variable $v \in \mathcal{V}$ we define a function $l(v)$ which
+    returns the set of labels of this variable regarding the $l$ as follows:
+    $$
+        l(v) = \begin{cases}
+            \s{l(e),l(e')}                     & \text{ if } \exists e,e' \in E. v = C_{e,e'} \\
+            \s{l(e')| e' \in s } \cup \s{l(e)} & \text{ if }
+            \exists s \subseteq E, e \in E. v = EN_{s,e}
+        \end{cases}
+    $$
+\end{definition}
+
+\begin{definition}
+    Let $\mathrm{E} = (E,\#,\vdash,L,l)$ be an event structure and $M$ its
+    causal model.
+    Given a set of labels $\Lambda$, we define $M' = M\lceil \Lambda$ to be
+    a causal model where we have removed any variable such as
+    $x \in \mathcal{V}$ and its functions where $l(v) \not \subseteq \Lambda$.
+\end{definition}

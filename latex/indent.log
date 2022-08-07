@@ -1,7 +1,7 @@
 INFO:  latexindent version 3.16, 2022-03-13, a script to indent .tex files
        latexindent lives here: /usr/local/texlive/2022/texmf-dist/scripts/latexindent/
-       Sat Aug  6 14:58:09 2022
-       Filename: /Users/amir/Data/Projects/personal/Thesis/latex/sections/examples/__latexindent_temp.tex
+       Sun Aug  7 12:37:47 2022
+       Filename: /Users/amir/Data/Projects/personal/Thesis/latex/sections/__latexindent_temp.tex
 INFO:  Processing switches:
        -y|--yaml: YAML settings specified via command line
        -c|--cruft: cruft directory
