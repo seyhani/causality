@@ -137,3 +137,74 @@ We describe how to use causality for a given DyNetKAT expression.
     a causal model where we have removed any variable such as
     $x \in \mathcal{V}$ and its functions where $l(v) \not \subseteq \Lambda$.
 \end{definition}
+
+\begin{example}
+    Consider the following network where we want to check a blacklist
+    property, i.e. no packets arrive at $d$:
+    \begin{center}
+        \begin{tikzpicture}[node distance={25mm},
+                main/.style = {draw, circle},
+                d/.style = {->,thick,dashed} ]
+            \node[main] (a) {$a$};
+            \node[main] (b) [right of=a] {$b$};
+            \node[main] (c) [right of=b] {$c$};
+            \draw[d] (a) -- (b);
+            \draw[d] (b) -- (c);
+        \end{tikzpicture}
+    \end{center}
+    We define this network using the following DyNetKAT term:
+    \begin{align*}
+        S_{xy}  & = l = x \cdot l \la y              \\
+        P       & = u!S_{ab}                         \\
+        Q       & = u!S_{bc}                         \\
+        N_{x,y} & = (S_x+S_y)^* \oplus u?x';N_{x',y}
+        \oplus u?y';N_{x,y'}                         \\
+        SDN     & = N_{0,0} \parallel P \parallel Q
+    \end{align*}
+    We may rewrite the terms as follows:
+    \begin{align*}
+        N_{0,0}   & = u?S_{ab};N_{ab,0} \oplus u?S_{bc};N_{0,bc} \\
+        N_{ab,0}  & = S_{ab}^* \oplus u?S_{bc};N_{ab,bc}         \\
+        N_{0,bc}  & = S_{bc}^* \oplus u?S_{ab};N_{ab,cd}         \\
+        N_{ab,bc} & = (S_{ab}+S_{bc})^*
+    \end{align*}
+    Given a packet $\sigma$ where $\sigma(l) = a$ we can replace NetKAT
+    policies with actions of the form $(\sigma, \sigma')$.
+    In this network we denote the action $(\sigma, \sigma')$
+    with $xy$ where $\sigma(l) = x$ and $\sigma'(l) = y$.
+    Let $N'_{x,y}$ be the term where we replaced NetKAT policies with
+    actions of the form $(\sigma,\sigma')$ and let we use $p,p',q,q'$ to
+    denote the actions $u?S_{ab},u!S_{ab},u?S_{bc},u!S_{bc}$.
+    We also restrict the network by forbidding actions in 
+    $\mathcal{L}=\s{p,p',q,q'}$.
+    Thus we have:
+    \begin{align*}
+        SDN'       & = \delta_{\mathcal{L}}(N'_{0,0} \parallel P \parallel Q) \\
+        P'         & = p'                                                     \\
+        Q'         & = q'                                                     \\
+        N'_{0,0}   & = p;N'_{ab,0} \oplus q;N'_{0,bc}                         \\
+        N'_{ab,0}  & = ab \oplus q;N'_{ab,bc}                                 \\
+        N'_{0,bc}  & = p;N'_{ab,bc}                                           \\
+        N'_{ab,bc} & = ab \oplus ac
+    \end{align*}
+    \begin{center}
+        \begin{tikzpicture}[node distance={20mm},
+                main/.style = {draw, circle,minimum width=5mm},
+                s/.style = {->,thick}]
+            \node[main] (s1) {};
+            \node[main] (s2) [below left of=s1] {};
+            \node[main] (s3) [below right of=s1] {};
+            \node[main] (s4) [below left of=s2] {};
+            \node[main] (s5) [below right of=s2] {};
+            \node[main] (s6) [below left of=s5] {};
+            \node[main] (s7) [below right of=s5] {};
+            \draw[s] (s1) -- node[left]{$rcfg(p)$} (s2);
+            \draw[s] (s1) -- node[right]{$rcfg(q)$}(s3);
+            \draw[s] (s2) -- node[above]{$ab$}(s4);
+            \draw[s] (s2) -- node[above]{$rcfg(q)$}(s5);
+            \draw[s] (s3) -- node[right]{$rcfg(p)$}(s5);
+            \draw[s] (s5) -- node[left]{$ab$}(s6);
+            \draw[s] (s5) -- node[right]{$ac$}(s7);
+        \end{tikzpicture}
+    \end{center}
+\end{example}
