@@ -244,6 +244,17 @@ class EventStructure:
     def is_configuration(self, x: Set[Event]):
         return frozenset(x) in self.configurations
 
+    def conflicts(self, e1: Event, e2: Event):
+        return e1 in self.conflict[e2] and e2 in self.conflict[e1]
+
+    def min_en(self, x: Set[Event], e: Event) -> bool:
+        return (x in self.enabling[e]) and all(
+            [
+                (y not in self.enabling[e]) or y == x
+                for y in utils.powerset(x)
+            ]
+        )
+
     def __eq__(self, other):
         if not isinstance(other, EventStructure):
             return False
