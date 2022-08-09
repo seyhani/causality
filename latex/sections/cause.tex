@@ -1,6 +1,5 @@
-Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure with
-$E = \s{e_1, e_2, ...,e_n}$ and let $\s{s_1,s_2,...,s_p}$ be the power set of $E$.
-Given an event structure $\mathrm{E}$ and a subset $\mathcal{C}$ of
+Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure where
+$E = \s{e_1, e_2, ...,e_n}$ and $\mathcal{C}$ be a subset of
 $\mathcal{P}(E)$, we define the causal model
 $\mathfrak{M}(\mathrm{E},\mathcal{C}) = (\mathcal{S},\mathscr{F},\mathcal{E})$
 where
@@ -12,10 +11,9 @@ We define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
                   & \cup \s{EN_{s,e} | s \in \mathcal{P}(E),
     e \in E. e \not \in s }                                  \\
                   & \cup \s{M_{s,e} | s \in \mathcal{P}(E),
-    e \in E. e \not \in s }                                  \\
-                  & \cup \s{ES,IC}
+        e \in E. e \not \in s } \cup \s{ES,IC}
 \end{align*}
-We $\mathcal{R}(ES) = \mathbb{E}$ where $\mathbb{E}$ is the set of all
+Let $\mathcal{R}(ES) = \mathbb{E}$ where $\mathbb{E}$ is the set of all
 triples of the form $(E',\#',\vdash')$ where $\#' \subseteq E \times E$
 and $\vdash' \subseteq \mathcal{P}(E') \times E'$ and we define all other
 variables to be boolean.
@@ -28,17 +26,6 @@ For $x,y \in \mathcal{P}(E)$ we say $x$ is covered by $y$ written $ x \prec y$ i
     \text{ or } y = z)
 \end{align*}
 We define the functions in $\mathscr{F}$ as follows:
-\begin{align*}
-    Con(s)   & =   \left(
-    \bigwedge_{ 1\leq j<j' \leq n \wedge e_j,e_{j'} \in s}
-    \neg C_{e_j,e_{j'}}
-    \right)               \\
-    Min(s,e) & = \left(
-    \bigwedge_{s'. (s' \subset s \vee s \subset s')
-        \wedge e \notin s'}
-    \neg M(k',i)
-    \right)
-\end{align*}
 $$
     \f{C_{e,e'}} = \begin{cases}
         true  & \text{ if } e \# e' \amp e' \# e \\
@@ -61,6 +48,18 @@ $$
     \right)
     \bigwedge
     Con(s)
+\end{align*}
+Where we have:
+\begin{align*}
+    Con(s)   & =   \left(
+    \bigwedge_{ 1\leq j<j' \leq n \wedge e_j,e_{j'} \in s}
+    \neg C_{e_j,e_{j'}}
+    \right)               \\
+    Min(s,e) & = \left(
+    \bigwedge_{s'. (s' \subset s \vee s \subset s')
+        \wedge e \notin s'}
+    \neg M(k',i)
+    \right)
 \end{align*}
 Additionally, we define:
 \begin{align*}
@@ -89,16 +88,27 @@ settings of the endogenous variables such as $\vec v'$
 for which if $M \vDash \vec V = \vec v' \wedge ES = \mathrm{E}'$
 then $\mathrm{E}'$ is an event structure.
 
-Given a set of events $E$, we define a safety property $P$ to be a
-subset of $\mathcal{P}(E)$.
-We say an event structure $\mathrm{E}$ is safe regarding the property
-$p$ if $\mathcal{F}(\mathrm{E}) \subseteq P$.
-Finally, to find the cause of $P$'s violation in $\mathrm{E}$ we
-need to find the cause of
-$\bigvee_{c \in \mathcal{P}(E) - P}c \in \mathcal{F}(\mathrm{E})$.
-
+\subsection{Actual Cause of Property Violation}
 \begin{definition}
-    Let $P$ be a safety property on $E$ and $\mathrm{E} = (E,\#,\vdash)$ be an event structure where $P$ is violated.
+    Given a set of events $E$, we define a safety property $P$ to be a
+    subset of $\mathcal{P}(E)$.
+\end{definition}
+\begin{definition}
+    Given an event structure $\mathrm{E}$ we say it is safe regarding the 
+    property $P$ if $\mathcal{F}(\mathrm{E}) \subseteq P$.
+\end{definition}
+
+Let $E$ be set of events and $\mathrm{E} = (E,\#,\vdash)$ be an event structure.
+Let $P \subseteq \mathcal{P}(E)$ be a safety property that is violated in 
+$\mathrm{E}$.
+The property is violated if any $c \in \mathcal{P}(E) - P$ be a configuration
+of $\mathrm{E}$. 
+Thus to find the actual cause of the property violation we need to find 
+the actual cause of 
+$\bigvee_{c \in \mathcal{P}(E) - P}c \in \mathcal{F}(\mathrm{E})$.
+\begin{definition}
+    Given a set of events $E$, let $P$ be a safety property on $E$ and 
+    $\mathrm{E} = (E,\#,\vdash)$ be an event structure where $P$ is violated.
     If $\mathcal{M} = \mathfrak{M}(\mathrm{E}, P - \mathcal{P}(E))$
     be a causal model then $\vec X = \vec x$ is
     an actual cause of the violation of $P$ in $\mathrm{E}$ if the
