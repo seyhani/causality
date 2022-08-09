@@ -1,5 +1,6 @@
 import unittest
 
+from event_structure.event_structure import EventStructure
 from mapper import EventStructureToCausalModelMapper
 from event_structure import EventStructureTerm
 from event import Event
@@ -47,3 +48,24 @@ class TestCausalModel(unittest.TestCase):
         self.assertEqual(cm.vals['M([a], c)'], True)
         self.assertEqual(cm.vals['EN([b], a)'], True)
         self.assertEqual(cm.vals['EN([a, b], c)'], False)
+
+    def test_intervention(self):
+        a, b, c = Event('a'), Event('b'), Event('c')
+        es = EventStructure()
+        es.add_enabling(set(), a)
+        es.add_enabling(set(), b)
+        es.add_enabling({a, b}, c)
+        es.build_configurations()
+        self.assertTrue(es.is_configuration({a, b, c}))
+
+        cm = EventStructureToCausalModelMapper(es).map()
+        cm.evaluate()
+        esp = cm.to_es()
+        esp.build_configurations()
+        self.assertTrue(esp.is_configuration({a, b, c}))
+
+        cm = cm.intervene({'C(a,b)': True})
+        cm.evaluate()
+        esp = cm.to_es()
+        esp.build_configurations()
+        self.assertFalse(esp.is_configuration({a, b, c}))

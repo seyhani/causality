@@ -5,13 +5,14 @@ from causality import CausalModel
 from causality.causal_model import VALS
 from event import Event
 from event_structure import EventStructureTerm
+from event_structure.event_structure import EventStructure
 from mapper.event_structure_causal_model import EventStructureCausalModel
 from mapper.var import ConflictVar, MinEnablingVar, EnablingVar
 from utils import powerset, ids
 
 
 class EventStructureToCausalModelMapper:
-    def __init__(self, es: EventStructureTerm):
+    def __init__(self, es: EventStructure):
         self.es = es
         self.cm = EventStructureCausalModel()
 
@@ -60,7 +61,7 @@ class EventStructureToCausalModelMapper:
                     continue
                 self.cm.add_enabling(s, e, (lambda s_=s, e_=e: lambda vals: enabling_condition(vals, s_, e_))())
 
-    def map(self) -> CausalModel:
+    def map(self) -> EventStructureCausalModel:
         self.__add_conflict_vars()
         self.__add_min_en_vars()
         self.__add_enabling_vars()
