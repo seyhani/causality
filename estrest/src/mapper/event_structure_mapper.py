@@ -50,7 +50,7 @@ class EventStructureToCausalModelMapper:
                     continue
                 var = self.__min_en_var(s, e)
                 if self.es.min_en(s, e):
-                    cm.add(var, lambda vals, s_=s, e_=e: self.min(s_, e_, vals) and self.con(s_, vals))
+                    cm.add(var, (lambda s_=s, e_=e: lambda vals,: self.min(s_, e_, vals) and self.con(s_, vals))())
                 else:
                     cm.add_constant(var, False)
 
@@ -72,7 +72,7 @@ class EventStructureToCausalModelMapper:
                 if e in s:
                     continue
                 var = self.__enabling_var(s, e)
-                cm.add(var, lambda vals, s_=s, e_=e: enabling_condition(vals, s_, e_))
+                cm.add(var, (lambda s_=s, e_=e: lambda vals: enabling_condition(vals, s_, e_))())
 
     def map(self) -> CausalModel:
         cm = CausalModel()
