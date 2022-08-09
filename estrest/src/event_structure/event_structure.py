@@ -19,6 +19,22 @@ class EventStructure:
         self.conflict = conflict or {}
         self.configurations = set()
 
+    def __add_event(self, e: Event):
+        self.events.add(e)
+        self.enabling[e] = []
+        self.conflict[e] = set()
+
+    def add_enabling(self, s: Set[Event], e: Event):
+        for ep in s.union({e}) - self.events:
+            self.__add_event(ep)
+        self.enabling[e].append(s)
+
+    def add_conflict(self, e: Event, ep: Event):
+        for e_ in {e, ep}.difference(self.events):
+            self.__add_event(e_)
+        self.conflict[e].add(ep)
+        self.conflict[ep].add(e)
+
     def get_event(self, _id: tuple):
         for e in self.events:
             if e.idx() == _id:
