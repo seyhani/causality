@@ -1,4 +1,4 @@
-from event_structure import EventStructure
+from event_structure import EventStructureTerm
 from src import ids
 from .serializable import Serializable
 from .enabling import Enabling
@@ -30,7 +30,7 @@ class IdRelation(Serializable):
         return self.events == other.events and self.conflict == other.conflict and self.enabling == other.enabling
 
 
-def to_relation(event_structure: EventStructure):
+def to_relation(event_structure: EventStructureTerm):
     events = ids(event_structure.events)
     conflict = set([(e.idx(), ce.idx()) for e, conflict_set in event_structure.conflict.items() for ce in
                     conflict_set])

@@ -4,12 +4,12 @@ from itertools import combinations
 from causality import CausalModel
 from causality.causal_model import VALS
 from event import Event
-from event_structure import EventStructure
+from event_structure import EventStructureTerm
 from utils import powerset, ids
 
 
 class EventStructureToCausalModelMapper:
-    def __init__(self, es: EventStructure):
+    def __init__(self, es: EventStructureTerm):
         self.es = es
 
     @staticmethod

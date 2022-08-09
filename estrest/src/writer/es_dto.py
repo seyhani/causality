@@ -1,13 +1,13 @@
-from event_structure import EventStructure
+from event_structure import EventStructureTerm
 from writer.evnet_structure_expression import EventStructureExpression
 from .word_list import WordList
 
 
-def events_to_words(es: EventStructure) -> WordList:
+def events_to_words(es: EventStructureTerm) -> WordList:
     return WordList(list(map(repr, es.events)))
 
 
-def conflict_to_words(es: EventStructure) -> WordList:
+def conflict_to_words(es: EventStructureTerm) -> WordList:
     words = WordList()
     for e, conflict in es.conflict.items():
         for ce in conflict:
@@ -15,7 +15,7 @@ def conflict_to_words(es: EventStructure) -> WordList:
     return words
 
 
-def enabling_to_words(es: EventStructure) -> WordList:
+def enabling_to_words(es: EventStructureTerm) -> WordList:
     words = WordList()
     for e, enabling in es.enabling.items():
         for enabling_set in enabling:
@@ -26,11 +26,11 @@ def enabling_to_words(es: EventStructure) -> WordList:
     return words
 
 
-def labels_to_words(es: EventStructure) -> WordList:
+def labels_to_words(es: EventStructureTerm) -> WordList:
     return WordList(list(es.get_labels()))
 
 
-def labeling_to_words(es: EventStructure) -> WordList:
+def labeling_to_words(es: EventStructureTerm) -> WordList:
     words = WordList()
     for e in es.events:
         words.add("l({}) = {}".format(e, repr(e.label).replace("\'", "")))

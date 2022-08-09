@@ -1,7 +1,7 @@
 import unittest
 
 from mapper import EventStructureToCausalModelMapper
-from event_structure import EventStructure
+from event_structure import EventStructureTerm
 from event import Event
 
 
@@ -9,7 +9,7 @@ class TestCausalModel(unittest.TestCase):
 
     def test_firewall(self):
         i, o = Event('i'), Event('o')
-        es = EventStructure(
+        es = EventStructureTerm(
             events={i, o},
             conflict={i: set(), o: set()},
             enabling={i: {frozenset()}, o: {frozenset()}},
@@ -31,7 +31,7 @@ class TestCausalModel(unittest.TestCase):
 
     def test_cm_with_conflict_and_enabling(self):
         a, b, c = Event('a'), Event('b'), Event('c')
-        es = EventStructure(
+        es = EventStructureTerm(
             events={a, b, c},
             conflict={a: {b}, b: {a}, c: set()},
             enabling={

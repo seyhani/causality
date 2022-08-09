@@ -1,14 +1,14 @@
 import unittest
 
 from event import Event
-from event_structure import EventStructure
+from event_structure import EventStructureTerm
 from utils import list_ids
 
 
 class TestConfiguration(unittest.TestCase):
 
     def test_configuration_base(self):
-        es = EventStructure()
+        es = EventStructureTerm()
         a, b = Event('a'), Event('b')
         es.events = {a, b}
         es.conflict = {a: set(), b: set()}
@@ -18,7 +18,7 @@ class TestConfiguration(unittest.TestCase):
         self.assertTrue(es.is_configuration({a, b}))
 
     def test_configuration_conflict(self):
-        es = EventStructure()
+        es = EventStructureTerm()
         a, b = Event('a'), Event('b')
         es.events = {a, b}
         es.conflict = {a: {b}, b: {a}}
@@ -28,7 +28,7 @@ class TestConfiguration(unittest.TestCase):
         self.assertFalse(es.is_configuration({a, b}))
 
     def test_configuration_not_secured(self):
-        es = EventStructure()
+        es = EventStructureTerm()
         a, b, c = Event('a'), Event('b'), Event('c')
         es.events = {a, b, c}
         es.conflict = {a: set(), b: set(), c: set()}
@@ -41,7 +41,7 @@ class TestConfiguration(unittest.TestCase):
         self.assertTrue(es.is_configuration({a, b, c}))
 
     def test_configuration_generic(self):
-        es = EventStructure()
+        es = EventStructureTerm()
         a, b, c, d, e = [Event(x) for x in 'abcde']
         es.events = {a, b, c, d, e}
         es.conflict = {a: set(), b: {d, e}, c: set(), d: {b}, e: {b}}
@@ -61,7 +61,7 @@ class TestConfiguration(unittest.TestCase):
 
     def test_configuration_prefix(self):
         a, b = Event('a'), Event('b')
-        es = EventStructure(
+        es = EventStructureTerm(
             events={a, b},
             enabling={a: [set()], b: [{a}]},
             conflict={a: set(), b: set()},
@@ -78,12 +78,12 @@ class TestConfiguration(unittest.TestCase):
     def test_configuration_plus(self):
         a, b = Event('a'), Event('b')
         es = {
-            0: EventStructure(
+            0: EventStructureTerm(
                 events={a},
                 enabling={a: [set()]},
                 conflict={a: set()},
             ),
-            1: EventStructure(
+            1: EventStructureTerm(
                 events={b},
                 enabling={b: [set()]},
                 conflict={b: set()},
@@ -100,7 +100,7 @@ class TestConfiguration(unittest.TestCase):
 
     def test_configuration_restrict(self):
         a, b = Event('a'), Event('b')
-        es = EventStructure(
+        es = EventStructureTerm(
             events={a, b},
             enabling={a: [set()], b: [{a}]},
             conflict={a: set(), b: set()},
@@ -113,7 +113,7 @@ class TestConfiguration(unittest.TestCase):
 
     def test_configuration_relabelling(self):
         a, b = Event('a'), Event('b')
-        es = EventStructure(
+        es = EventStructureTerm(
             events={a, b},
             enabling={a: [set()], b: [{a}]},
             conflict={a: set(), b: set()},
@@ -127,12 +127,12 @@ class TestConfiguration(unittest.TestCase):
     def test_configuration_times(self):
         a, b, c = Event('a'), Event('b'), Event('c')
         es = {
-            0: EventStructure(
+            0: EventStructureTerm(
                 events={a, b},
                 enabling={a: [set()], b: [set()]},
                 conflict={a: {b}, b: {a}},
             ),
-            1: EventStructure(
+            1: EventStructureTerm(
                 events={c},
                 enabling={c: [set()]},
                 conflict={c: set()},

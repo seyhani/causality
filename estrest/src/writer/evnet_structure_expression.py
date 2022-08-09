@@ -1,10 +1,10 @@
-from event_structure import EventStructure
+from event_structure import EventStructureTerm
 from utils import sem
 
 
 class EventStructureExpression:
     def __init__(self):
-        self.es = EventStructure()
+        self.es = EventStructureTerm()
         self.expr = 'nil'
         self.expr_eq = sem('nil')
 

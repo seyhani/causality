@@ -7,7 +7,7 @@ from event import Event, SyncedEvent, STAR
 
 
 # noinspection SpellCheckingInspection
-class EventStructure:
+class EventStructureTerm:
     def __init__(self, events=None, enabling=None, conflict=None) -> None:
         self.events = events or set()
         self.enabling = enabling or {}  # Event -> List[Set[Event]]
@@ -67,7 +67,7 @@ class EventStructure:
         return es
 
     def plus(self, es1):
-        res = EventStructure()
+        res = EventStructureTerm()
         es = {0: deepcopy(self), 1: deepcopy(es1)}
 
         for i in (0, 1):
@@ -89,7 +89,7 @@ class EventStructure:
         return res
 
     def times(self, es1):
-        res = EventStructure()
+        res = EventStructureTerm()
         es = {0: deepcopy(self), 1: deepcopy(es1)}
 
         events = set()
@@ -174,7 +174,7 @@ class EventStructure:
 
     def restrict(self, labels):
         es = deepcopy(self)
-        res = EventStructure()
+        res = EventStructureTerm()
         for e in es.events:
             if e.label in labels:
                 res.events.update([e])
@@ -256,7 +256,7 @@ class EventStructure:
         )
 
     def __eq__(self, other):
-        if not isinstance(other, EventStructure):
+        if not isinstance(other, EventStructureTerm):
             return False
         return self.events == other.events
 
