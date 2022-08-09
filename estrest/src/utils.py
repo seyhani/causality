@@ -1,5 +1,5 @@
 from itertools import chain, combinations
-from typing import Set, List
+from typing import Set, List, Iterable
 
 from event import Event, SyncedEvent, STAR
 
@@ -48,7 +48,7 @@ def is_conflict_free(es: set, conflict):
     return True
 
 
-def ids(events: Set[Event]):
+def ids(events: Iterable[Event]):
     return set(map(lambda e: e.idx(), events))
 
 

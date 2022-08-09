@@ -74,7 +74,7 @@ class EventStructure:
         self.configurations = visited
 
     def is_configuration(self, x: Set[Event]):
-        return frozenset(x) in self.configurations
+        return utils.ids(x) in map(utils.ids, self.configurations)
 
     def conflicts(self, e1: Event, e2: Event):
         return e1 in self.conflict[e2] and e2 in self.conflict[e1]
