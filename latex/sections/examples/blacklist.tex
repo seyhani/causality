@@ -42,7 +42,7 @@
     Under this condition, we can replace the NetKAT terms with
     packet forwarding actions of the form $(\sigma, \sigma')$.
     We use $xy$ to denote an action of the form $(\sigma,\sigma')$
-    where $\sigma(sw) = x$ and $\sigma(sw') = y$.
+    where $\sigma(sw) = x$ and $\sigma'(sw) = y$.
     For a DyNetKAT term $T$, we use $T^a$ to denote the term where
     we have replaced all NetKAT policies with packet forwarding actions.
     Given a packet $\sigma$ where $\sigma(l) = a$ we can replace NetKAT
@@ -50,13 +50,15 @@
     $u?S_{ac},u!S_{ac},u?S_{cd},u!S_{cd}$ to $u_a,u_a',u_c,u_c'$,
     so we can derive the following terms:
     \begin{align*}
-        SDN^u       & = \delta_{\mathcal{L}}( N'_{ab,cb} \parallel P \parallel Q) \\
-        P           & = u_a'                                                      \\
-        Q           & = u_c'                                                      \\
-        N^u_{ab,cb} & = ab \oplus u_a;N^u_{ac,cb} \oplus u_c;N^u_{ab,cd}          \\
-        N^u_{ac,cb} & = ac \oplus ab \oplus u_c;N^u_{ac,cd}                       \\
-        N^u_{ab,cd} & = ab \oplus u_a;N^u_{ac,cd}                                 \\
-        N^u_{ac,cd} & = ac \oplus ad
+        SDN^a       & = \delta_{\mathcal{L}}
+        ( N'_{ab,cb} \parallel P \parallel Q)               \\
+        P           & = u_a'                                \\
+        Q           & = u_c'                                \\
+        N^a_{ab,cb} & = ab \oplus u_a;N^a_{ac,cb}
+        \oplus u_c;N^a_{ab,cd}                              \\
+        N^a_{ac,cb} & = ac \oplus ab \oplus u_c;N^a_{ac,cd} \\
+        N^a_{ab,cd} & = ab \oplus u_a;N^a_{ac,cd}           \\
+        N^a_{ac,cd} & = ac \oplus ad
     \end{align*}
     Let we use $p,q$ for the actions $rcfg(u_a,u_a'),rcfg(u_c,u_c')$
     respectively so we can derive the following LTS for $SDN^u$:
@@ -135,23 +137,23 @@
     \begin{align*}
         P = \s{s|\forall e \in s. l(e) = (\sigma,\sigma')\wedge \sigma'(sw) \neq d}
     \end{align*}
-    To find the cause of $P$ in $\mathrm{E}$, 
-    let $\mathcal{C} = \mathcal{P}(E) - P$. 
+    To find the cause of $P$ in $\mathrm{E}$,
+    let $\mathcal{C} = \mathcal{P}(E) - P$.
     $C$ contains subsets of $E$ that contains either $ad_1$ or $ad_2$.
     Thus we construct the causal model $M = \mathfrak{M}(\mathrm{E},\mathcal{C})$.
-    Assume that we wish to declare $C(p_1,q_1) = \F$ as a cause using the witness 
+    Assume that we wish to declare $C(p_1,q_1) = \F$ as a cause using the witness
     $(C(p_2,q_2),\T,\T)$.
-    Since $\s{p_1,q_1,ad_1}$ is a configuration of $\mathrm{E}$ thus 
+    Since $\s{p_1,q_1,ad_1}$ is a configuration of $\mathrm{E}$ thus
     $AC1$ is satisfied.
     Now assume that we set both $C(p_1,q_1)$ and $C(p_2,q_2)$ to true.
     Since we have $\s{p_1,q_1} \vdash_{min} ad_1$ and
-    $\s{p_2,q_2} \vdash_{min} ad_2$ and also $p_1\#q_1$ and $p_2\#q_2$ in the 
+    $\s{p_2,q_2} \vdash_{min} ad_2$ and also $p_1\#q_1$ and $p_2\#q_2$ in the
     event structure $ES$, thus neither $\s{p_1,q_1,ad_1}$ nor $\s{p_2,q_2,ad_2}$
-    are not configurations of $ES$. 
+    are not configurations of $ES$.
     So AC2(a) is satisfied.
     Now assume that we only set $C(p_2,q_2)$ to true.
-    In this case $\s{p_1,q_1,ad_1}$ is a configuration of $ES$ even if reset any 
-    variable to its original value in the actual context. 
-    So finally we can conclude that $C(p_1,q_1) = \F$ is an actual cause of the 
+    In this case $\s{p_1,q_1,ad_1}$ is a configuration of $ES$ even if reset any
+    variable to its original value in the actual context.
+    So finally we can conclude that $C(p_1,q_1) = \F$ is an actual cause of the
     violation of $P$ in $E$.
 \end{example}

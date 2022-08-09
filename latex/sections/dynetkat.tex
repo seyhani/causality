@@ -10,7 +10,7 @@ We describe how to use causality for a given DyNetKAT expression.
 \begin{definition}
     Given sets of events $E_0$ and $E_1$ let their product $E$ be:
     \begin{align*}
-        E_0 \times_* E_1 = \s{(e_0,*)|e_0 \in E_0} \cup \s{(e_0,*)|e_0 \in E_0}
+        E_0 \times_* E_1 = \s{(e_0,*)|e_0 \in E_0} \cup \s{(*,e_1)|e_1 \in E_1}
         \cup \s{(e_0,e_1)|e_0 \in E_0 \wedge e_1 \in E_1}
     \end{align*}
     We define projections $\pi_i: E \rightarrow_* E_i$, given by
@@ -19,7 +19,13 @@ We describe how to use causality for a given DyNetKAT expression.
 
 \begin{definition}
     Let $\mathrm{E} = (E,\#,\vdash,L,l)$ be a labeled event structure and
-    $M = \mathfrak{M}(\mathrm{E})$ be its causal model.
+    $M$ be its causal model with the set of variables:
+    \begin{align*}
+        \mathcal{V} = & \s{C_{e_i,e_j} |  1 \leq i < j \leq n.
+        e_i \in E \amp e_j \in E}                                \\
+                      & \cup \s{EN_{s,e} | s \in \mathcal{P}(E),
+            e \in E. e \not \in s }
+    \end{align*}
     Let $\alpha$ be a label and $\mathrm{E'} = \alpha \mathrm{E}$.
     We define $M' = \alpha M$ to be a causal model where:
     \begin{align*}
@@ -32,15 +38,15 @@ We describe how to use causality for a given DyNetKAT expression.
     Next, we define functions of $M'$ as follows:
     $$
         \f{C'_{e,e'}} = \begin{cases}
-            \T       & \text{ if } e = (0,\alpha) \vee e' = (0,\alpha) \\
+            \T       & \text{ if } e = \iota_0(\alpha) \vee e' = \iota_0(\alpha) \\
             C_{e,e'} & \text{ otherwise }
         \end{cases}
     $$
 
     $$
         \f{EN'_{s,e}} = \begin{cases}
-            \T                      & \text{ if } e = (0,\alpha)             \\
-            EN_{s',e} \wedge Con(s) & \text{ if } s = s' \cup \s{(0,\alpha)} \\
+            Con(s)                  & \text{ if } e = \iota_0(\alpha)             \\
+            EN_{s',e} \wedge Con(s) & \text{ if } s = s' \cup \s{\iota_0(\alpha)} \\
             \F                      & \text{ otherwise }
         \end{cases}
     $$
@@ -53,30 +59,40 @@ We describe how to use causality for a given DyNetKAT expression.
     Let $(E',\#',\vdash',L',l') = \mathrm{E_0} + \mathrm{E_1}$.
     We define $M' = M_0 + M_1$ to be a causal model where we have:
     \begin{align*}
-        \mathcal{V} = & \s{C_{e_i,e_j} |  1 \leq i < j \leq n.
-        e_i \in E' \amp e_j \in E'}                               \\
-                      & \cup \s{EN_{s,e} | s \in \mathcal{P}(E'),
-        e \in E'. e \not \in s }                                  \\
-                      & \cup \mathcal{V}_0 \cup \mathcal{V}_1
+        \mathcal{V}_0 = & \s{C_{e_i,e_j}^0 |  1 \leq i < j \leq n.
+        e_i \in E_0 \amp e_j \in E_0}                                 \\
+                        & \cup \s{EN_{s,e}^0 | s \in \mathcal{P}(E_0)
+        e \in E_0. e \not \in s }                                     \\
+        \mathcal{V}_1 = & \s{C_{e_i,e_j}^1 |  1 \leq i < j \leq n.
+        e_i \in E_1 \amp e_j \in E_1}                                 \\
+                        & \cup \s{EN_{s,e}^1 | s \in \mathcal{P}(E_1)
+        e \in E_1. e \not \in s }                                     \\
+        \mathcal{V} =   & \s{C_{e_i,e_j} |  1 \leq i < j \leq n.
+        e_i \in E' \amp e_j \in E'}                                   \\
+                        & \cup \s{EN_{s,e} | s \in \mathcal{P}(E'),
+        e \in E'. e \not \in s }                                      \\
+                        & \cup \mathcal{V}_0 \cup \mathcal{V}_1
     \end{align*}
     We define the functions of $M'$ as follows:
     $$
         \f{C_{e,e'}} = \begin{cases}
-            \T         & \text{ if } \exists e_0,e_1.
+            \T         & \text{ if } \exists e_0 \in E_0,e_1 \in E_1.
             (e = \iota_0(e_0) \wedge e' = \iota_1(e_1))
-            \vee (e' = \iota_0(e_0) \wedge e = \iota_1(e_1))            \\
-            C^0_{e,e'} & \text{ if } \exists e_0,e_0'. e = \iota_0(e_0)
-            \wedge e' = \iota_0(e_0')                                   \\
-            C^1_{e,e'} & \text{ if } \exists e_1,e_1'. e = \iota_1(e_1)
+            \vee (e' = \iota_0(e_0) \wedge e = \iota_1(e_1))                    \\
+            C^0_{e,e'} & \text{ if } \exists e_0,e_0' \in E_0. e = \iota_0(e_0)
+            \wedge e' = \iota_0(e_0')                                           \\
+            C^1_{e,e'} & \text{ if } \exists e_1,e_1' \in E_1. e = \iota_1(e_1)
             \wedge e' = \iota_1(e_1')
         \end{cases}
     $$
     $$
         \f{EN_{s,e}} = \begin{cases}
             Con(s) \wedge EN^0_{s_0,e_0} & \text{ if }
-            \exists s_0 \in Con_0,e_0 \in E_0. s = \iota_0(s_0) \\
+            \exists s_0 \in Con_0,e_0 \in E_0. s = \iota_0(s_0)
+            \wedge e = \iota_0(e_0)                           \\
             Con(s) \wedge EN^1_{s_1,e_1} & \text{ if }
-            \exists s_1 \in Con_1,e_1 \in E_1. s = \iota_1(s_1) \\
+            \exists s_1 \in Con_1,e_1 \in E_1. s = \iota_1(s_1)
+            \wedge e = \iota_1(e_1)                           \\
             \F                           & \text{ otherwise }
         \end{cases}
     $$
@@ -89,11 +105,19 @@ We describe how to use causality for a given DyNetKAT expression.
     Let $(E',\#',\vdash',L',l') = E_0 \times E_1$.
     We define $M' = M_0 \times M_1$ to be a causal model where we have:
     \begin{align*}
-        \mathcal{V} = & \s{C_{e_i,e_j} |  1 \leq i < j \leq n.
-        e_i \in E' \amp e_j \in E'}                               \\
-                      & \cup \s{EN_{s,e} | s \in \mathcal{P}(E'),
-        e \in E'. e \not \in s }                                  \\
-                      & \cup \mathcal{V}_0 \cup \mathcal{V}_1
+        \mathcal{V}_0 = & \s{C_{e_i,e_j}^0 |  1 \leq i < j \leq n.
+        e_i \in E_0 \amp e_j \in E_0}                                 \\
+                        & \cup \s{EN_{s,e}^0 | s \in \mathcal{P}(E_0)
+        e \in E_0. e \not \in s }                                     \\
+        \mathcal{V}_1 = & \s{C_{e_i,e_j}^1 |  1 \leq i < j \leq n.
+        e_i \in E_1 \amp e_j \in E_1}                                 \\
+                        & \cup \s{EN_{s,e}^1 | s \in \mathcal{P}(E_1)
+        e \in E_1. e \not \in s }                                     \\
+        \mathcal{V} =   & \s{C_{e_i,e_j} |  1 \leq i < j \leq n.
+        e_i \in E' \amp e_j \in E'}                                   \\
+                        & \cup \s{EN_{s,e} | s \in \mathcal{P}(E'),
+        e \in E'. e \not \in s }                                      \\
+                        & \cup \mathcal{V}_0 \cup \mathcal{V}_1
     \end{align*}
     We define the functions of $M'$ as follows:
     $$
@@ -140,7 +164,7 @@ We describe how to use causality for a given DyNetKAT expression.
 
 \begin{example}
     Consider the following network where we want to check a blacklist
-    property, i.e. no packets arrive at $d$:
+    property, i.e. no packets arrive at $c$:
     \begin{center}
         \begin{tikzpicture}[node distance={25mm},
                 main/.style = {draw, circle},
@@ -154,7 +178,7 @@ We describe how to use causality for a given DyNetKAT expression.
     \end{center}
     We define this network using the following DyNetKAT term:
     \begin{align*}
-        S_{xy}  & = l = x \cdot l \la y              \\
+        S_{xy}  & = sw = x \cdot sw \la y            \\
         P       & = u!S_{ab}                         \\
         Q       & = u!S_{bc}                         \\
         N_{x,y} & = (S_x+S_y)^* \oplus u?x';N_{x',y}
@@ -168,25 +192,34 @@ We describe how to use causality for a given DyNetKAT expression.
         N_{0,bc}  & = S_{bc}^* \oplus u?S_{ab};N_{ab,cd}         \\
         N_{ab,bc} & = (S_{ab}+S_{bc})^*
     \end{align*}
+    We consider this network under the situation that a single packet
+    arrived at $a$.
+    Thus we assume that a single packet $\sigma$ is arrived where
+    $\sigma(sw) = a$.
+    Under this condition, we can replace the NetKAT terms with
+    packet forwarding actions of the form $(\sigma, \sigma')$.
+    We use $xy$ to denote an action of the form $(\sigma,\sigma')$
+    where $\sigma(sw) = x$ and $\sigma'(sw) = y$.
+    For a DyNetKAT term $T$, we use $T^a$ to denote the term where
+    we have replaced all NetKAT policies with packet forwarding actions.
     Given a packet $\sigma$ where $\sigma(l) = a$ we can replace NetKAT
-    policies with actions of the form $(\sigma, \sigma')$.
-    In this network we denote the action $(\sigma, \sigma')$
-    with $xy$ where $\sigma(l) = x$ and $\sigma'(l) = y$.
-    Let $N'_{x,y}$ be the term where we replaced NetKAT policies with
-    actions of the form $(\sigma,\sigma')$ and let we use $p,p',q,q'$ to
-    denote the actions $u?S_{ab},u!S_{ab},u?S_{bc},u!S_{bc}$.
-    We also restrict the network by forbidding actions in 
-    $\mathcal{L}=\s{p,p',q,q'}$.
+    Furthermore, we rename actions
+    $u?S_{ab},u!S_{ab},u?S_{bc},u!S_{bc}$ to $u_a,u_a',u_b,u_b'$,
+    so we can derive the following terms:
     Thus we have:
     \begin{align*}
-        SDN'       & = \delta_{\mathcal{L}}(N'_{0,0} \parallel P \parallel Q) \\
-        P'         & = p'                                                     \\
-        Q'         & = q'                                                     \\
-        N'_{0,0}   & = p;N'_{ab,0} \oplus q;N'_{0,bc}                         \\
-        N'_{ab,0}  & = ab \oplus q;N'_{ab,bc}                                 \\
-        N'_{0,bc}  & = p;N'_{ab,bc}                                           \\
-        N'_{ab,bc} & = ab \oplus ac
+        SDN^a       & = \delta_{\mathcal{L}}(N^a_{0,0}
+        \parallel P \parallel Q)                         \\
+        P^a         & = u_a'                               \\
+        Q^a         & = u_b'                               \\
+        N^a_{0,0}   & = u_a;N^a_{ab,0} \oplus u_b;N^a_{0,bc} \\
+        N^a_{ab,0}  & = ab \oplus u_b;N^a_{ab,bc}          \\
+        N^a_{0,bc}  & = u_a;N^a_{ab,bc}                    \\
+        N^a_{ab,bc} & = ab \oplus ac
     \end{align*}
+    Let we denote $rcfg(u_a,u_a')$ and $rcfg(u_b,u_b')$ with $p$ and $q$ 
+    respectively.
+    Thus we can derive the following LTS for $SDN^a$:
     \begin{center}
         \begin{tikzpicture}[node distance={20mm},
                 main/.style = {draw, circle,minimum width=5mm},
@@ -198,13 +231,19 @@ We describe how to use causality for a given DyNetKAT expression.
             \node[main] (s5) [below right of=s2] {};
             \node[main] (s6) [below left of=s5] {};
             \node[main] (s7) [below right of=s5] {};
-            \draw[s] (s1) -- node[left]{$rcfg(p)$} (s2);
-            \draw[s] (s1) -- node[right]{$rcfg(q)$}(s3);
+            \draw[s] (s1) -- node[left]{$p$} (s2);
+            \draw[s] (s1) -- node[right]{$q$}(s3);
             \draw[s] (s2) -- node[above]{$ab$}(s4);
-            \draw[s] (s2) -- node[above]{$rcfg(q)$}(s5);
-            \draw[s] (s3) -- node[right]{$rcfg(p)$}(s5);
+            \draw[s] (s2) -- node[above]{$q$}(s5);
+            \draw[s] (s3) -- node[right]{$p$}(s5);
             \draw[s] (s5) -- node[left]{$ab$}(s6);
             \draw[s] (s5) -- node[right]{$ac$}(s7);
         \end{tikzpicture}
     \end{center}
+    Let $\mathrm{E} = (E,\#,\vdash,L,l)$ be the event structure of $SDN^a$
+    where $L = \s{p,q,ab,ac}$.
+    We define the blacklist property as follows:
+    \begin{align*}
+        P = \s{s \in \mathcal{P}| \forall e \in s. l(e) \neq ac}
+    \end{align*}  
 \end{example}
