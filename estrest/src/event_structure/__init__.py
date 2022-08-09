@@ -1,1 +1,1 @@
-from .event_structure import EventStructureTerm
+from .event_structure_term import EventStructureTerm
