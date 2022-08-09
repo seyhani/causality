@@ -7,7 +7,7 @@ from event import Event
 from event_structure import EventStructureTerm
 from event_structure.event_structure import EventStructure
 from mapper.event_structure_causal_model import EventStructureCausalModel
-from mapper.var import ConflictVar, MinEnablingVar, EnablingVar
+from mapper.event_structure_var import ConflictVar, MinEnablingVar, EnablingVar
 from utils import powerset, ids
 
 

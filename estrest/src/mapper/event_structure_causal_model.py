@@ -4,7 +4,7 @@ from causality import CausalModel
 from causality.causal_model import FN
 from event import Event
 from event_structure.event_structure import EventStructure
-from mapper.var import EventStructureVar, ConflictVar, EnablingVar, MinEnablingVar
+from mapper.event_structure_var import EventStructureVar, ConflictVar, EnablingVar, MinEnablingVar
 
 
 class EventStructureCausalModel(CausalModel):
@@ -29,7 +29,7 @@ class EventStructureCausalModel(CausalModel):
         self.vars.add(var)
         self.add(repr(var), fn)
 
-    def to_es(self) -> EventStructure:
+    def get_es(self) -> EventStructure:
         es = EventStructure()
         for var in self.vars:
             if self.vals[repr(var)]:

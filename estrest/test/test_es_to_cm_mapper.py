@@ -60,12 +60,12 @@ class TestCausalModel(unittest.TestCase):
 
         cm = EventStructureToCausalModelMapper(es).map()
         cm.evaluate()
-        esp = cm.to_es()
+        esp = cm.get_es()
         esp.build_configurations()
         self.assertTrue(esp.is_configuration({a, b, c}))
 
         cm = cm.intervene({'C(a,b)': True})
         cm.evaluate()
-        esp = cm.to_es()
+        esp = cm.get_es()
         esp.build_configurations()
         self.assertFalse(esp.is_configuration({a, b, c}))
