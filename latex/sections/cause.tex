@@ -1,0 +1,143 @@
+Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure where
+$E = \s{e_1, e_2, ...,e_n}$ and $\mathcal{C}$ be a subset of
+$\mathcal{P}(E)$, we define the causal model
+$\mathfrak{M}(\mathrm{E},\mathcal{C}) = (\mathcal{S},\mathscr{F},\mathcal{E})$
+where
+$\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$.
+We define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
+\begin{align*}
+    \mathcal{V} = & \s{C_{e_i,e_j} |  1 \leq i < j \leq n.
+    e_i \in E \amp e_j \in E}                                \\
+                  & \cup \s{EN_{s,e} | s \in \mathcal{P}(E),
+    e \in E. e \not \in s }                                  \\
+                  & \cup \s{M_{s,e} | s \in \mathcal{P}(E),
+        e \in E. e \not \in s } \cup \s{ES,IC}
+\end{align*}
+Let $\mathcal{R}(ES) = \mathbb{E}$ where $\mathbb{E}$ is the set of all
+triples of the form $(E',\#',\vdash')$ where $\#' \subseteq E \times E$
+and $\vdash' \subseteq \mathcal{P}(E') \times E'$ and we define all other
+variables to be boolean.
+For each variable $x \in \mathcal{V}$ we define $\vec V_x$ as a vector
+of all variables in $\mathcal{V}$ excluding $x$.
+For $x,y \in \mathcal{P}(E)$ we say $x$ is covered by $y$ written $ x \prec y$ iff:
+\begin{align*}
+    x \subseteq y \amp x \neq y \amp
+    (\forall z. x \subseteq z \subseteq y \Rightarrow x = z
+    \text{ or } y = z)
+\end{align*}
+We define the functions in $\mathscr{F}$ as follows:
+$$
+    \f{C_{e,e'}} = \begin{cases}
+        true  & \text{ if } e \# e' \amp e' \# e \\
+        false & \text{ otherwise }
+    \end{cases}
+$$
+$$
+    \f{M_{s,e}} = \begin{cases}
+        Min(s,e) \wedge Con(s) & \text{ if } s \vdash_{min} e \\
+        false                  & \text{ otherwise }
+    \end{cases}
+$$
+\begin{align*}
+    \f{EN_{s,e}} & =
+    \left(
+    M_{s,e} \vee
+    \left(
+    \bigvee_{s'\prec s}EN_{s',e}
+    \right)
+    \right)
+    \bigwedge
+    Con(s)
+\end{align*}
+Where we have:
+\begin{align*}
+    Con(s)   & =   \left(
+    \bigwedge_{ 1\leq j<j' \leq n \wedge e_j,e_{j'} \in s}
+    \neg C_{e_j,e_{j'}}
+    \right)               \\
+    Min(s,e) & = \left(
+    \bigwedge_{s'. (s' \subset s \vee s \subset s')
+        \wedge e \notin s'}
+    \neg M(k',i)
+    \right)
+\end{align*}
+Additionally, we define:
+\begin{align*}
+    \f{ES} = (E,\#',\vdash')
+\end{align*}
+where we have:
+\begin{align*}
+    \forall e,e' \in E. e \#' e' \wedge e' \#' e
+     & \iff C_{e,e'} = \T \\
+    \forall s \in \mathcal{P}(E), e \in E.  s \vdash' e
+     & \iff EN_{s,e} = \T
+\end{align*}
+Intuitively, the value of $ES$ represents the event structure induced
+regarding the current setting of variables.
+We define the function of $IC$ to determine whether $ES$
+contains any element of $\mathcal{C}$:
+\begin{align*}
+    \f{IC} = \bigvee_{c \in \mathcal{C}}c \in \mathcal{F}(ES)
+\end{align*}
+Note that since we have defined $\mathcal{U}$ to be empty and
+\textcolor{red}{the model is recursive}, the values of all variables in
+$\mathcal{V}$ can be uniquely determined in the model.
+
+We define $\mathcal{E}$ to be the set of all allowable
+settings of the endogenous variables such as $\vec v'$
+for which if $M \vDash \vec V = \vec v' \wedge ES = \mathrm{E}'$
+then $\mathrm{E}'$ is an event structure.
+
+\subsection{Actual Cause of Property Violation}
+\begin{definition}
+    Given a set of events $E$, we define a safety property $P$ to be a
+    subset of $\mathcal{P}(E)$.
+\end{definition}
+\begin{definition}
+    Given an event structure $\mathrm{E}$ we say it is safe regarding the 
+    property $P$ if $\mathcal{F}(\mathrm{E}) \subseteq P$.
+\end{definition}
+
+Let $E$ be set of events and $\mathrm{E} = (E,\#,\vdash)$ be an event structure.
+Let $P \subseteq \mathcal{P}(E)$ be a safety property that is violated in 
+$\mathrm{E}$.
+The property is violated if any $c \in \mathcal{P}(E) - P$ be a configuration
+of $\mathrm{E}$. 
+Thus to find the actual cause of the property violation we need to find 
+the actual cause of 
+$\bigvee_{c \in \mathcal{P}(E) - P}c \in \mathcal{F}(\mathrm{E})$.
+\begin{definition}
+    Given a set of events $E$, let $P$ be a safety property on $E$ and 
+    $\mathrm{E} = (E,\#,\vdash)$ be an event structure where $P$ is violated.
+    If $\mathcal{M} = \mathfrak{M}(\mathrm{E}, P - \mathcal{P}(E))$
+    be a causal model then $\vec X = \vec x$ is
+    an actual cause of the violation of $P$ in $\mathrm{E}$ if the
+    following three conditions hold:
+    \begin{itemize}
+        \item  \textbf{AC1.} $M\models \vec X = \vec x
+                  \wedge \bigvee_{c \in \mathcal{P}(E) - P}c \in \mathcal{F}(\mathrm{E})$.
+        \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
+
+              (a) $M \models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']
+                  IC = \F
+                  \wedge \vec V = \vec v
+                  \wedge  \vec v \in \mathcal{E}$.
+
+              (b) $M \models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
+                  IC = \T
+                  \wedge \vec V = \vec v
+                  \wedge \vec v \in \mathcal{E}$
+              for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+
+        \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
+    \end{itemize}
+    Where $\vec v$ is the value of endogenous variables.
+\end{definition}
+\pagebreak
+
+
+\subsection{Examples}
+\input{sections/examples}
+
+\subsection{Causality in DyNetKAT}
+\input{sections/dynetkat.tex}

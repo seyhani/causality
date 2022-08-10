@@ -34,6 +34,18 @@ class TestCausalModel(unittest.TestCase):
         checker = EventStructureCausalChecker(es, [{a, b, c}], cause, witness)
         self.assertFalse(checker.is_cause())
 
+    def test_blacklist(self):
+        ab1, ab2, ab3, ac1, ac2 = Event('ab1'), Event('ab2'), Event('ab3'), Event('ac1'), Event('ac2')
+        ad1, ad2, p1, p2, q1, q2 = Event('ad1'), Event('ad2'), Event('p1'), Event('p2'), Event('q1'), Event('q2')
+        es = EventStructure()
+        es.add_enabling(set(), p1)
+        es.add_enabling(set(), p2)
+        es.build_configurations()
+        print("s")
+        # es.add_enabling(set(), ab1)
+        # es.add_enabling(set(), p1)
+        # es.add_enabling(set(), q2)
+
 
 if __name__ == '__main__':
     unittest.main()
