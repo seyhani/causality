@@ -41,6 +41,8 @@ class CausalModel:
 
     def intervene(self, ints: Dict[str, bool]) -> 'CausalModel':
         model = self
+        if not set(ints.keys()).issubset(self.get_var_names()):
+            raise Exception("Unknown variables")
         for var, val in ints.items():
             model = model.__intervene_internal(var, val)
         return model
@@ -58,3 +60,6 @@ class CausalModel:
         for i in range(len(self.vals)):
             for var, val in self.vals.items():
                 self.vals[var] = self.fns[var](self.vals)
+
+    def get_var_names(self):
+        return self.fns.keys()

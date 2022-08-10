@@ -4,15 +4,15 @@ from itertools import combinations
 from causality import CausalModel
 from causality.causal_model import VALS
 from event import Event
-from event_structure import EventStructureTerm
-from event_structure.event_structure import EventStructure
+from event_structure import ValidEventStructureTerm
+from event_structure.valid_event_structure import ValidEventStructure
 from mapper.event_structure_causal_model import EventStructureCausalModel
 from mapper.event_structure_var import ConflictVar, MinEnablingVar, EnablingVar
 from utils import powerset, ids
 
 
 class EventStructureToCausalModelMapper:
-    def __init__(self, es: EventStructure):
+    def __init__(self, es: ValidEventStructure):
         self.es = es
         self.cm = EventStructureCausalModel()
 
@@ -41,7 +41,7 @@ class EventStructureToCausalModelMapper:
             for e in self.es.events:
                 if e in s:
                     continue
-                if self.es.min_en(s, e):
+                if s in self.es.min_enabling[e]:
                     self.cm.add_min_enabling(s, e, (
                         lambda s_=s, e_=e: lambda vals: self.min(s_, e_, vals) and self.con(s_, vals))())
                 else:

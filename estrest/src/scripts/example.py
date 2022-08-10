@@ -1,4 +1,4 @@
-from event_structure import EventStructureTerm
+from event_structure import ValidEventStructureTerm
 from writer.semantic_derivation_writer import SemanticDerivationWriter
 from utils import disjoint_relabeling
 

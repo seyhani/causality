@@ -1,4 +1,4 @@
-from event_structure import EventStructureTerm
+from event_structure import ValidEventStructureTerm
 from writer import SemanticDerivationWriter
 
 writer = SemanticDerivationWriter('simple_example.tex')

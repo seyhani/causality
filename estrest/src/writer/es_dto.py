@@ -1,13 +1,13 @@
-from event_structure import EventStructureTerm
+from event_structure import ValidEventStructureTerm
 from writer.evnet_structure_expression import EventStructureExpression
 from .word_list import WordList
 
 
-def events_to_words(es: EventStructureTerm) -> WordList:
+def events_to_words(es: ValidEventStructureTerm) -> WordList:
     return WordList(list(map(repr, es.events)))
 
 
-def conflict_to_words(es: EventStructureTerm) -> WordList:
+def conflict_to_words(es: ValidEventStructureTerm) -> WordList:
     words = WordList()
     for e, conflict in es.conflict.items():
         for ce in conflict:
@@ -15,9 +15,9 @@ def conflict_to_words(es: EventStructureTerm) -> WordList:
     return words
 
 
-def enabling_to_words(es: EventStructureTerm) -> WordList:
+def enabling_to_words(es: ValidEventStructureTerm) -> WordList:
     words = WordList()
-    for e, enabling in es.enabling.items():
+    for e, enabling in es.min_enabling.items():
         for enabling_set in enabling:
             words.add("\\{{ {} \\}} \\vdash {}".format(
                 ", ".join(map(repr, enabling_set)),
@@ -26,11 +26,11 @@ def enabling_to_words(es: EventStructureTerm) -> WordList:
     return words
 
 
-def labels_to_words(es: EventStructureTerm) -> WordList:
+def labels_to_words(es: ValidEventStructureTerm) -> WordList:
     return WordList(list(es.get_labels()))
 
 
-def labeling_to_words(es: EventStructureTerm) -> WordList:
+def labeling_to_words(es: ValidEventStructureTerm) -> WordList:
     words = WordList()
     for e in es.events:
         words.add("l({}) = {}".format(e, repr(e.label).replace("\'", "")))

@@ -5,27 +5,27 @@ from event import Event
 
 
 # noinspection SpellCheckingInspection
-class EventStructure:
+class ValidEventStructure:
     events: Set[Event]
-    enabling: Dict[Event, List[Set[Event]]]
+    min_enabling: Dict[Event, Set[FrozenSet[Event]]]
     conflict: Dict[Event, Set[Event]]
     configurations: Set[FrozenSet[Event]]
 
     def __init__(self, events=None, enabling=None, conflict=None) -> None:
         self.events = events or set()
-        self.enabling = enabling or {}
+        self.min_enabling = enabling or {}
         self.conflict = conflict or {}
         self.configurations = set()
 
     def __add_event(self, e: Event):
         self.events.add(e)
-        self.enabling[e] = []
+        self.min_enabling[e] = set()
         self.conflict[e] = set()
 
     def add_enabling(self, s: Set[Event], e: Event):
         for ep in s.union({e}) - self.events:
             self.__add_event(ep)
-        self.enabling[e].append(s)
+        self.min_enabling[e].add(frozenset(s))
 
     def add_conflict(self, e: Event, ep: Event):
         for e_ in {e, ep}.difference(self.events):
@@ -40,7 +40,7 @@ class EventStructure:
         return None
 
     def get_enabling(self, _id: tuple):
-        return self.enabling[self.get_event(_id)]
+        return self.min_enabling[self.get_event(_id)]
 
     def get_conflict(self, _id: tuple):
         return self.conflict[self.get_event(_id)]

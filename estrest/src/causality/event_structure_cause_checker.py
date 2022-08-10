@@ -3,7 +3,7 @@ from typing import Set, List
 from causality import PrimitiveEvent
 from causality.cause_checker import Witness
 from event import Event
-from event_structure.event_structure import EventStructure
+from event_structure.valid_event_structure import ValidEventStructure
 from mapper import EventStructureToCausalModelMapper
 from mapper.event_structure_causal_model import EventStructureCausalModel
 from utils import powerset
@@ -15,7 +15,7 @@ class EventStructureCausalChecker:
     cause: PrimitiveEvent
     witness: Witness
 
-    def __init__(self, es: EventStructure, ces: List[Set[Event]], cause: PrimitiveEvent, witness: Witness):
+    def __init__(self, es: ValidEventStructure, ces: List[Set[Event]], cause: PrimitiveEvent, witness: Witness):
         self.ces = ces
         self.cause = cause
         self.witness = witness

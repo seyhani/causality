@@ -1,8 +1,8 @@
 import unittest
 
-from event_structure.event_structure import EventStructure
+from event_structure.valid_event_structure import ValidEventStructure
 from mapper import EventStructureToCausalModelMapper
-from event_structure import EventStructureTerm
+from event_structure import ValidEventStructureTerm
 from event import Event
 
 
@@ -10,7 +10,7 @@ class TestCausalModel(unittest.TestCase):
 
     def test_firewall(self):
         i, o = Event('i'), Event('o')
-        es = EventStructureTerm(
+        es = ValidEventStructureTerm(
             events={i, o},
             conflict={i: set(), o: set()},
             enabling={i: {frozenset()}, o: {frozenset()}},
@@ -32,7 +32,7 @@ class TestCausalModel(unittest.TestCase):
 
     def test_cm_with_conflict_and_enabling(self):
         a, b, c = Event('a'), Event('b'), Event('c')
-        es = EventStructureTerm(
+        es = ValidEventStructureTerm(
             events={a, b, c},
             conflict={a: {b}, b: {a}, c: set()},
             enabling={
@@ -51,7 +51,7 @@ class TestCausalModel(unittest.TestCase):
 
     def test_intervention(self):
         a, b, c = Event('a'), Event('b'), Event('c')
-        es = EventStructure()
+        es = ValidEventStructure()
         es.add_enabling(set(), a)
         es.add_enabling(set(), b)
         es.add_enabling({a, b}, c)
@@ -64,7 +64,7 @@ class TestCausalModel(unittest.TestCase):
         esp.build_configurations()
         self.assertTrue(esp.is_configuration({a, b, c}))
 
-        cm = cm.intervene({'C(a,b)': True})
+        cm = cm.intervene({'C(a, b)': True})
         cm.evaluate()
         esp = cm.get_es()
         esp.build_configurations()

@@ -2,7 +2,7 @@ import json
 import os
 import unittest
 
-from event_structure import EventStructureTerm
+from event_structure import ValidEventStructureTerm
 from serializer import to_relation, SerializableEncoder, IdRelation
 
 FILE_PATH = "./test/es.json"
@@ -17,7 +17,7 @@ def save_relation(relation: IdRelation):
 class TestRegression(unittest.TestCase):
 
     def test_regression(self):
-        es = EventStructureTerm().prefix('b').prefix('a').plus(EventStructureTerm().prefix('y').prefix('x'))
+        es = ValidEventStructureTerm().prefix('b').prefix('a').plus(ValidEventStructureTerm().prefix('y').prefix('x'))
         relation = to_relation(es)
 
         if os.getenv('SAVE_REL') == 'true':

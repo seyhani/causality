@@ -1,14 +1,14 @@
 import unittest
 
 from event import Event
-from event_structure import EventStructureTerm
-from event_structure.event_structure import EventStructure
+from event_structure import ValidEventStructureTerm
+from event_structure.valid_event_structure import ValidEventStructure
 from utils import ids, list_ids
 
 
 class TestEventStructure(unittest.TestCase):
     def test_enabling(self):
-        es = EventStructure()
+        es = ValidEventStructure()
         a, b, c = Event('a'), Event('b'), Event('c')
         es.add_enabling(set(), a)
         es.add_enabling(set(), b)
@@ -19,7 +19,7 @@ class TestEventStructure(unittest.TestCase):
         self.assertFalse(es.is_configuration({a, c}))
 
     def test_conflict(self):
-        es = EventStructure()
+        es = ValidEventStructure()
         a, b, c = Event('a'), Event('b'), Event('c')
         es.add_enabling(set(), a)
         es.add_enabling(set(), b)

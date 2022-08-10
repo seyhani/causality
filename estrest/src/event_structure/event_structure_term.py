@@ -6,10 +6,10 @@ import utils
 from event import Event, SyncedEvent, STAR
 
 # noinspection SpellCheckingInspection
-from event_structure.event_structure import EventStructure
+from event_structure.valid_event_structure import ValidEventStructure
 
 
-class EventStructureTerm(EventStructure):
+class ValidEventStructureTerm(ValidEventStructure):
     def __init__(self, events=None, enabling=None, conflict=None) -> None:
         super().__init__(events, enabling, conflict)
 
@@ -29,13 +29,13 @@ class EventStructureTerm(EventStructure):
             e.prefix(1)
 
         # Add (0,a) to all enabling sets
-        for enabling in es.enabling.values():
+        for enabling in es.min_enabling.values():
             for ee in enabling:
                 ee.update([event])
 
         # Add (0,a) as an event with no conflicts and no enablings
         es.events.update([event])
-        es.enabling[event] = [set()]
+        es.min_enabling[event] = [set()]
         es.conflict[event] = set()
 
         # Configurations = {} union (
@@ -54,13 +54,13 @@ class EventStructureTerm(EventStructure):
         return es
 
     def plus(self, es1):
-        res = EventStructureTerm()
+        res = ValidEventStructureTerm()
         es = {0: deepcopy(self), 1: deepcopy(es1)}
 
         for i in (0, 1):
             es[i].prefix_events(i)  # Disjoint union
             res.events.update(es[i].events)
-            res.enabling.update(es[i].enabling)
+            res.min_enabling.update(es[i].min_enabling)
             res.conflict.update(es[i].conflict)
 
         for i in (0, 1):
@@ -76,7 +76,7 @@ class EventStructureTerm(EventStructure):
         return res
 
     def times(self, es1):
-        res = EventStructureTerm()
+        res = ValidEventStructureTerm()
         es = {0: deepcopy(self), 1: deepcopy(es1)}
 
         events = set()
@@ -133,7 +133,7 @@ class EventStructureTerm(EventStructure):
                 if e[i] == STAR:
                     enabling_synced[i].extend([set()])
                 else:
-                    for enabling_set in es[i].enabling[e[i]]:  # Enabling set of ith component
+                    for enabling_set in es[i].min_enabling[e[i]]:  # Enabling set of ith component
 
                         # Map each element of enabling set to a set of syncrhoinzed events
                         projected = list(map(lambda x: p[i][x], enabling_set))
@@ -152,7 +152,7 @@ class EventStructureTerm(EventStructure):
                     if utils.is_conflict_free(se0.union(se1), conflicts):
                         enabling[e].append(se0.union(se1))
 
-        res.enabling = enabling
+        res.min_enabling = enabling
         res.events = events
 
         res.build_configurations()
@@ -161,7 +161,7 @@ class EventStructureTerm(EventStructure):
 
     def restrict(self, labels):
         es = deepcopy(self)
-        res = EventStructureTerm()
+        res = ValidEventStructureTerm()
         for e in es.events:
             if e.label in labels:
                 res.events.update([e])
@@ -173,8 +173,8 @@ class EventStructureTerm(EventStructure):
                     if c.label in labels:
                         res.conflict[e].update([c])
 
-        for e, enabling in es.enabling.items():
-            res.enabling[e] = []
+        for e, enabling in es.min_enabling.items():
+            res.min_enabling[e] = []
             if e.label in labels:
                 for enabling_set in enabling:
                     is_valid = True
@@ -183,7 +183,7 @@ class EventStructureTerm(EventStructure):
                             is_valid = False
                             break
                     if is_valid:
-                        res.enabling[e].append(enabling_set)
+                        res.min_enabling[e].append(enabling_set)
 
         for c in es.configurations:
             is_valid = True
