@@ -1,7 +1,7 @@
 import unittest
 
 from event_structure import ValidEventStructureTerm
-from utils import ids, list_ids
+from utils import ids, ids_set
 
 
 class TestEventStructureTerm(unittest.TestCase):
@@ -10,7 +10,7 @@ class TestEventStructureTerm(unittest.TestCase):
         es = ValidEventStructureTerm().prefix('b').prefix('a')
         self.assertIsNotNone(es.get_event((0, 'a')))
         self.assertIsNotNone(es.get_event((1, 0, 'b')))
-        self.assertIn({(0, 'a')}, list_ids(es.get_enabling((1, 0, 'b'))))
+        self.assertIn({(0, 'a')}, ids_set(es.get_enabling((1, 0, 'b'))))
 
     def test_sum(self):
         a = ValidEventStructureTerm().prefix('a')
@@ -33,7 +33,7 @@ class TestEventStructureTerm(unittest.TestCase):
         p = ValidEventStructureTerm().prefix('b').prefix('a').times(ValidEventStructureTerm().prefix('y').prefix('x'))
         self.assertIn(set(), p.get_enabling(('a', '*')))
         self.assertIn(('a', 'y'), ids(p.get_conflict(('a', 'x'))))
-        self.assertNotIn({('a', 'x'), ('b', 'x')}, list_ids(p.get_enabling(('b', 'y'))))
+        self.assertNotIn({('a', 'x'), ('b', 'x')}, ids_set(p.get_enabling(('b', 'y'))))
 
     def test_restrict(self):
         s = ValidEventStructureTerm().prefix('a').plus(ValidEventStructureTerm().prefix('b'))

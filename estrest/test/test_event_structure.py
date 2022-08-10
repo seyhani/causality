@@ -3,7 +3,7 @@ import unittest
 from event import Event
 from event_structure import ValidEventStructureTerm
 from event_structure.valid_event_structure import ValidEventStructure
-from utils import ids, list_ids
+from utils import ids, ids_set
 
 
 class TestEventStructure(unittest.TestCase):

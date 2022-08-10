@@ -2,7 +2,7 @@ import unittest
 
 from event import Event
 from event_structure import ValidEventStructureTerm
-from utils import list_ids
+from utils import ids_set
 
 
 class TestConfiguration(unittest.TestCase):
@@ -68,11 +68,11 @@ class TestConfiguration(unittest.TestCase):
         )
         es.build_configurations()
 
-        self.assertIn({'a', 'b'}, list_ids(es.configurations))
+        self.assertIn({'a', 'b'}, ids_set(es.configurations))
         es = es.prefix('c')
         self.assertIn(
             {(0, 'c'), (1, 'a'), (1, 'b')},
-            list_ids(es.configurations)
+            ids_set(es.configurations)
         )
 
     def test_configuration_plus(self):
@@ -95,8 +95,8 @@ class TestConfiguration(unittest.TestCase):
 
         es[2] = es[0].plus(es[1])
 
-        self.assertIn({(0, 'a')}, list_ids(es[2].configurations))
-        self.assertNotIn({(0, 'a'), (1, 'b')}, list_ids(es[2].configurations))
+        self.assertIn({(0, 'a')}, ids_set(es[2].configurations))
+        self.assertNotIn({(0, 'a'), (1, 'b')}, ids_set(es[2].configurations))
 
     def test_configuration_restrict(self):
         a, b = Event('a'), Event('b')
@@ -108,8 +108,8 @@ class TestConfiguration(unittest.TestCase):
         es.build_configurations()
 
         es = es.restrict({'a'})
-        self.assertIn({'a'}, list_ids(es.configurations))
-        self.assertNotIn({'a', 'b'}, list_ids(es.configurations))
+        self.assertIn({'a'}, ids_set(es.configurations))
+        self.assertNotIn({'a', 'b'}, ids_set(es.configurations))
 
     def test_configuration_relabelling(self):
         a, b = Event('a'), Event('b')
@@ -121,8 +121,8 @@ class TestConfiguration(unittest.TestCase):
         es.build_configurations()
 
         es = es.relabel({'a': 'c'})
-        self.assertIn({'c', 'b'}, list_ids(es.configurations))
-        self.assertNotIn({'a'}, list_ids(es.configurations))
+        self.assertIn({'c', 'b'}, ids_set(es.configurations))
+        self.assertNotIn({'a'}, ids_set(es.configurations))
 
     def test_configuration_times(self):
         a, b, c = Event('a'), Event('b'), Event('c')
@@ -140,7 +140,7 @@ class TestConfiguration(unittest.TestCase):
         }
 
         es[2] = es[0].times(es[1])
-        con = list_ids(es[2].configurations)
+        con = ids_set(es[2].configurations)
 
         self.assertIn({('a', '*')}, con)
         self.assertIn({('*', 'c')}, con)

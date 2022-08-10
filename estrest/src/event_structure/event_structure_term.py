@@ -29,13 +29,14 @@ class ValidEventStructureTerm(ValidEventStructure):
             e.prefix(1)
 
         # Add (0,a) to all enabling sets
-        for enabling in es.min_enabling.values():
-            for ee in enabling:
-                ee.update([event])
+        new_min_en = {}
+        for e, enabling in es.min_enabling.items():
+            new_min_en[e] = set(map(lambda s: frozenset({event}.union(s)), enabling))
+        es.min_enabling = new_min_en
 
         # Add (0,a) as an event with no conflicts and no enablings
         es.events.update([event])
-        es.min_enabling[event] = [set()]
+        es.min_enabling[event] = {frozenset()}
         es.conflict[event] = set()
 
         # Configurations = {} union (
@@ -174,7 +175,7 @@ class ValidEventStructureTerm(ValidEventStructure):
                         res.conflict[e].update([c])
 
         for e, enabling in es.min_enabling.items():
-            res.min_enabling[e] = []
+            res.min_enabling[e] = set()
             if e.label in labels:
                 for enabling_set in enabling:
                     is_valid = True
@@ -183,7 +184,7 @@ class ValidEventStructureTerm(ValidEventStructure):
                             is_valid = False
                             break
                     if is_valid:
-                        res.min_enabling[e].append(enabling_set)
+                        res.min_enabling[e].add(frozenset(enabling_set))
 
         for c in es.configurations:
             is_valid = True
