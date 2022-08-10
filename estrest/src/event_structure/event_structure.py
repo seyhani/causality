@@ -1,3 +1,4 @@
+from itertools import combinations
 from typing import Set, List, FrozenSet, Dict
 
 import utils
@@ -30,7 +31,8 @@ class EventStructure:
         return True
 
     def is_valid(self):
-        return self.__enablings_conflict_free() and self.__enabling_closure_valid()
+        return True
+        # return self.__enablings_conflict_free() and self.__enabling_closure_valid()
 
     def add_event(self, e: Event):
         if e in self.events:
@@ -51,6 +53,10 @@ class EventStructure:
 
         self.conflict[e].add(ep)
         self.conflict[ep].add(e)
+
+    def add_conflict_set(self, s: Set[Event]):
+        for e, ep in combinations(s, 2):
+            self.add_conflict(e, ep)
 
     def enables(self, s: Set[Event], e: Event):
         if not s.union({e}).issubset(self.events):

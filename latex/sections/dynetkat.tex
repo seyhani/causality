@@ -38,7 +38,7 @@ We describe how to use causality for a given DyNetKAT expression.
     Next, we define functions of $M'$ as follows:
     $$
         \f{C'_{e,e'}} = \begin{cases}
-            \T       & \text{ if } e = \iota_0(\alpha) \vee e' = \iota_0(\alpha) \\
+            \F       & \text{ if } e = \iota_0(\alpha) \vee e' = \iota_0(\alpha) \\
             C_{e,e'} & \text{ otherwise }
         \end{cases}
     $$
@@ -123,12 +123,17 @@ We describe how to use causality for a given DyNetKAT expression.
     $$
         \f{C_{e,e'}} = \begin{cases}
             \T & \text{ if } \pi_0(e) = \pi_0(e') \vee \pi_1(e) = \pi_1(e') \\
+            \F & \text { if } (\pi_0(e) = * \wedge \pi_1(e') = *)
+            \vee (\pi_1(e) = * \wedge \pi_0(e') = *)
+            \\
             C^0(\pi_0(e),\pi_0(e')) \vee  C^1(\pi_1(e),\pi_1(e'))
-               & \text { if } \pi_0(e) \neq * \wedge \pi_1(e) \neq *        \\
+               & \text { if } \pi_0(e) \neq * \wedge \pi_1(e) \neq *
+            \wedge \pi_0(e') \neq * \wedge \pi_1(e') \neq *
+            \\
             C^0(\pi_0(e),\pi_0(e'))
-               & \text { if } \pi_1(e) = *                                  \\
+               & \text { if } \pi_1(e) = * \vee \pi_1(e') = *               \\
             C^1(\pi_1(e),\pi_1(e'))
-               & \text { if } \pi_0(e) = *                                  \\
+               & \text { if } \pi_0(e) = * \vee \pi_0(e') = *               \\
         \end{cases}
     $$
     $$
@@ -209,15 +214,15 @@ We describe how to use causality for a given DyNetKAT expression.
     Thus we have:
     \begin{align*}
         SDN^a       & = \delta_{\mathcal{L}}(N^a_{0,0}
-        \parallel P \parallel Q)                         \\
-        P^a         & = u_a'                               \\
-        Q^a         & = u_b'                               \\
+        \parallel P \parallel Q)                             \\
+        P^a         & = u_a'                                 \\
+        Q^a         & = u_b'                                 \\
         N^a_{0,0}   & = u_a;N^a_{ab,0} \oplus u_b;N^a_{0,bc} \\
-        N^a_{ab,0}  & = ab \oplus u_b;N^a_{ab,bc}          \\
-        N^a_{0,bc}  & = u_a;N^a_{ab,bc}                    \\
+        N^a_{ab,0}  & = ab \oplus u_b;N^a_{ab,bc}            \\
+        N^a_{0,bc}  & = u_a;N^a_{ab,bc}                      \\
         N^a_{ab,bc} & = ab \oplus ac
     \end{align*}
-    Let we denote $rcfg(u_a,u_a')$ and $rcfg(u_b,u_b')$ with $p$ and $q$ 
+    Let we denote $rcfg(u_a,u_a')$ and $rcfg(u_b,u_b')$ with $p$ and $q$
     respectively.
     Thus we can derive the following LTS for $SDN^a$:
     \begin{center}
@@ -242,8 +247,31 @@ We describe how to use causality for a given DyNetKAT expression.
     \end{center}
     Let $\mathrm{E} = (E,\#,\vdash,L,l)$ be the event structure of $SDN^a$
     where $L = \s{p,q,ab,ac}$.
+    \begin{center}
+        \begin{tikzpicture}[u/.style ={ultra thick}]
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-1}{-1}{$\s{p_1}$}
+            \crd[right]{1}{-1}{$\s{q_2}$}
+            \crd[right]{-1}{-2}{$\s{p_1,q_1}$}
+            \crd[left]{-2}{-2}{$\s{p_1,ab_1}$}
+            \crd[below]{-1}{-3}{$\s{p_1,q_1,ac_1}$}
+            \crd[left]{-2}{-3}{$\s{p_1,q_1,ab_2}$}
+            \crd[right]{1}{-2}{$\s{p_2,q_2}$}
+            \crd[below]{1}{-3}{$\s{p_2,q_2,ac_2}$}
+            \crd[right]{2}{-3}{$\s{p_2,q_2,ab_3}$}
+            \draw [u] (0,0) -- (-1,-1);
+            \draw [u] (0,0) -- (1,-1);
+            \draw [u] (-1,-1) -- (-1,-2);
+            \draw [u] (-1,-1) -- (-2,-2);
+            \draw [u] (-1,-2) -- (-1,-3);
+            \draw [u] (-1,-2) -- (-2,-3);
+            \draw [u] (1,-1) -- (1,-2);
+            \draw [u] (1,-2) -- (1,-3);
+            \draw [u] (1,-2) -- (2,-3);
+        \end{tikzpicture}
+    \end{center}
     We define the blacklist property as follows:
     \begin{align*}
         P = \s{s \in \mathcal{P}| \forall e \in s. l(e) \neq ac}
-    \end{align*}  
+    \end{align*}
 \end{example}

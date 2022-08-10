@@ -97,13 +97,12 @@ then $\mathrm{E}'$ is an event structure.
     Given an event structure $\mathrm{E}$ we say it is safe regarding the 
     property $P$ if $\mathcal{F}(\mathrm{E}) \subseteq P$.
 \end{definition}
-
 Let $E$ be set of events and $\mathrm{E} = (E,\#,\vdash)$ be an event structure.
 Let $P \subseteq \mathcal{P}(E)$ be a safety property that is violated in 
 $\mathrm{E}$.
 The property is violated if any $c \in \mathcal{P}(E) - P$ be a configuration
 of $\mathrm{E}$. 
-Thus to find the actual cause of the property violation we need to find 
+So, to find the actual cause of the property violation we need to find 
 the actual cause of 
 $\bigvee_{c \in \mathcal{P}(E) - P}c \in \mathcal{F}(\mathrm{E})$.
 \begin{definition}

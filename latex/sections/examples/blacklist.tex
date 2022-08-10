@@ -50,7 +50,7 @@
     so we can derive the following terms:
     \begin{align*}
         SDN^a       & = \delta_{\mathcal{L}}
-        ( N^a_{ab,cb} \parallel P \parallel Q)               \\
+        ( N^a_{ab,cb} \parallel P \parallel Q)              \\
         P           & = u_a'                                \\
         Q           & = u_c'                                \\
         N^a_{ab,cb} & = ab \oplus u_a;N^a_{ac,cb}
@@ -98,7 +98,7 @@
                 \crd[below]{-1}{-3}{$\s{p_1,q_1,ad_1}$}
                 \crd[left]{-2}{-3}{$\s{p_1,q_1,ac_2}$}
                 \crd[above]{1}{-2}{$\s{p_2,q_2}$}
-                \crd[right]{2}{-2}{$\s{q_2,ab_2}$}
+                \crd[right]{2}{-2}{$\s{q_2,ab_3}$}
                 \crd[below]{1}{-3}{$\s{p_2,q_2,ad_2}$}
                 \crd[right]{2}{-3}{$\s{p_2,q_2,ac_3}$}
                 \draw [u] (0,0) -- (-1,-1);
@@ -130,6 +130,14 @@
         \s{q_1} \vdash p_2, \s{q_1} \vdash ab_3              \\
          & \s{p_1,q_1} \vdash ac_2, \s{p_1,q_1} \vdash ad_1,
         \s{p_2,q_2} \vdash ac_2, \s{p_2,q_2} \vdash ad_2
+    \end{align*}
+    And conflict relation as follows:
+    \begin{align*}
+        \# & = \s{(e,e')| \forall s \in S. \forall e,e'\in s .e \neq e'} \\
+        S & = \s{
+            \s{ab_1,p_1,q_2},\s{ab_2,ac_1,q_1},\s{ac_2,ad_1},
+            \s{p_2,ab_3},\s{ad_3,ad_2}
+        }
     \end{align*}
     Here we have considered the switch $d$ as a blacklist, thus we can define the
     safety property $P$ as follows:
