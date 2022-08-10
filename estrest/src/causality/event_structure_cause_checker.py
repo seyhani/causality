@@ -6,7 +6,6 @@ from event import Event
 from event_structure.valid_event_structure import ValidEventStructure
 from mapper import EventStructureToCausalModelMapper
 from mapper.event_structure_causal_model import EventStructureCausalModel
-from utils import powerset
 
 
 class EventStructureCausalChecker:
@@ -49,7 +48,7 @@ class EventStructureCausalChecker:
         cm.evaluate()
         es = cm.get_es()
         es.build_configurations()
-        return any([es.is_configuration(c) for c in self.ces])
+        return es.is_valid() and any([es.is_configuration(c) for c in self.ces])
 
     def is_cause(self):
         return self.check_ac1() \

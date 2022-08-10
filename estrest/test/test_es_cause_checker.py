@@ -1,5 +1,6 @@
 import unittest
 
+import utils
 from causality.cause_checker import PrimitiveEvent, Witness
 from causality.event_structure_cause_checker import EventStructureCausalChecker
 from event import Event

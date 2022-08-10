@@ -17,6 +17,21 @@ class EventStructure:
         self.conflict = {e: set() for e in self.events}
         self.configurations = set()
 
+    def __enablings_conflict_free(self):
+        return all(map(lambda s: self.conflict_free(s), set.union(*self.enabling.values())))
+
+    def __enabling_closure_valid(self):
+        for e in self.events:
+            closure = set()
+            for s in self.enabling[e]:
+                closure = closure.union(utils.superset_closure(frozenset(self.events - {e}), s))
+            if closure != self.enabling[e]:
+                return False
+        return True
+
+    def is_valid(self):
+        return self.__enablings_conflict_free() and self.__enabling_closure_valid()
+
     def add_event(self, e: Event):
         if e in self.events:
             raise Exception("Event already exists")
@@ -58,8 +73,8 @@ class EventStructure:
     def get_conflict(self, _id: tuple):
         return self.conflict[self.get_event(_id)]
 
-    def conflict_free(self, es: Set[Event]):
-        return utils.is_conflict_free(es, self.conflict)
+    def conflict_free(self, s: Set[Event]):
+        return utils.is_conflict_free(s, self.conflict)
 
     def get_labels(self):
         return set(map(lambda x: repr(x.label).replace("\'", ""), self.events))

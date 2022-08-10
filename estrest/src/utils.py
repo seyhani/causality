@@ -75,3 +75,7 @@ def powerset(iterable):
             combinations(s, r) for r in range(len(s) + 1)
         )
     )
+
+
+def superset_closure(elements: FrozenSet, subset: FrozenSet):
+    return set(map(lambda s: frozenset(s.union(subset)), powerset(elements - subset)))
