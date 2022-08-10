@@ -2,14 +2,29 @@ import unittest
 
 from event import Event
 from event_structure import ValidEventStructureTerm
+from event_structure.event_structure import EventStructure
 from utils import ids_set
 
 
 class TestConfiguration(unittest.TestCase):
 
-    def test_configuration_base(self):
-        es = ValidEventStructureTerm()
+    def test_es(self):
         a, b = Event('a'), Event('b')
+        es = EventStructure({a, b})
+        es.add_enabling(set(), a)
+        es.add_enabling(set(), b)
+        es.build_configurations()
+        self.assertTrue(es.is_configuration({a}))
+        self.assertTrue(es.is_configuration({b}))
+        self.assertFalse(es.is_configuration({a, b}))
+
+        es.add_enabling({a}, b)
+        es.build_configurations()
+        self.assertTrue(es.is_configuration({a, b}))
+
+    def test_configuration_base(self):
+        a, b = Event('a'), Event('b')
+        es = ValidEventStructureTerm({a, b})
         es.events = {a, b}
         es.conflict = {a: set(), b: set()}
         es.min_enabling = {a: [set()], b: [{a}]}
@@ -18,8 +33,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertTrue(es.is_configuration({a, b}))
 
     def test_configuration_conflict(self):
-        es = ValidEventStructureTerm()
         a, b = Event('a'), Event('b')
+        es = ValidEventStructureTerm({a, b})
         es.events = {a, b}
         es.conflict = {a: {b}, b: {a}}
         es.min_enabling = {a: [set()], b: [set()]}
@@ -28,8 +43,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertFalse(es.is_configuration({a, b}))
 
     def test_configuration_not_secured(self):
-        es = ValidEventStructureTerm()
         a, b, c = Event('a'), Event('b'), Event('c')
+        es = ValidEventStructureTerm({a, b, c})
         es.events = {a, b, c}
         es.conflict = {a: set(), b: set(), c: set()}
         es.min_enabling = {a: [set()], b: [{a}], c: [{a, b}]}
@@ -41,9 +56,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertTrue(es.is_configuration({a, b, c}))
 
     def test_configuration_generic(self):
-        es = ValidEventStructureTerm()
         a, b, c, d, e = [Event(x) for x in 'abcde']
-        es.events = {a, b, c, d, e}
+        es = ValidEventStructureTerm({a, b, c, d, e})
         es.conflict = {a: set(), b: {d, e}, c: set(), d: {b}, e: {b}}
         es.min_enabling = {
             a: [set()],
@@ -61,11 +75,9 @@ class TestConfiguration(unittest.TestCase):
 
     def test_configuration_prefix(self):
         a, b = Event('a'), Event('b')
-        es = ValidEventStructureTerm(
-            events={a, b},
-            enabling={a: [set()], b: [{a}]},
-            conflict={a: set(), b: set()},
-        )
+        es = ValidEventStructureTerm({a, b})
+        es.add_min_enabling(set(), a)
+        es.add_min_enabling({a}, b)
         es.build_configurations()
 
         self.assertIn({'a', 'b'}, ids_set(es.configurations))
@@ -78,17 +90,11 @@ class TestConfiguration(unittest.TestCase):
     def test_configuration_plus(self):
         a, b = Event('a'), Event('b')
         es = {
-            0: ValidEventStructureTerm(
-                events={a},
-                enabling={a: [set()]},
-                conflict={a: set()},
-            ),
-            1: ValidEventStructureTerm(
-                events={b},
-                enabling={b: [set()]},
-                conflict={b: set()},
-            ),
+            0: ValidEventStructureTerm({a}),
+            1: ValidEventStructureTerm({b}),
         }
+        es[0].add_min_enabling(set(), a)
+        es[1].add_min_enabling(set(), b)
 
         es[0].build_configurations()
         es[1].build_configurations()
@@ -100,11 +106,9 @@ class TestConfiguration(unittest.TestCase):
 
     def test_configuration_restrict(self):
         a, b = Event('a'), Event('b')
-        es = ValidEventStructureTerm(
-            events={a, b},
-            enabling={a: [set()], b: [{a}]},
-            conflict={a: set(), b: set()},
-        )
+        es = ValidEventStructureTerm({a, b})
+        es.add_min_enabling(set(), a)
+        es.add_min_enabling({a}, b)
         es.build_configurations()
 
         es = es.restrict({'a'})
@@ -113,11 +117,9 @@ class TestConfiguration(unittest.TestCase):
 
     def test_configuration_relabelling(self):
         a, b = Event('a'), Event('b')
-        es = ValidEventStructureTerm(
-            events={a, b},
-            enabling={a: [set()], b: [{a}]},
-            conflict={a: set(), b: set()},
-        )
+        es = ValidEventStructureTerm({a, b})
+        es.add_min_enabling(set(), a)
+        es.add_min_enabling({a}, b)
         es.build_configurations()
 
         es = es.relabel({'a': 'c'})
@@ -127,17 +129,12 @@ class TestConfiguration(unittest.TestCase):
     def test_configuration_times(self):
         a, b, c = Event('a'), Event('b'), Event('c')
         es = {
-            0: ValidEventStructureTerm(
-                events={a, b},
-                enabling={a: [set()], b: [set()]},
-                conflict={a: {b}, b: {a}},
-            ),
-            1: ValidEventStructureTerm(
-                events={c},
-                enabling={c: [set()]},
-                conflict={c: set()},
-            ),
+            0: ValidEventStructureTerm({a, b}),
+            1: ValidEventStructureTerm({c}),
         }
+        es[0].add_min_enabling(set(), a)
+        es[0].add_min_enabling({a}, b)
+        es[1].add_min_enabling(set(), c)
 
         es[2] = es[0].times(es[1])
         con = ids_set(es[2].configurations)

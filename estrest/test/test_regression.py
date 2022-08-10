@@ -17,7 +17,8 @@ def save_relation(relation: IdRelation):
 class TestRegression(unittest.TestCase):
 
     def test_regression(self):
-        es = ValidEventStructureTerm().prefix('b').prefix('a').plus(ValidEventStructureTerm().prefix('y').prefix('x'))
+        es = ValidEventStructureTerm(set()).prefix('b').prefix('a').plus(
+            ValidEventStructureTerm(set()).prefix('y').prefix('x'))
         relation = to_relation(es)
 
         if os.getenv('SAVE_REL') == 'true':

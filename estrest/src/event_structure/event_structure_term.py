@@ -10,8 +10,8 @@ from event_structure.valid_event_structure import ValidEventStructure
 
 
 class ValidEventStructureTerm(ValidEventStructure):
-    def __init__(self, events=None, enabling=None, conflict=None) -> None:
-        super().__init__(events, enabling, conflict)
+    def __init__(self, events: Set[Event]) -> None:
+        super().__init__(events)
 
     def prefix_events(self, prefix):
         for e in self.events:
@@ -55,7 +55,7 @@ class ValidEventStructureTerm(ValidEventStructure):
         return es
 
     def plus(self, es1):
-        res = ValidEventStructureTerm()
+        res = ValidEventStructureTerm(set())
         es = {0: deepcopy(self), 1: deepcopy(es1)}
 
         for i in (0, 1):
@@ -77,7 +77,7 @@ class ValidEventStructureTerm(ValidEventStructure):
         return res
 
     def times(self, es1):
-        res = ValidEventStructureTerm()
+        res = ValidEventStructureTerm(set())
         es = {0: deepcopy(self), 1: deepcopy(es1)}
 
         events = set()
@@ -162,7 +162,7 @@ class ValidEventStructureTerm(ValidEventStructure):
 
     def restrict(self, labels):
         es = deepcopy(self)
-        res = ValidEventStructureTerm()
+        res = ValidEventStructureTerm(set())
         for e in es.events:
             if e.label in labels:
                 res.events.update([e])

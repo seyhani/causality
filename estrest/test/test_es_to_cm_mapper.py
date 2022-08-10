@@ -10,11 +10,9 @@ class TestCausalModel(unittest.TestCase):
 
     def test_firewall(self):
         i, o = Event('i'), Event('o')
-        es = ValidEventStructureTerm(
-            events={i, o},
-            conflict={i: set(), o: set()},
-            enabling={i: {frozenset()}, o: {frozenset()}},
-        )
+        es = ValidEventStructureTerm({i, o})
+        es.add_min_enabling(set(), i)
+        es.add_min_enabling(set(), o)
 
         mp = EventStructureToCausalModelMapper(es)
         cm = mp.map()
@@ -32,15 +30,12 @@ class TestCausalModel(unittest.TestCase):
 
     def test_cm_with_conflict_and_enabling(self):
         a, b, c = Event('a'), Event('b'), Event('c')
-        es = ValidEventStructureTerm(
-            events={a, b, c},
-            conflict={a: {b}, b: {a}, c: set()},
-            enabling={
-                a: {frozenset()},
-                b: {frozenset()},
-                c: {frozenset({a}), frozenset({b})}
-            },
-        )
+        es = ValidEventStructureTerm({a, b, c})
+        es.add_conflict(a, b)
+        es.add_min_enabling(set(), a)
+        es.add_min_enabling(set(), b)
+        es.add_min_enabling({a}, c)
+        es.add_min_enabling({b}, c)
         mp = EventStructureToCausalModelMapper(es)
         cm = mp.map()
         cm.evaluate()
@@ -51,10 +46,10 @@ class TestCausalModel(unittest.TestCase):
 
     def test_intervention(self):
         a, b, c = Event('a'), Event('b'), Event('c')
-        es = ValidEventStructure()
-        es.add_enabling(set(), a)
-        es.add_enabling(set(), b)
-        es.add_enabling({a, b}, c)
+        es = ValidEventStructure({a, b, c})
+        es.add_min_enabling(set(), a)
+        es.add_min_enabling(set(), b)
+        es.add_min_enabling({a, b}, c)
         es.build_configurations()
         self.assertTrue(es.is_configuration({a, b, c}))
 

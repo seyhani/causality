@@ -11,22 +11,40 @@ class EventStructure:
     conflict: Dict[Event, Set[Event]]
     configurations: Set[FrozenSet[Event]]
 
-    def __init__(self, events=set()) -> None:
+    def __init__(self, events: Set[Event]) -> None:
         self.events = events
-        self.enabling = {}
-        self.conflict = {}
+        self.enabling = {e: set() for e in self.events}
+        self.conflict = {e: set() for e in self.events}
         self.configurations = set()
 
+    def add_event(self, e: Event):
+        if e in self.events:
+            raise Exception("Event already exists")
+        self.events.add(e)
+        self.enabling[e] = set()
+        self.conflict[e] = set()
+
     def add_enabling(self, s: Set[Event], e: Event):
-        for ep in s.union({e}) - self.events:
-            self.__add_event(ep)
+        if not s.union({e}).issubset(self.events):
+            raise Exception("Unknown events")
+
         self.enabling[e].add(frozenset(s))
 
     def add_conflict(self, e: Event, ep: Event):
-        for e_ in {e, ep}.difference(self.events):
-            self.__add_event(e_)
+        if not {e, ep}.issubset(self.events):
+            raise Exception("Unknown events")
+
         self.conflict[e].add(ep)
         self.conflict[ep].add(e)
+
+    def enables(self, s: Set[Event], e: Event):
+        if not s.union({e}).issubset(self.events):
+            raise Exception("Unknown events")
+
+        return s in self.enabling[e]
+
+    def min_enables(self, s: Set[Event], e: Event):
+        raise NotImplementedError()
 
     def get_event(self, _id: tuple):
         for e in self.events:
@@ -60,7 +78,7 @@ class EventStructure:
                 conf_new = conf.union({e})
                 if not self.conflict_free(conf_new):
                     continue
-                if not [s_ for s_ in self.min_enabling[e] if s_.issubset(conf_new)]:
+                if not self.enables(conf, e):
                     continue
                 visited.add(frozenset(conf_new))
                 queue.append(conf_new)

@@ -3,6 +3,7 @@ from typing import Set
 from causality import CausalModel
 from causality.causal_model import FN
 from event import Event
+from event_structure.event_structure import EventStructure
 from event_structure.valid_event_structure import ValidEventStructure
 from mapper.event_structure_var import EventStructureVar, ConflictVar, EnablingVar, MinEnablingVar
 
@@ -29,8 +30,10 @@ class EventStructureCausalModel(CausalModel):
         self.vars.add(var)
         self.add(repr(var), fn)
 
-    def get_es(self) -> ValidEventStructure:
-        es = ValidEventStructure()
+    def get_es(self) -> EventStructure:
+        es = EventStructure(set())
+        for e in set.union(*map(lambda v: v.get_events(), self.vars)):
+            es.add_event(e)
         for var in self.vars:
             if self.vals[repr(var)]:
                 if isinstance(var, ConflictVar):
