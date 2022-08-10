@@ -12,7 +12,7 @@ class TestConfiguration(unittest.TestCase):
         a, b = Event('a'), Event('b')
         es.events = {a, b}
         es.conflict = {a: set(), b: set()}
-        es.enabling = {a: [set()], b: [{a}]}
+        es.min_enabling = {a: [set()], b: [{a}]}
         es.build_configurations()
 
         self.assertTrue(es.is_configuration({a, b}))
@@ -22,7 +22,7 @@ class TestConfiguration(unittest.TestCase):
         a, b = Event('a'), Event('b')
         es.events = {a, b}
         es.conflict = {a: {b}, b: {a}}
-        es.enabling = {a: [set()], b: [set()]}
+        es.min_enabling = {a: [set()], b: [set()]}
         es.build_configurations()
 
         self.assertFalse(es.is_configuration({a, b}))
@@ -32,7 +32,7 @@ class TestConfiguration(unittest.TestCase):
         a, b, c = Event('a'), Event('b'), Event('c')
         es.events = {a, b, c}
         es.conflict = {a: set(), b: set(), c: set()}
-        es.enabling = {a: [set()], b: [{a}], c: [{a, b}]}
+        es.min_enabling = {a: [set()], b: [{a}], c: [{a, b}]}
         es.build_configurations()
 
         self.assertFalse(es.is_configuration({a, c}))
@@ -45,7 +45,7 @@ class TestConfiguration(unittest.TestCase):
         a, b, c, d, e = [Event(x) for x in 'abcde']
         es.events = {a, b, c, d, e}
         es.conflict = {a: set(), b: {d, e}, c: set(), d: {b}, e: {b}}
-        es.enabling = {
+        es.min_enabling = {
             a: [set()],
             b: [{a}],
             d: [{a}],
@@ -63,7 +63,7 @@ class TestConfiguration(unittest.TestCase):
         a, b = Event('a'), Event('b')
         es = EventStructure(
             events={a, b},
-            enabling={a: [set()], b: [{a}]},
+            min_enabling={a: [set()], b: [{a}]},
             conflict={a: set(), b: set()},
         )
         es.build_configurations()
@@ -80,12 +80,12 @@ class TestConfiguration(unittest.TestCase):
         es = {
             0: EventStructure(
                 events={a},
-                enabling={a: [set()]},
+                min_enabling={a: [set()]},
                 conflict={a: set()},
             ),
             1: EventStructure(
                 events={b},
-                enabling={b: [set()]},
+                min_enabling={b: [set()]},
                 conflict={b: set()},
             ),
         }
@@ -102,7 +102,7 @@ class TestConfiguration(unittest.TestCase):
         a, b = Event('a'), Event('b')
         es = EventStructure(
             events={a, b},
-            enabling={a: [set()], b: [{a}]},
+            min_enabling={a: [set()], b: [{a}]},
             conflict={a: set(), b: set()},
         )
         es.build_configurations()
@@ -115,7 +115,7 @@ class TestConfiguration(unittest.TestCase):
         a, b = Event('a'), Event('b')
         es = EventStructure(
             events={a, b},
-            enabling={a: [set()], b: [{a}]},
+            min_enabling={a: [set()], b: [{a}]},
             conflict={a: set(), b: set()},
         )
         es.build_configurations()
@@ -129,12 +129,12 @@ class TestConfiguration(unittest.TestCase):
         es = {
             0: EventStructure(
                 events={a, b},
-                enabling={a: [set()], b: [set()]},
+                min_enabling={a: [set()], b: [set()]},
                 conflict={a: {b}, b: {a}},
             ),
             1: EventStructure(
                 events={c},
-                enabling={c: [set()]},
+                min_enabling={c: [set()]},
                 conflict={c: set()},
             ),
         }

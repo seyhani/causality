@@ -17,7 +17,7 @@ def conflict_to_words(es: EventStructure) -> WordList:
 
 def enabling_to_words(es: EventStructure) -> WordList:
     words = WordList()
-    for e, enabling in es.enabling.items():
+    for e, enabling in es.min_enabling.items():
         for enabling_set in enabling:
             words.add("\\{{ {} \\}} \\vdash {}".format(
                 ", ".join(map(repr, enabling_set)),

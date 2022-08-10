@@ -14,7 +14,7 @@ def repr_conflict(es):
 
 def repr_enabling(es):
     res = ""
-    for e, enabling in es.enabling.items():
+    for e, enabling in es.min_enabling.items():
         for enabling_set in enabling:
             res += "{" + ",".join([repr(ee.label) for ee in enabling_set]) + "} -> " + repr(e.label) + "\n"
     return res

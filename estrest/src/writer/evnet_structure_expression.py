@@ -42,6 +42,6 @@ class EventStructureExpression:
         return "({}, {}, {}, {})".format(
             len(self.es.events),
             sum(map(len, self.es.conflict.values())),
-            sum(map(len, self.es.enabling.values())),
+            sum(map(len, self.es.min_enabling.values())),
             len(self.es.get_labels())
         )

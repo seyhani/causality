@@ -35,5 +35,5 @@ def to_relation(event_structure: EventStructure):
     conflict = set([(e.idx(), ce.idx()) for e, conflict_set in event_structure.conflict.items() for ce in
                     conflict_set])
     enabling = set(
-        Enabling(ids(es), e.idx()) for e, enabling_sets in event_structure.enabling.items() for es in enabling_sets)
+        Enabling(ids(es), e.idx()) for e, enabling_sets in event_structure.min_enabling.items() for es in enabling_sets)
     return IdRelation(events, conflict, enabling)
