@@ -12,7 +12,7 @@ class TestCausalModel(unittest.TestCase):
         es = EventStructure(
             events={i, o},
             conflict={i: set(), o: set()},
-            enabling={i: {frozenset()}, o: {frozenset()}},
+            min_enabling={i: {frozenset()}, o: {frozenset()}},
         )
 
         mp = EventStructureToCausalModelMapper(es)
@@ -34,7 +34,7 @@ class TestCausalModel(unittest.TestCase):
         es = EventStructure(
             events={a, b, c},
             conflict={a: {b}, b: {a}, c: set()},
-            enabling={
+            min_enabling={
                 a: {frozenset()},
                 b: {frozenset()},
                 c: {frozenset({a}), frozenset({b})}

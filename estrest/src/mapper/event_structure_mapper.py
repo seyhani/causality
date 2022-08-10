@@ -12,6 +12,8 @@ class EventStructureToCausalModelMapper:
     def __init__(self, es: EventStructure):
         self.es = es
 
+    # E.g. __conflict_var(Event('b'), Event('a')) -> 'C(a, b)'
+    # Note the order of labels in return value
     @staticmethod
     def __conflict_var(e: Event, ep: Event):
         ids_ = ids({e, ep})
@@ -31,6 +33,9 @@ class EventStructureToCausalModelMapper:
             result = result and not vals[self.__conflict_var(e, ep)]
         return result
 
+    # E.g. __min_en_var({Event('b'), Event('a')}, Event('c')) -> 'M([a, b], c)'
+    # Here the set is represented as a list of labels, as only a list can hold
+    # their lexicographic order.
     @staticmethod
     def __min_en_var(s: Set[Event], e: Event):
         ids_ = ids(s)
@@ -45,15 +50,17 @@ class EventStructureToCausalModelMapper:
 
     def __add_min_en_vars(self, cm: CausalModel):
         for s in powerset(self.es.events):
-            for e in self.es.events:
-                if e in s:
-                    continue
+            for e in self.es.events - s:
                 var = self.__min_en_var(s, e)
                 if self.es.min_en(s, e):
-                    cm.add(var, lambda vals, s_=s, e_=e: self.min(s_, e_, vals) and self.con(s_, vals))
+                    cm.add(var, (
+                        lambda s_=s, e_=e: lambda vals: self.min(s_, e_, vals) and self.con(s_, vals)
+                    )())
                 else:
                     cm.add_constant(var, False)
 
+    # E.g. __enabling_var({Event('b'), Event('a')}, Event('c')) -> 'EN([a, b], c)'
+    # This function is almost identical to __min_en_var
     @staticmethod
     def __enabling_var(s: Set[Event], e: Event):
         ids_ = ids(s)
@@ -68,9 +75,7 @@ class EventStructureToCausalModelMapper:
             return result
 
         for s in powerset(self.es.events):
-            for e in self.es.events:
-                if e in s:
-                    continue
+            for e in self.es.events - s:
                 var = self.__enabling_var(s, e)
                 cm.add(var, lambda vals, s_=s, e_=e: enabling_condition(vals, s_, e_))
 
