@@ -2,7 +2,7 @@ import json
 from json import JSONEncoder
 from typing import Any
 
-from event_structure import EventStructure
+from event_structure import ValidEventStructureTerm
 from serializer import IdRelation, to_relation
 from serializer import SerializableEncoder
 

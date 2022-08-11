@@ -30,6 +30,11 @@ class TestCausalModel(unittest.TestCase):
         m.evaluate()
         print(m.vals['D'])
 
+    def test_invalid_intervention(self):
+        m = CausalModel()
+        m.add('A', lambda vals: True)
+        self.assertRaises(Exception, lambda: m.intervene({'X': True}))
+
 
 if __name__ == '__main__':
     unittest.main()
