@@ -36,9 +36,7 @@ class EventStructureToCausalModelMapper:
 
     def __add_min_en_vars(self):
         for s in powerset(self.es.events):
-            for e in self.es.events:
-                if e in s:
-                    continue
+            for e in self.es.events - s:
                 if self.es.min_enables(s, e):
                     self.cm.add_min_enabling(s, e, (
                         lambda s_=s, e_=e: lambda vals: self.min(s_, e_, vals) and self.con(s_, vals))())
@@ -54,9 +52,7 @@ class EventStructureToCausalModelMapper:
             return result
 
         for s in powerset(self.es.events):
-            for e in self.es.events:
-                if e in s:
-                    continue
+            for e in self.es.events - s:
                 self.cm.add_enabling(s, e, (lambda s_=s, e_=e: lambda vals: enabling_condition(vals, s_, e_))())
 
     def map(self) -> EventStructureCausalModel:

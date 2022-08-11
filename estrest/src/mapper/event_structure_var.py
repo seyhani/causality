@@ -26,11 +26,15 @@ class ConflictVar(EventStructureVar):
     def get_events(self) -> Set[Event]:
         return {self.e, self.ep}
 
+    # E.g. ConflictVar(Event('b'), Event('a')) -> 'C(a, b)'
+    # Note the order of labels in return value
     def __repr__(self):
         ids_ = ids({self.e, self.ep})
         return f'C{tuple(sorted(ids_))}'.replace('\'', '')
 
-
+# E.g. EnablingVar({Event('b'), Event('a')}, Event('c')) -> 'EN([a, b], c)'
+     # Here the set is represented as a list of labels, as only a list can hold
+     # their lexicographic order.
 class EnablingVar(EventStructureVar):
     s: Set[Event]
     e: Event
@@ -48,6 +52,9 @@ class EnablingVar(EventStructureVar):
         return f'EN{sorted(ids_), self.e}'.replace('\'', '')
 
 
+# E.g. MinEnablingVar({Event('b'), Event('a')}, Event('c')) -> 'M([a, b], c)'
+# Here the set is represented as a list of labels, as only a list can hold
+# their lexicographic order.
 class MinEnablingVar(EventStructureVar):
     s: Set[Event]
     e: Event
