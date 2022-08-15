@@ -2,50 +2,51 @@
 
 \usepackage{preamble}
 
+\defbeamertemplate{footline}{centered page number}
+{%
+  \hspace*{\fill}%
+  \usebeamercolor[fg]{page number in head/foot}%
+  \usebeamerfont{page number in head/foot}%
+  \insertpagenumber\,/\,\insertpresentationendpage%
+  \hspace*{\fill}\vskip2pt%
+}
+\setbeamertemplate{footline}[centered page number]
+\setbeamertemplate{navigation symbols}{}
+
+\date{\today}
+\title{Causality in DyNetKAT}
+\author{Amir Hossein Seyhani}
+\institute{
+    University of Tehran \linebreak \  \\
+    \includegraphics[height=1.5cm]{./resources/ut.png}
+}
+
+\logo{
+    \vspace*{-0.5cm}
+    \includegraphics[height=1cm]{./resources/ut.png}
+}
+
 \begin{document}
 
-\begin{frame}
-    \titlepage
-\end{frame}
+\frame[plain]{\titlepage}
 
-\begin{frame}{Outline}
-    \tableofcontents
-\end{frame}
 
-\tikzset{g/.style={
-            prefix after command= {\pgfextra{\tikzset{every label/.style={color=green,above left}}}}
-}
-}
+% \begin{frame}{Outline}
+%     \tableofcontents
+% \end{frame}
 
-\tikzset{r/.style={
-            prefix after command= {\pgfextra{\tikzset{every label/.style={red,above left}}}}
-}
-}
+\section{Introduction}
 
-\tikzset{o/.style={
-            prefix after command= {\pgfextra{\tikzset{every label/.style={orange,above left}}}}
-}
-}
+\input{teias/intro.tex}
 
-\section{Examples}
+\section{Example}
 
-\subsection{blacklist}
+\input{teias/blacklist.tex}
 
-\input{network/blacklist.tex}
+\input{teias/loop.tex}
 
-\subsection{loop freedom}
+\input{teias/congestion.tex}
 
-\input{network/loop.tex}
-
-\subsection{waypoint enforcement}
-
-\input{network/waypoint.tex}
-
-\subsection{invalid drop}
-\input{network/invalid_drop.tex}
-
-\subsection{congestion}
-\input{network/congestion.tex}
-
+\input{teias/blackhole.tex}
 
 \end{document}

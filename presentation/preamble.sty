@@ -18,7 +18,8 @@
 \usepackage{eufrak}
 \usepackage{xcolor}
 \usepackage{multicol}
-
+\usepackage{textpos}
+\usepackage{graphbox}
 
 \allowdisplaybreaks
 \hypersetup{
@@ -46,4 +47,19 @@
 \newcommand{\la}{\leftarrow}
 \newcommand{\vte}{\mathfrak{E}(\vec C,\vec {EN})}
 
-\date{\today}
+
+
+\tikzset{g/.style={
+            prefix after command= {\pgfextra{\tikzset{every label/.style={color=green,above left}}}}
+}
+}
+
+\tikzset{r/.style={
+            prefix after command= {\pgfextra{\tikzset{every label/.style={red,above left}}}}
+}
+}
+
+\tikzset{o/.style={
+            prefix after command= {\pgfextra{\tikzset{every label/.style={orange,above left}}}}
+}
+}
