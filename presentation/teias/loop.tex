@@ -20,14 +20,14 @@
             S           & = F \oplus p?1;S_p \oplus q?1;S_q                   \\
             S_p         & = F_p \oplus q?1;F                                  \\
             S_q         & = F_q \oplus p?1;F                                  \\
-            SDN         & = \delta_{\mathcal{L}}(SDN \parallel P \parallel Q) \\
+            SDN         & = \delta_{\mathcal{L}}(S \parallel P \parallel Q) \\
             \mathcal{L} & = \s{p!1,p?1,q!1,q?1}
         \end{aligned}
         \qquad \qquad
         \begin{aligned}
             F    = & ab \oplus ac \oplus ad               \\
                    & \oplus bc \oplus bd \oplus cd        \\
-            F_p  = & aac \oplus ad \oplus cd              \\
+            F_p  = & ac \oplus ad \oplus cd              \\
             F_q  = & ab \oplus ac \oplus ad               \\
                    & \oplus bc \oplus bb \oplus bd        \\
                    & \oplus        cb \oplus cc \oplus cd 
@@ -36,16 +36,17 @@
 \end{frame}
 
 \begin{frame}{Example: Loop Freedom}
+    Property: Loop Freedom
+    \begin{align*}
+        \f{PV} & = \bigvee_{c \in C} c \in \mathcal{F}(ES(\vec v)) \\
+        C      & = \s{c \subset E | \exists e \in c.
+            l(e) = bb \vee l(e) = cc }
+    \end{align*}
     We can define $M(\s{p_2},q_2) = \F$ as a cause.
 
     Setting $M(\s{p_2},q_2)$ to true results in $EN(\e,q_2)$ become false
     neither $\s{q_2,bb}$ nor $\s{q_2,cc}$ are not configurations anymore
     We define:
-    \begin{align*}
-        \f{PV} & = \bigvee_{c \in C} c \in \mathcal{F}(ES) \\
-        C      & = \s{c \subset E | \exists e \in c.
-            l(e) = bb \vee l(e) = cc }
-    \end{align*}
     \begin{center}
         \begin{tikzpicture}[scale=0.8]
             \crd{0}{0}{$\emptyset$}

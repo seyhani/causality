@@ -1,0 +1,34 @@
+Let $l$ be a set of labels.
+We define a safety property violation over event structure as follows
+where $\alpha \in L$:
+\begin{align*}
+    \varphi ::=  \top | \alpha | \varphi \vee \varphi
+\end{align*}
+Given an event structure $\mathrm{E}$ we define the semantics of
+the $\varphi$ as follows:
+\begin{align*}
+    \mathrm{E} & \vDash \top                               \\
+    \mathrm{E} & \vDash \alpha \text{ iff }
+    \exists c \in \mathcal{F}(\mathrm{E}). \alpha \in l(c) \\
+    \mathrm{E} & \vDash \alpha \vee \alpha' \text{ iff }
+    \mathrm{E} \vDash \alpha \vee \mathrm{E} \vDash \alpha'
+\end{align*}
+Where $l(c) = \s{l(e)| e \in c}$.
+For a given formula $\varphi$ we use $\sigma_i(\varphi)$ for the formula
+where we have replaced all labels $\alpha$ with $\sigma_i(\alpha)$.or a label $\alpha$ let $\sigma_0(\alpha) = (\alpha,*)$ and
+$\sigma_1(\alpha) = (*,\alpha)$.
+\begin{theorem}
+    Let $\mr{E}_0 = (E_0,\#_0,\vdash_0,L_0,l_0)$
+    and $\mr{E}_1 = (E_1,\#_1,\vdash_1,L_1,l_1)$be event structures.
+    Let $\varphi_0$ and $\varphi_1$ be two safety property violations
+    over $L_0$ and $L_1$ respectively.
+    Let $\mr{E} = \mr{E}_0 \times \mr{E}_1$ and
+    $\varphi =  \sigma_0(\varphi_0) \vee \sigma_1(\varphi_1$).
+    Then we have:
+    \begin{align*}
+        \mr{E}_0 \vDash \varphi_0 \vee \mr{E}_1 \vDash \varphi_1 
+        \iff 
+        \mr{E}_0 \times \mr{E}_1 \vDash \sigma_0(\varphi_0) 
+        \vee \sigma_1(\varphi_1)
+    \end{align*}
+\end{theorem}

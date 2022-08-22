@@ -1,5 +1,5 @@
 \begin{frame}{Example: Blackhole Freedom}
-    Property: each packet should reach $b$
+    Property: each packet should reach $s$
     \begin{center}
         \begin{tikzpicture}[
                 node distance={20mm},
@@ -24,13 +24,13 @@
             P   & = p!1                             \\
             Q   & = q!1                             \\
             N   & = F \oplus p?1;N_p \oplus q?1;N_q \\
-            N_p & = F \oplus q?1;N_{pq}           \\
-            N_q & = F \oplus p?1;N_{pq}           
+            N_p & = F \oplus q?1;F_{pq}           \\
+            N_q & = F \oplus p?1;F_{pq}           
         \end{aligned}
         \qquad\qquad
         \begin{aligned}[c]
             F   & = as \oplus cs                    \\
-            F_{pq}      & = ab \vee cd  \\
+            F_{pq}      & = ab \oplus cd  \\
             SDN         & = \delta_{\mathcal{L}} (N
             \parallel P \parallel Q)                \\
             \mathcal{L} & = \s{p!1,p?1,q?1,q?1}     
@@ -38,37 +38,12 @@
     \end{equation*}
 \end{frame}
 
-\begin{frame}{Example: Blacklist}
+\begin{frame}{Example: Blackhole Freedom}
+    Property: each packet should reach $s$
     \begin{align*}
-        E  = \s{ &
-        p_1,p_2,q_1,q_2,p',q',ab_1,ab_2,ab_3, ac_1,ac_2,     \\
-                 & ac_3,ad_1,ad_2,cb_1,cb_2,cd_1,cd_2,cd_3 }
+        \f{PV} & = \exists c \in \mathcal{F}(ES(\vec v)),
+        \exists e \in c. l(e) =  \alpha\cdot\pi \wedge \pi(sw) \neq s
     \end{align*}
-    We encode the property as:
-    \begin{align*}
-        \f{PV} & = \forall c \in \mathcal{F}(ES),
-        \forall e \in c. l(e) =  \alpha\cdot\pi \Rightarrow \pi(sw) = s
-    \end{align*}
-    \begin{center}
-        \begin{tikzpicture}[scale=0.8]
-            \crd{0}{0}{$\emptyset$}
-            \crd[left]{-2}{1}{$\s{p_1}$}
-            \crd[left]{-2}{2}{$\s{p_1,q_1}$}
-            \crd[left]{-2}{3}{$\s{p_1,q_1,ad_1}$}
-            \crd[right]{2}{1}{$\s{q_2}$}
-            \crd[right]{2}{2}{$\s{p_2,q_2}$}
-            \crd[right]{2}{3}{$\s{p_2,q_2,ad_2}$}
-            \draw [ultra thick] (-2,1) -- (-2,2);
-            \draw [ultra thick] (-2,2) -- (-2,3);
-            \draw [ultra thick] (0,0) -- (2,1);
-            \draw [ultra thick] (0,0) -- (-2,1);
-            \draw [ultra thick] (2,1) -- (2,2);
-            \draw [ultra thick] (2,1) -- (2,3);
-        \end{tikzpicture}
-    \end{center}
-\end{frame}
-
-\begin{frame}{Example: Blacklist}
     We can define $C(p_1,q_1) = \F$ as an actual cause of $PV$
     using the witness $(C(p_2,q_2),\T,\T)$
     \begin{center}
