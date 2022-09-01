@@ -1,5 +1,5 @@
 \begin{frame}{Example: Blacklist}
-    Property: switch $d$ is blacklisted
+    Property: no packets from $a$ should reach $d$
     \begin{center}
         \begin{tikzpicture}[
                 node distance={20mm},
@@ -38,10 +38,10 @@
 \end{frame}
 
 \begin{frame}{Example: Blacklist}
-    Property: no packets should reach $d$ from $a$
+    Property: no packets from $a$ should reach $d$
     \begin{align*}
         \f{PV} & = \bigvee_{c \in C} c \in \mathcal{F}(ES(\vec v))       \\
-        C      & = \s{c \subset E | \exists e \in c. l(c) = ad } 
+        C      & = \s{c \subseteq E | \exists e \in c. l(c) = ad } 
     \end{align*}
     We can define $C(p_1,q_1) = \F$ as an actual cause of $PV$
     using the witness $(C(p_2,q_2),\T,\T)$

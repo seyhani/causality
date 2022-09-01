@@ -1,14 +1,14 @@
 \subsection{Event Structure}
 \begin{definition}[Event Structure]
-    An event structure is a triple $E = (\mathcal{E},\#,\vdash)$ where:
+    An event structure is a triple $\mr{E} = (E,\#,\vdash)$ where:
     \begin{enumerate}
-        \item $\mathcal{E}$ is a set of events
-        \item \# is a binary symmetric, irreflexive relation on $\mathcal{E}$,
+        \item $E$ is a set of events
+        \item \# is a binary symmetric, irreflexive relation on $E$,
               the conflict relation.
-              We shall write $Con$ for the set of conflict-free subsets of $\mathcal{E}$,
-              i.e. those finite subsets $X \subseteq \mathcal{E}$ for which:
+              We shall write $Con$ for the set of conflict-free subsets of $E$,
+              i.e. those finite subsets $X \subseteq E$ for which:
               $\forall e,e' \in X . \neg (e\#e')$
-        \item $\vdash \subseteq Con \times \mathcal{E}$ is the enabling relation which satisfies:
+        \item $\vdash \subseteq Con \times E$ is the enabling relation which satisfies:
               $ X \vdash e \ \& \ X \subseteq Y \in Con \Rightarrow Y \vdash e$
     \end{enumerate}
 
@@ -30,7 +30,7 @@
 \begin{notion}
     For any event structure we can define the minimal enabling relation $\vdash_{min}$ by:
     \begin{align*}
-        X \vdash_{min} e \iff X \vdash e \amp
+        X \vdash_{min} e \iff X \vdash e \wedge
         ( \forall Y \subseteq X . Y \vdash e \Rightarrow Y = X )
     \end{align*}
     Then for any event structure:
@@ -41,15 +41,15 @@
 
 \begin{definition}[Configuration]
     \label{conf}
-    Let $E = (\mathcal{E},\#,\vdash)$ be an event structure.
-    Define a configuration of $E$ to be a subset of events $x \subseteq \mathcal{E}$ which is
+    Let $\mr{E} = (E,\#,\vdash)$ be an event structure.
+    Define a configuration of $\mr{E}$ to be a subset of events $x \subseteq E$ which is
     \begin{enumerate}
         \item conflict-free: $x \in Con$
-        \item secured: $\forall e \in x \exists e_0,...,e_n \in x. e_n = e \ \& 
-        \forall i \leq n. \s{e_0,...,e_{i-1}} \vdash e_i$
+        \item secured: $\forall e \in x. \exists e_0,...,e_n \in x. e_n = e \ \wedge
+                  \forall i \leq n. \s{e_0,...,e_{i-1}} \vdash e_i$
     \end{enumerate}
 \end{definition}
-The set of all configurations of an event structure is written as $\mathcal{F(E)}$.
+The set of all configurations of an event structure is written as $\mathcal{F}(E)$.
 It is helpful to unwrap condition (2) a little. It says an event $e$ is secured in a set $x$
 iff there is a sequence of events $e_0,...,e_n = e$ in $x$ such that:
 \begin{align*}
@@ -111,7 +111,7 @@ We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
     limit.
     \begin{center}
         \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
-            \node[main] (S) [right of=H1] {$s$};
+            \node[main] (S) {$s$};
             \node[main] (H1) [above of=S,left of=S] {$h_1$};
             \node[main] (H2) [above of=S,right of=S] {$h_2$};
             \draw[->] (H1) -- (S);
@@ -191,9 +191,9 @@ set of event occurrences.
 We can rule out such possibilities by insisting on event structures
 satisfy the following stability axiom.
 \begin{definition}[Stable Event Structure]
-    Let $E = (\mathcal{E},\#,\vdash)$ be an event structure. Say $E$ is stable if it satisfies the following axiom:
+    Let $\mr{E} = (E,\#,\vdash)$ be an event structure. Say $E$ is stable if it satisfies the following axiom:
     \begin{align*}
-        X \vdash e \ \& \ Y \vdash e \ \& \ X \cup Y \cup \{e\} \in Con \Rightarrow X \cap Y \vdash e
+        X \vdash e \ \wedge \ Y \vdash e \ \wedge \ X \cup Y \cup \{e\} \in Con \Rightarrow X \cap Y \vdash e
     \end{align*}
 \end{definition}
 The stability axiom ensures that an event in a configuration is
@@ -203,62 +203,64 @@ Suppose $X \vdash e$ and $X \subseteq x$.
 Then $X \cup \s{e} \in Con$, the enabling $X\vdash e$ is consistent.
 Take
 \begin{align*}
-    X_0 = \cap \s{Y | Y \subseteq X \amp Y \vdash e}
+    X_0 = \cap \s{Y ~|~ Y \subseteq X \wedge Y \vdash e}
 \end{align*}
 Because $X$ is finite this is an intersection of a finite number of
 sets and we see by the stability axiom that $X_0 \vdash e$.
 Moreover $X_0$ is the unique minimal subset of $X$ which enables $e$.
 Thus for stable event structures, we have:
 \begin{align*}
-    Y \vdash e \amp Y \cup \s{e} \in Con \Rightarrow
+    Y \vdash e \wedge Y \cup \s{e} \in Con \Rightarrow
     \exists ! X \subseteq Y.X \vdash_{min} e
 \end{align*}
 It follows that for stable event structures
 \begin{align*}
-    X \vdash_{min} e \amp Y \vdash_{min} \amp
+    X \vdash_{min} e \wedge Y \vdash_{min} \wedge
     X \cup Y \cup e \in Con \Rightarrow X = Y
 \end{align*}
 \begin{definition}
-    Let $E_0 = (\mathcal{E}_0,\#_0,\vdash_0)$ and $E_1 = (\mathcal{E}_1,\#_1,\vdash_1)$
+    Let $\mr{E_0} = (E_0,\#_0,\vdash_0)$ and $\mr{E_1} = (E_1,\#_1,\vdash_1)$
     be event Structures. Define
     \begin{align*}
-        E_0 \trianglelefteq E_1 \iff & \mathcal{E}_0 \subseteq \mathcal{E}_1,                                          \\
-                                     & \forall e,e'. e\#_0e'  \iff e,e' \in \mathcal{E}_0 \ \& \ e\#_1 e' \text{ and } \\
-                                     & \forall X,e.X\vdash_0 e  \iff X \subseteq \mathcal{E}_0
-        \ \& \ e \in \mathcal{E}_0\ \& \ X \vdash_1 e
+        \mr{E_0} \trianglelefteq \mr{E_1} \iff
+         & E_0 \subseteq E_1,                            \\
+         & \forall e,e'. e\#_0e'  \iff e,e' \in E_0
+        \ \wedge \ e\#_1 e' \text{ and }                 \\
+         & \forall X,e.X\vdash_0 e  \iff X \subseteq E_0
+        \ \wedge \ e \in E_0\ \wedge \ X \vdash_1 e
     \end{align*}
-    In this case say $E_0$ is a substructure of $E_1$.
+    In this case say $\mr{E_0}$ is a substructure of $\mr{E_1}$.
 \end{definition}
 
 \begin{definition}[Restriction]
-    Let $E = (\mathcal{E},\#,\vdash)$ be an event structure.
-    Let $A \subseteq \mathcal{E}$.
-    Define the restriction of $E$ to $A$ to be
+    Let $\mr{E} = (E,\#,\vdash)$ be an event structure.
+    Let $A \subseteq E$.
+    Define the restriction of $\mr{E}$ to $A$ to be
     \begin{align*}
-        E \lceil A = (A,\#_A,\vdash_A)
+        \mr{E} \lceil A = (A,\#_A,\vdash_A)
     \end{align*}
     where
     \begin{align*}
-        X \in Con_A \iff X \subseteq A \ \& \ X \in Con \\
-        X \vdash_A e \iff X \subseteq A \ \& \ e \in A \ \& \ X \vdash e
+        X \in Con_A \iff X \subseteq A \ \wedge \ X \in Con \\
+        X \vdash_A e \iff X \subseteq A \ \wedge \ e \in A \ \& \ X \vdash e
     \end{align*}
 \end{definition}
 
 \begin{definition}
     Let $a$ be an event.
-    For an event structure $E = (\mathcal{E},\#,\vdash)$ define $aE$ to be the event structure $(\mathcal{E'},\#',\vdash')$ where:
+    For an event structure $\mr{E} = (E,\#,\vdash)$ define $a\mr{E}$ to be the event structure $(E',\#',\vdash')$ where:
     \begin{align*}
-         & \mathcal{E'} = \s{(0,a)} \cup \s{(1,e)|e \in \mathcal{E}},                                                   \\
+         & E' = \s{(0,a)} \cup \s{(1,e)|e \in E},                                                                               \\
          & e_0' \#' e_1'  \iff \exists e_0,e_1.e_0' = (1,e_0)
-        \ \& \ e_1' = (1,e_1) \ \& \ e_0 \# e_1                                                                         \\
-         & X \vdash' e' \iff e' = (0,a) \text{ or } [e' = (1,e_1) \ \& \ (0,a)\in X \ \& \ \s{e|(1,e)\in X} \vdash e_1]
+        \ \wedge \ e_1' = (1,e_1) \ \wedge \ e_0 \# e_1                                                                         \\
+         & X \vdash' e' \iff e' = (0,a) \text{ or } [e' = (1,e_1) \ \wedge \ (0,a)\in X \ \wedge \ \s{e|(1,e)\in X} \vdash e_1]
     \end{align*}
 \end{definition}
 
 \begin{definition}
-    A labelled event structure consists of $(\mathcal{E},\#,\vdash,L,l)$ where
-    $(\mathcal{E},\#,\vdash)$ is an event structure, $L$ is a set of labels,
-    not including the element *, and $l$ is a function $l: \mathcal{E} \rightarrow L$
+    A labelled event structure consists of $(E,\#,\vdash,L,l)$ where
+    $(E,\#,\vdash)$ is an event structure, $L$ is a set of labels,
+    not including the element *, and $l$ is a function $l: E \rightarrow L$
     from its events to its labels.
 \end{definition}
 \subsection{Causal Model}

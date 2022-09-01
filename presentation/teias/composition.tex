@@ -1,73 +1,29 @@
 \begin{frame}{Composing Causality}
-    Property: switch $d$ is blacklisted
-    \begin{center}
-        \begin{tikzpicture}[
-                node distance={20mm},
-                main/.style = {draw, circle},
-                s/.style = {->,thick},
-                d/.style = {->,thick,dashed} ]
-            \node[main] (d) {$d$};
-            \node[main] (b) [left of=d] {$b$};
-            \node[main] (a) [above left of=b] {$a$};
-            \node[main] (c) [below left of=a] {$c$};
-            \node[main] (f) [right of=d] {$f$};
-            \node[main] (e) [above right of=f] {$e$};
-            \node[main] (g) [below right of=e] {$g$};
-            \draw[thick,green,->] (a) -- (c);
-            \draw[thick,green,->,dashed] (a) -- (b);
-            \draw[thick,orange,->] (b) -- (c);
-            \draw[thick,orange,->,dashed] (b) -- (d);
-            \draw[thick,blue,->] (e) -- (g);
-            \draw[thick,blue,->,dashed] (e) -- (f);
-            \draw[thick,red,->] (f) -- (g);
-            \draw[thick,red,->,dashed] (f) -- (d);
-            \pic [draw, ->, angle radius=7mm,
-                angle eccentricity=1.5, "$p_1$"] {angle = c--b--d};
-            \pic [draw, ->, angle radius=7mm,
-                angle eccentricity=1.5, "$p_2$"] {angle = c--a--b};
-            \pic [draw, <-, angle radius=7mm,
-                angle eccentricity=1.5, "$q_1$"] {angle = d--f--g};
-            \pic [draw, <-, angle radius=7mm,
-                angle eccentricity=1.5, "$q_2$"] {angle = f--e--g};
-        \end{tikzpicture}
-    \end{center}
-    \begin{equation*}
-        \begin{aligned}
-            \mathrm{E}_0 & = (E_0,\#_0,\vdash_0,L_0,l_0)     \\
-            E_0          & = \s{p_1,p_2,ad_0}                \\
-            \#_0         & = \e                              \\
-                         & \e \vdash_0 p_1 , \e \vdash_0 p_2
-            \s{p_1,p_2} \vdash ad_0                          \\
-        \end{aligned}
-        \qquad
-        \begin{aligned}
-            \mathrm{E}_1 & = (E_1,\#_1,\vdash_1,L_1,l_1)     \\
-            E_1          & = \s{q_1,q_2,ad_1}                \\
-            \#_1         & = \e                              \\
-                         & \e \vdash_1 q_1 , \e \vdash_1 q_2
-            \s{p_1,p_2} \vdash ad_1                          \\
-        \end{aligned}
-    \end{equation*}
-\end{frame}
-
-\begin{frame}{Composing Causality}
     \begin{align*}
-         & p_1' = (p_1,*), p_2' = (p_2,*), q_1' = (*,q_1),  \\
-         & q_2'=(*,q_2), ad_0' = (ad_0,*), ad_1' = (*,ad_1)
+        \mathrm{E}                   & = (E,\#,\vdash)                          \\
+        \mathcal{M}                  & = \mathfrak{M}(\mathrm{E}),s \subseteq E \\
+        \varphi                      & = X_1 = x_1 \wedge X_2 = x_2
+        \wedge ... \wedge X_n = x_n                                             \\
+        \mathcal{M},\varphi \vDash s & \iff \varphi \text{ Cause }
+        s \in \mathcal{F}(\mathrm{E})
     \end{align*}
+    \begin{itemize}
+        \item $\mathrm{E}_0 = (E_0,\#_0,\vdash_0)$, $\mathrm{E}_1 = (E_1,\#_1,\vdash_1)$
+        \item $\mathrm{E} = (E,\#,\vdash) = \mathrm{E}_0 + \mathrm{E}_1$
+    \end{itemize}
     \begin{align*}
-        \varphi   & = \s{p_1',p_2',ad_0'} \in \mathcal{F}(\mathrm{E})
-        \vee \s{q_1',q_2',ad_1'} \in \mathcal{F}(\mathrm{E})          \\
-        \varphi_0 & = \s{p_1,p_2,ad_0} \in \mathcal{F}(\mathrm{E}_0)  \\
-        \varphi_1 & = \s{q_1,q_2,ad_1} \in \mathcal{F}(\mathrm{E}_1)
-    \end{align*}
-    \begin{align*}
-         &
-        \mathrm{E}_0 \vDash \varphi_0 \vee \mathrm{E}_1 \vDash \varphi_1
-        \iff \mathrm{E}_0 \times \mathrm{E}_1 \vDash \varphi_0 \vee \varphi_1                \\
-         & C_0(p_1,p_2) = \F \text{ \textcolor{red}{Cause} } \mathrm{E}_0 \vDash \varphi_0
-        \bigvee C_1(q_1,q_2) = \F \text{ \textcolor{red}{Cause} } \mathrm{E}_1 \vDash \varphi_1 \\
-         & \iff C(p_1',p_2') = \F \vee C(q_1',q_2') = \F \text{ \textcolor{red}{Cause} }
-        \mathrm{E}_0 \times \mathrm{E}_1 \vDash \varphi
+        \iota_k(e)          & = (k,e)                     \\
+        \iota_k(X)          & = \s{\iota_{k}(e)| e \in s} \\
+        \mathcal{M},\varphi & \vDash s \iff               \\
+                            & \left(
+        \exists s_0 \subseteq E_0. s = \iota_0(s_0)
+        ,\exists \varphi_0 \in \mathcal{M}_0. \iota_0(\varphi_0) = \varphi.
+        \mathcal{M}_0,\varphi_0 \vDash s_0
+        \right)                                           \\
+                            & \vee \left(
+        \exists s_1 \subseteq E_1. s = \iota_1(s_1)
+        ,\exists \varphi_1 \in \mathcal{M}_1. \iota_1(\varphi_1) = \varphi.
+        \mathcal{M}_1,\varphi_1 \vDash s_1
+        \right)
     \end{align*}
 \end{frame}
