@@ -27,29 +27,11 @@
     urlcolor=black
 }
 
-\newcommand{\s}[1]{\{#1\}}
-\newcommand{\es}{$E = (\mathcal{E,\#,\vdash})$}
-\newcommand{\tc}[1]{\textcircled{#1}}
-\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
-\newcommand{\amp}{\ \& \ }
-\newcommand{\crd}[4][above]{
-    \node[draw,circle,inner sep=2pt,fill,label={[#1]:#4}] at (#2,#3) {};
-}
-
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[subsection]
 \newtheorem{proposition}{Proposition}
 \newtheorem{example}{Example}[subsection]
 \newtheorem{notion}{Notion}
 \newtheorem{theorem}{Theorem}
-\newcommand{\f}[1]{F_{#1}(\vec V_{#1})}
-\newcommand{\F}{\mathrm{F}}
-\newcommand{\T}{\mathrm{T}}
-\newcommand{\e}{\emptyset}
-\newcommand{\m}{\mathcal{M}}
-\newcommand{\mr}[1]{\mathrm{#1}}
-\newcommand{\mc}[1]{\mathcal{#1}}
-\newcommand{\la}{\leftarrow}
-\newcommand{\ra}{\rightarrow}
-\newcommand{\vte}{\mathfrak{E}(\vec C,\vec {EN})}
-\newcommand{\his}[1]{\langle #1 \rangle} 
+
+\input{commands.tex}
