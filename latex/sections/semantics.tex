@@ -166,3 +166,34 @@ and * is a sort of undefined.
     \end{align*}
     Where $\mc{L}$ is a subset of $\mc{A}$.
 \end{definition}
+
+% \subsection{Examples}
+% Consider the following DyNetKAT program:
+% \begin{equation*}
+%     SDN = a \ra b; a \ra c
+% \end{equation*}
+% It encodes a network where a packet on $a$ is first forwarded to $b$
+% and the next packet is forwarded to $c$.
+% Let $\mr{E} = (E,\#,\vdash)$ be the event structure of $SDN$ so we have:
+% \begin{align*}
+%     E & = \s{ab,ac}                     \\
+%     \# = \e                             \\
+%       & \e \vdash ab, \s{ab} \vdash{ac} \\
+%     L & = \s{a\ra b, a\ra c}            \\
+%       & l(ab) = a\ra b, l(ac) = a \ra c
+% \end{align*}
+% Figure \ref{fig:ex:sem:prefix} shows the configurations of $\mr{E}$.
+
+
+% \begin{figure}
+%     \centering
+%     \begin{tikzpicture}
+%         \crd[left]{0}{0}{$\emptyset$}
+%         \crd[left]{0}{1}{$\s{ab}$}
+%         \crd[left]{0}{2}{$\s{ab,ac}$}
+%         \draw [ultra thick] (0,0) -- (0,1);
+%         \draw [ultra thick] (0,1) -- (0,2);
+%     \end{tikzpicture}
+%     \caption{}
+%     \label{fig:ex:sem:prefix}
+% \end{figure}
