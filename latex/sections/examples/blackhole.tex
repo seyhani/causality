@@ -46,17 +46,16 @@
     \end{equation*}
     We encoded the network in such a way that packets are forwarded
     along the longest possible loop-free paths.
-    In this network
-    we require that all forwarding actions must be of the
-    shape $\alpha\cdot\pi$ where $\pi(sw) = s$.
+    We define the property to require that all forwarding actions 
+    be of the shape $\alpha\cdot\pi$ where $\pi(sw) = s$.
     Thus, the $a \ra d$ and $c \ra b$ actions are unsafe behaviors.
     Again we have two events for each of the actions
-    $rcfg(p,1)$,$rcfg(q,1)$,$a \ra d$,$c \ra b$.
+    $rcfg(p,1)$, $rcfg(q,1)$, $a \ra d$, and $c \ra b$.
     So we consider the events $p_1,p_2$ with label $rcfg(p,1)$,
-    $q_1,q_2$ with label $rcfg(q,1)$,
-    $ad_1,ad_2$ with label $a \ra d$ and events $cb_1,cb_2$
+    events $q_1,q_2$ with label $rcfg(q,1)$,
+    events $ad_1,ad_2$ with label $a \ra d$ and events $cb_1,cb_2$
     with label $c\ra b$.
-    Figure \refname{fig:blacklist:es} show a part of the event
+    Figure \refname{fig:blacklist:es} shows a part of the event
     structure of $SDN$.
     \begin{figure}
         \centering

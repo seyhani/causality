@@ -1,5 +1,5 @@
 \section{Preliminaries}
-\subsection{Event Structure}
+\subsection{Event Structure \cite{es}}
 \begin{definition}[Event Structure]
     An event structure is a triple $\mr{E} = (E,\#,\vdash)$ where:
     \begin{enumerate}
@@ -61,48 +61,6 @@ We call such a sequence $e_0,e_1,...,e_n = e$ a \emph{securing} for $e$ in $x$.
 We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
 
 \begin{example}
-    Consider a network with two hosts $h_1$ and $h_2$ that are
-    connected to a single switch.
-    Assume that a packet arrives at the switch and then the switch
-    non-deterministically forwards the packets to either $h_1$ or $h_2$.
-    \begin{center}
-        \begin{tikzpicture}[node distance={25mm},main/.style = {draw, circle}]
-            \node[main] (H1) {$h_1$};
-            \node[main] (S) [right of=H1] {$s$};
-            \node[main] (H2) [right of=S] {$h_2$};
-            \draw[<-] (H1) -- (S);
-            \draw[->] (S) -- (H2);
-            \draw[<-] (S) -- (2.5,1.5);
-        \end{tikzpicture}
-    \end{center}
-    To model this scenario in event structures we can define an event
-    $p$ for the arrival of the packet at the switch and events $h_1$
-    and $h_2$ for forwarding the packet to the hosts.
-    The enabling relation is the least one for which we have:
-    \begin{align*}
-        \emptyset \vdash_{min} s,
-        \s{s} \vdash_{min} h_1,
-        \s{s} \vdash_{min} h_2,
-    \end{align*}
-    And we consider the conflict relation the least one that satisfies
-    $h_1 \# h_2$.
-    We illustrate configurations of event structures using the Hasse diagram of
-    the partial order of configurations ordered by inclusion:
-    \begin{center}
-        \begin{tikzpicture}[scale=0.8]
-            \crd[right]{0}{0}{$\emptyset$}
-            \crd{0}{2}{$\s{s}$}
-            \crd{-2}{3}{$\s{s,h_1}$}
-            \crd{2}{3}{$\s{s,h_2}$}
-            \draw [ultra thick] (0,0) -- (0,2);
-            \draw [ultra thick] (0,2) -- (-2,3);
-            \draw [ultra thick] (0,2) -- (2,3);
-        \end{tikzpicture}
-    \end{center}
-    We can see that non-determinism appears as branching in the partial order of configurations.
-\end{example}
-
-\begin{example}
     Consider another network in which two hosts are connected
     to a single switch.
     This time both hosts are sending a packet concurrently to the
@@ -111,7 +69,7 @@ We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
     drop the packets received from the other host due to capacity
     limit.
     \begin{center}
-        \begin{tikzpicture}[node distance={15mm},main/.style = {draw, circle}]
+        \begin{tikzpicture}[node distance={15mm},minimum width=7mm,main/.style = {draw, circle}]
             \node[main] (S) {$s$};
             \node[main] (H1) [above of=S,left of=S] {$h_1$};
             \node[main] (H2) [above of=S,right of=S] {$h_2$};
@@ -150,34 +108,8 @@ We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
     \end{center}
 \end{example}
 
-\begin{example}
-    Consider two parallel switches in a circuit where they are connected
-    to a light bulb.
-    An event may be enabled in more than one way even in a single configuration.
-    Assume initially both switches are open.
-    Closing either one enables the event of the bulb lighting up.
-    The configurations have the form:
-    \begin{center}
-        \begin{tikzpicture}[scale=0.8]
-            \crd{0}{0}{$\emptyset$}
-            \crd[left]{-2}{1}{$\s{0}$}
-            \crd[right]{2}{1}{$\s{1}$}
-            \crd[right]{0}{2}{$\s{0,1}$}
-            \crd{-2}{3}{$\s{0,b}$}
-            \crd{2}{3}{$\s{1,b}$}
-            \crd{0}{4}{$\s{0,1,b}$}
-            \draw [ultra thick] (0,0) -- (2,1);
-            \draw [ultra thick] (0,0) -- (-2,1);
-            \draw [ultra thick] (-2,1) -- (0,2);
-            \draw [ultra thick] (2,1) -- (0,2);
-            \draw [ultra thick] (-2,1) -- (-2,3);
-            \draw [ultra thick] (0,2) -- (0,4);
-            \draw [ultra thick] (2,1) -- (2,3);
-            \draw [ultra thick] (-2,3) -- (0,4);
-            \draw [ultra thick] (2,3) -- (0,4);
-        \end{tikzpicture}
-    \end{center}
-\end{example}
+\subsubsection{Stable Event Structure}
+
 We look for a special class of event structures for which there is a
 the partial order of causal dependency on each configuration.
 This can not be done so obviously for all event structures.
@@ -204,7 +136,7 @@ Suppose $X \vdash e$ and $X \subseteq x$.
 Then $X \cup \s{e} \in Con$, the enabling $X\vdash e$ is consistent.
 Take
 \begin{align*}
-    X_0 = \cap \s{Y ~|~ Y \subseteq X \wedge Y \vdash e}
+    X_0 = \bigcap \s{Y ~|~ Y \subseteq X \wedge Y \vdash e}
 \end{align*}
 Because $X$ is finite this is an intersection of a finite number of
 sets and we see by the stability axiom that $X_0 \vdash e$.
@@ -264,7 +196,7 @@ It follows that for stable event structures
     not including the element *, and $l$ is a function $l: E \rightarrow L$
     from its events to its labels.
 \end{definition}
-\subsection{Causal Model}
+\subsection{Causal Model \cite{hp}}
 
 A signature $\mathcal{S}$ is a tuple $(\mathcal{U},\mathcal{V},\mathcal{R})$,
 where $\mathcal{U}$ is a set of exogenous variables, $\mathcal{V}$
@@ -306,7 +238,7 @@ The function $\mathcal{F}$ defines a set of (\textit{modifiable}) \textit{struct
     Note that although the value of $F$ depends on the value $L$ and $ML$, the value of $L$ does not depend on the values of $F$ and $ML$.
 \end{example}
 
-\subsection{Causal Network}
+\subsubsection{Causal Network}
 We can describe a causal model $\m$ using a causal network.
 This is a graph with nodes corresponding to the random variables
 in $\mathcal{V}$ and an edge from a node labeled $X$ to one
@@ -327,7 +259,7 @@ form:
     \end{tikzpicture}
 \end{center}
 
-\subsection{Actual Cause}
+\subsubsection{Actual Cause}
 Given a signature $S= (\mathcal{U},\mathcal{V},\mathcal{R})$, a formula of the form $X =x$, for $X \in \mathcal{V}$ and $x \in \mathcal{R}(X)$, is called a \textit{primitive event}.
 A \textit{basic causal formula} is one of the form $[Y_1 \leftarrow y_, ..., Y_l\leftarrow y_k]\varphi$, where $\varphi$ is a Boolean combination of primitive events, $Y_1,...,Y_k$ are distinct variables in $\mathcal{V}$, and $y_i \in \mathcal{R}(Y_i)$.
 Such a formula is abbreviated as $[\vec{Y}\leftarrow\vec{y}]\varphi$.
@@ -386,7 +318,12 @@ That is, if the endogenous variables are $X_1,...,X_n$ then
 $(x_1,...,x_n) \in \mathcal{E}$ if $X_1 = x_1, ..., X_n=x_n$ is an
 allowable setting.
 We say that a setting of a subset of the endogenous variables is allowable if it can be extended to a setting in $\mathcal{E}$.
-We then modify the clauses AC2(a) and (b) in the definition of causality to restrict to allowable settings.
+
+In \cite{hp} there is no formal definition of the actual cause 
+in extended causal models.
+So, here we provide a new definition of the actual cause 
+in the context of extended causal models.
+
 
 \begin{definition}
     $\vec X = \vec x$ is an actual cause of $\varphi$ in $(M,\vec u)$ if the following three conditions hold:

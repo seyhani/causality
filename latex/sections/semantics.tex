@@ -1,4 +1,4 @@
-\section{Semantics of Communicating Processes}
+\section{Event Structure Semantics of DyNetKAT}
 \subsection{Normal DyNetKAT}
 We define the Normal DyNetKAT grammar as follows:
 \begin{align*}
@@ -6,7 +6,6 @@ We define the Normal DyNetKAT grammar as follows:
     D ::= & \bot ~|~ F;D ~|~ x?F;D ~|~ x!F;D ~|~ D \parallel D ~|~ D \oplus D ~|~ \delta_{\mc{L}}(D) \\
           & \mc{L} = \s{c ~|~ c ::= x?F ~|~ x!F}
 \end{align*}
-
 Lemma 9 in \cite{dynetkat} says that for a given guarded DyNetKAT term
 $p$ there exists a DyNetKAT term in normal form $q$ for which we have:
 \begin{equation*}
@@ -19,11 +18,14 @@ then labeled events structures.
 Using these definitions we provide a semantic for Normal DyNetKAT
 terms.
 
-\subsection{Empty event structure}
+\subsection{Composing Labeled Event Structures \cite{es}}
+
+\subsubsection{Empty event structure}
 We use $(\e,\e)$ to denote an empty labeled event structure with
 an empty set of events and an empty set of labels.
 
-\subsection{Prefix}
+
+\subsubsection{Prefix}
 
 \begin{definition}
     Let $(\mathcal{E},L,l)$ be a labelled event structure.
@@ -47,7 +49,8 @@ have the simple and expected characterization.
 (By $\mathcal{F}(E)$ of a labeled event structure $E$ we shall understand the set
 of configurations of the underlying event structure)
 
-\subsection{Sum}
+\subsubsection{Sum}
+
 \begin{definition}
     Let $\mr{E_0} = (E_0,\#_0,\vdash_0,L_0,l_0)$ and
     $\mr{E_1} = (E_1,\#_1,\vdash_1,L_1,l_1)$ be labelled event structures.
@@ -82,7 +85,7 @@ of configurations of the underlying event structure)
     $$
 \end{definition}
 
-\subsection{Product}
+\subsubsection{Product}
 In the product of two event structures, their events of synchronization are those pairs of events $(e_0,e_1)$, one from each event structure;
 if $e_0$ is labelled $\alpha_0$ and $e_1$ is labelled $\alpha_1$ the synchronization event is
 then labelled $(\alpha_0,\alpha_1)$.
@@ -114,7 +117,7 @@ and * is a sort of undefined.
     for all $e,e'$ we use $Con$ for the conflict-free finite sets,
     enabling relation $\vdash$ given by
     \begin{align*}
-         & X \vdash e \iff X \in Con \wedge e \in E \wedge        \\
+         & X \vdash e \iff X \in Con \wedge e \in E \wedge                  \\
          & (\pi_0(e)\text{ is defined } \Rightarrow \pi_0X\vdash_0\pi_0(e))
         \wedge (\pi_1(e)\text{ is defined } \Rightarrow \pi_1X\vdash_1\pi_1(e))
     \end{align*}
@@ -132,7 +135,7 @@ and * is a sort of undefined.
     \end{align*}
 \end{definition}
 
-\subsection{Restriction}
+\subsubsection{Restriction}
 
 \begin{definition}
 
@@ -144,7 +147,7 @@ and * is a sort of undefined.
     is the restriction of the original labeling function to the domain $L \cap \Lambda$.
 \end{definition}
 
-\subsection{Denotational Semantics}
+\subsection{Denotational Semantics of Normal DyNetKAT}
 
 \begin{definition}
     Let $\mc{A}$ be an alphabet of letters of the form
@@ -167,33 +170,86 @@ and * is a sort of undefined.
     Where $\mc{L}$ is a subset of $\mc{A}$.
 \end{definition}
 
-% \subsection{Examples}
-% Consider the following DyNetKAT program:
-% \begin{equation*}
-%     SDN = a \ra b; a \ra c
-% \end{equation*}
-% It encodes a network where a packet on $a$ is first forwarded to $b$
-% and the next packet is forwarded to $c$.
-% Let $\mr{E} = (E,\#,\vdash)$ be the event structure of $SDN$ so we have:
-% \begin{align*}
-%     E & = \s{ab,ac}                     \\
-%     \# = \e                             \\
-%       & \e \vdash ab, \s{ab} \vdash{ac} \\
-%     L & = \s{a\ra b, a\ra c}            \\
-%       & l(ab) = a\ra b, l(ac) = a \ra c
-% \end{align*}
-% Figure \ref{fig:ex:sem:prefix} shows the configurations of $\mr{E}$.
+\subsection{Examples}
+In the following, we provide some examples to illustrate
+how the prefix, sum, and product operators can be used to 
+compose event structures.
+For simplicity, here we use $a,b,c$ to denote DyNetKAT actions.
+
+\begin{example}
+    Let $a,b\in \mc{A}$ be some DyNetKAT actions and $a;b$ a
+    normal DyNetKAT term.
+    $\mr{E} = \sem{a;b}$ is an event structure
+    $(E,\#,\vdash,L,l)$ where:
+    \begin{align*}
+        E  & = \s{(0,a),(1,0,b)}                       \\
+        \# & = \emptyset                               \\
+           & \e \vdash (0,a), \s{(0,a)} \vdash (1,0,b) \\
+        L  & = \s{a,b}                                 \\
+           & l((0,a)) = a, l((1,0,b)) = b              
+    \end{align*}
+    The following diagram shows configurations of $\mr{E}$:
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \crd[right]{0}{0}{$\emptyset$}
+            \crd[right]{0}{1}{$\s{(0,a)}$}
+            \crd[right]{0}{2}{$\s{(0,a),(1,0,b)}$}
+            \draw [ultra thick] (0,0) -- (0,1);
+            \draw [ultra thick] (0,1) -- (0,2);
+        \end{tikzpicture}
+    \end{center}
+\end{example}
+
+\begin{example}
+    Let $a,b\in \mc{A}$ be some DyNetKAT actions and $a\oplus b$ a
+    normal DyNetKAT term.
+    $\mr{E} = \sem{a\oplus b}$ is an event structure
+    $(E,\#,\vdash,L,l)$ where:
+    \begin{align*}
+        E & = \s{(0,a),(1,b)}                \\
+          & (0,a) \# (1,b) , (1,b) \# (0,a)  \\
+          & \e \vdash (0,a), \e \vdash (1,b) \\
+        L & = \s{a,b}                        \\
+          & l((0,a)) = a, l((1,b)) = b       
+    \end{align*}
+    The following diagram shows configurations of $\mr{E}$:
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \crd[above]{0}{0}{$\emptyset$}
+            \crd[above]{-2}{1}{$\s{(0,a)}$}
+            \crd[above]{2}{1}{$\s{(1,b)}$}
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (0,0) -- (2,1);
+        \end{tikzpicture}
+    \end{center}
+\end{example}
 
 
-% \begin{figure}
-%     \centering
-%     \begin{tikzpicture}
-%         \crd[left]{0}{0}{$\emptyset$}
-%         \crd[left]{0}{1}{$\s{ab}$}
-%         \crd[left]{0}{2}{$\s{ab,ac}$}
-%         \draw [ultra thick] (0,0) -- (0,1);
-%         \draw [ultra thick] (0,1) -- (0,2);
-%     \end{tikzpicture}
-%     \caption{}
-%     \label{fig:ex:sem:prefix}
-% \end{figure}
+\begin{example}
+    Let $a,b\in \mc{A}$ be some DyNetKAT actions and $a\parallel b$ a
+    normal DyNetKAT term.
+    $\mr{E} = \sem{a\parallel b}$ is an event structure
+    $(E,\#,\vdash,L,l)$ where:
+    \begin{align*}
+        E  & = \s{(a,*),(*,b),(a,b)}                           \\
+        \# & = \e                                              \\
+           & \e \vdash (a,*), \e \vdash (*,b),\e \vdash (a,b)  \\
+        L  & = \s{(a,*),(*,b),(a,b)}                           \\
+           & l((a,*)) = (a,*), l((*,b)) = (*,b),l((a,b))=(a,b) 
+    \end{align*}
+    The following diagram shows configurations of $\mr{E}$:
+    \begin{center}
+        \begin{tikzpicture}[scale=0.8]
+            \crd[above]{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{(a,*)}$}
+            \crd[right]{2}{1}{$\s{(*,b)}$}
+            \crd[above]{0}{2}{$\s{(a,*),(*,b)}$}
+            \crd[above]{2}{3}{$\s{(a,b)}$}
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (2,1) -- (0,2);
+            \draw [ultra thick] (-2,1) -- (0,2);
+            \draw [ultra thick] (0,0) -- (2,3);
+        \end{tikzpicture}
+    \end{center}
+\end{example}

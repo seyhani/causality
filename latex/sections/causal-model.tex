@@ -1,4 +1,6 @@
-\section{Causal Model of Event Structures}
+\section{Causal Model of Unsafe Behavior in Event Structure}
+
+\subsection{Causal Model of Event Structure}
 Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure where
 $E = \s{e_1, e_2, ...,e_n}$ we define the causal model
 $\mathfrak{M}(\mr{E}) = (\mc{S},\mc{F},\mc{E})$
@@ -13,7 +15,6 @@ We define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
                   & \cup \s{M_{s,e} | s \in \mathcal{P}(E),
         e \in E. e \not \in s } \cup \s{PV}
 \end{align*}
-
 For each variable $x \in \mathcal{V}$ we define $\vec V_x$ as a vector
 of all variables in $\mathcal{V}$ excluding $x$.
 For $x,y \in \mathcal{P}(E)$ we say $x$ is covered by $y$ written $ x \prec y$ iff:
@@ -58,7 +59,6 @@ Where we have:
     \neg M_{s',e}
     \right)
 \end{align*}
-
 Let $\mathbb{E}$ be the all triples of the form
 $(E,\#',\vdash')$ on the set of events $E$ where
 $\#' \subseteq E \times E$ and
@@ -79,21 +79,21 @@ $ES(\vec v) = (E,\#',\vdash')$ we have:
     \forall s \in \mathcal{P}(E), e \in E.  s \vdash' e
      & \iff \vec{v}(EN_{s,e}) = \T
 \end{align*}
-
 We define $\mathcal{E}$, the set of all allowable
 settings of the endogenous variables, to be the set of
 values such as $\vec v'$ for which $ES(\vec v)$ is an
 event structure.
 
-Finally, we encode the unsafe behavior or property violation
+Finally, we encode the property violation or unsafe behaviors
 as a predicate on the set of configurations of the
 event structure derived by the causal model.
 
-Regarding the extended causal model we can define the
-actual cause of unsafe behavior in an event structure
-as follows:
+\subsection{Actual Cause of Unsafe Behavior}
 
-\subsection{Actual Cause of Property Violation}
+Using the definition of the actual cause in the extended causal 
+model, we can rewrite the definition for unsafe behaviors in 
+event structures as follows:
+
 \begin{definition}
     Let $\mr{E} = (E,\#,\vdash)$ be an event structure and
     $\mc{M}$ be the causal model of a property violation in

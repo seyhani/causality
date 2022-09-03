@@ -20,7 +20,7 @@
     \end{figure}
     Blacklisted nodes are nodes in the network that must not
     be reachable \cite{network-abstractions}.
-    Let's assume the network in \refname{fig:blacklist} as
+    Let's assume the network in figure \ref{fig:blacklist} as
     an example where the node $d$ is blacklisted.
     For simplicity we assume that we require
     $d$ not reachable only from $a$.
@@ -46,10 +46,10 @@
     \end{equation*}
     We assume that there are two concurrent processes for updating
     the switches $a$ and $c$.
-    Let we use $p$ and $q$ to denote $rcfg(p!1,p?1)$ and
-    $rcfg(q!1,q?1)$ respectively.
+    Let we use $p$ and $q$ to denote $rcfg(p,1)$ and
+    $rcfg(q,1)$ respectively.
     Thus, $p$ and $q$ replace the solid green and orange
-    paths in \ref{fig:blacklist} with dashed paths respectively.
+    paths in the network with dashed paths respectively.
     \begin{figure}
         \centering
         \begin{tikzpicture}[node distance={35mm},
@@ -84,12 +84,12 @@
     \end{equation*}
     The function above sets the value of $PV$ to true if $ES(\vec v)$ 
     contains a configuration with an event labeled $a \ra d$.
-    In $SDN$ there are two order execution for $p$ and $q$ so
+    In $SDN$ there are two order execution for $p$ and $q$ so,
     there are two events for each of these labels in $\mr{E}$ 
-    and thus there are two events with the label $a \ra b$ as well.
-    So let consider events $p_1,p_2$ with label $p$,
-    $q_1,q_2$ with label $q$ and $ad_1,ad_2$ with label $a \ra d$ 
-    in $E$.
+    and thus, there are two events with the label $a \ra b$ as well.
+    So, let's consider events $p_1,p_2$ with label $p$,
+    events $q_1,q_2$ with label $q$ and events $ad_1,ad_2$ 
+    with label $a \ra d$ in $E$.
     \begin{figure}
         \centering
         \begin{tikzpicture}
@@ -123,33 +123,35 @@
         \vec V = \vec v'
     \end{equation*}
     Obviously, neither $\s{p_1,q_1,ad_1}$ nor $\s{p_2,q_2,ad_2}$ 
-    are not configurations of $ES(\vec v')$ because there we have
-    $p_1 \# q_1$ and $p_2 \# q_2$. 
-    So we can claim that:
+    are not configurations of $ES(\vec v')$ because we have
+    $p_1 \# q_1$ and $p_2 \# q_2$.
+    So, we can claim that:
     \begin{equation*}
         \mc{M} \vDash [C_{p_1,q_1} \la \T, C_{p_2,q_2} \la T] 
         PV = \F
     \end{equation*}
     Which satisfies the AC2.a condition.
 
-    Now for AC2.b we need to consider contingencies where we have
-    set $C_{p_1,q_1}$ to $\F$, $C_{p_2,q_2}$ to $\T$ and resetting 
-    values of any subset of other variables to their original values.
+    Now, for the AC2.b condition, we need to consider contingencies 
+    where we set $C_{p_1,q_1}$ to $\F$, $C_{p_2,q_2}$ to $\T$ and 
+    resetting values of any subset of other variables to their 
+    original values.
     If we set $C_{p_1,q_1}$ to $\F$ it means that we removed
     the conflict between $p_1$ and $q_1$ so $\s{p_1,q_1,ad_1}$ becomes
-    a configuration of the $ES$ output again.
+    a configuration of the $ES(\vec v)$ again.
     Note that value of $C_{p_2,q_2}$ has no effect on this.
-    Formally this means
+    Formally, this means that:
     \begin{equation*}
         \mc{M} \vDash [C_{p_1,q_1} \la \F, C_{p_2,q_2} \la T
             ,\vec Z' \la \vec z^*
         ] \vec V = \vec v \wedge 
         (\vec v \in \mc{E} \Rightarrow PV = \T)
     \end{equation*}
-    Thus we can conclude that AC2.b is also satisfied and since the 
-    cause is a single conjunct and thus satisfies the AC3, 
-    the lack of conflict between $p_1$ and $q_1$ is an actual of 
-    the property violation. 
+    Thus, we can conclude that the AC2.b condition is also satisfied 
+    and since the cause is a single conjunct the AC3 condition is
+    satisfied too.
+    So, we can conclude that the lack of conflict between $p_1$ and 
+    $q_1$ is an actual of the property violation. 
 
 
 \end{example}
