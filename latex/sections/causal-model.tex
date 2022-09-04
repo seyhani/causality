@@ -3,20 +3,21 @@
 \subsection{Causal Model of Event Structure}
 Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure where
 $E = \s{e_1, e_2, ...,e_n}$ we define the causal model
-$\mathfrak{M}(\mr{E}) = (\mc{S},\mc{F},\mc{E})$
-where
+$\mc{M} = (\mc{S},\mc{F},\mc{E})$ of unsafe behavior
+in $\mr{E}$ where
 $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$.
-We define $\mathcal{U}$ to be empty and $\mathcal{V}$ as follows:
+We define $\mathcal{U}$ to be empty and $\mathcal{V}$
+consisting of boolean variables as follows:
 \begin{align*}
-    \mathcal{V} = & \s{C_{e_i,e_j} |  1 \leq i < j \leq n.
-    e_i \in E \amp e_j \in E}                                \\
-                  & \cup \s{EN_{s,e} | s \in \mathcal{P}(E),
+    \mathcal{V} = & \s{C_{e_i,e_j} ~|~  1 \leq i < j \leq n.
+    e_i \in E \wedge e_j \in E}                                \\
+                  & \cup \s{EN_{s,e} ~|~ s \in \mathcal{P}(E),
     e \in E. e \not \in s }                                  \\
-                  & \cup \s{M_{s,e} | s \in \mathcal{P}(E),
+                  & \cup \s{M_{s,e} ~|~ s \in \mathcal{P}(E),
         e \in E. e \not \in s } \cup \s{PV}
 \end{align*}
-For each variable $x \in \mathcal{V}$ we define $\vec V_x$ as a vector
-of all variables in $\mathcal{V}$ excluding $x$.
+For each variable $X \in \mathcal{V}$ we define $\vec V_X$ 
+as a vector of all variables in $\mathcal{V} \setminus \s{X}$.
 For $x,y \in \mathcal{P}(E)$ we say $x$ is covered by $y$ written $ x \prec y$ iff:
 \begin{align*}
     x \subseteq y \wedge x \neq y \wedge
@@ -26,7 +27,7 @@ For $x,y \in \mathcal{P}(E)$ we say $x$ is covered by $y$ written $ x \prec y$ i
 We define the functions in $\mathcal{F}$ as follows:
 $$
     \f{C_{e,e'}} = \begin{cases}
-        true  & \text{ if } e \# e' \amp e' \# e \\
+        true  & \text{ if } e \# e' \\
         false & \text{ otherwise }
     \end{cases}
 $$
@@ -39,7 +40,7 @@ $$
 \begin{align*}
     \f{EN_{s,e}} & =
     \left(
-    M_{s,e} \vee
+    M_{s,e} \bigvee
     \left(
     \bigvee_{s'\prec s}EN_{s',e}
     \right)
@@ -68,9 +69,8 @@ $ES: \times_{V \in \mc{V}\setminus \s{PV}} \mc{R}(V) \rightarrow \mathbb{E}$ whi
 that can be derived from the values of the endogenous variables
 in the model excluding $PV$.
 Let $\vec v$ be a vector of the values of the variables
-in $\mc{V} \setminus \s{PV}$.
-Let $\vec v(V)$ be the value of $V$ in $\vec v$ for each
-$V \in \mc{V} \setminus \s{PV}$.
+in $\mc{V} \setminus \s{PV}$ and $\vec v(V)$ be the value of
+ $V$ in $\vec v$ for each $V \in \mc{V} \setminus \s{PV}$.
 We define the function $ES$ so that if
 $ES(\vec v) = (E,\#',\vdash')$ we have:
 \begin{align*}
@@ -80,13 +80,13 @@ $ES(\vec v) = (E,\#',\vdash')$ we have:
      & \iff \vec{v}(EN_{s,e}) = \T
 \end{align*}
 We define $\mathcal{E}$, the set of all allowable
-settings of the endogenous variables, to be the set of
+settings of the endogenous variables, to be the vector of
 values such as $\vec v'$ for which $ES(\vec v)$ is an
 event structure.
 
 Finally, we encode the property violation or unsafe behaviors
 as a predicate on the set of configurations of the
-event structure derived by the causal model.
+event structure returned by $ES$.
 
 \subsection{Actual Cause of Unsafe Behavior}
 
@@ -96,11 +96,11 @@ event structures as follows:
 
 \begin{definition}
     Let $\mr{E} = (E,\#,\vdash)$ be an event structure and
-    $\mc{M}$ be the causal model of a property violation in
+    $\mc{M}$ be the causal model of an unsafe behavior in
     $\mr{E}$ where unsafe behavior is specified as the
     function $F_{PV}$ in $\mc{M}$.
     We say $\vec X = \vec x$ is an actual cause of 
-    the property violation in $\mr{E}$ if the following
+    the unsafe behavior in $\mr{E}$ if the following
     conditions hold:
     \begin{itemize}
         \item  \textbf{AC1.} $M\models \vec X = \vec x

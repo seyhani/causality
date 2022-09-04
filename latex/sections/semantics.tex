@@ -1,4 +1,9 @@
 \section{Event Structure Semantics of DyNetKAT}
+In this section, first, we introduce Normal DyNetKAT grammar.
+Then we define different constructions on labeled event structures
+which will be used to provide denotational semantics for Normal
+DyNetKAT terms.
+
 \subsection{Normal DyNetKAT}
 We define the Normal DyNetKAT grammar as follows:
 \begin{align*}
@@ -13,24 +18,19 @@ $p$ there exists a DyNetKAT term in normal form $q$ for which we have:
 \end{equation*}
 where $E_{DNK}$ is DyNetKAT axiom system.
 
-In the following we describe how to compose event structures and
-then labeled events structures.
-Using these definitions we provide a semantic for Normal DyNetKAT
-terms.
-
-\subsection{Composing Labeled Event Structures \cite{es}}
-
-\subsubsection{Empty event structure}
+\subsection{Constructions on Labeled Event Structures \cite{es}}
 We use $(\e,\e)$ to denote an empty labeled event structure with
 an empty set of events and an empty set of labels.
-
+In the following, we define four types of constructions on labeled 
+event structures.
 
 \subsubsection{Prefix}
 
 \begin{definition}
-    Let $(\mathcal{E},L,l)$ be a labelled event structure.
+    Let $(\mr{E},L,l)$ be a labelled event structure.
     Let $\alpha$ be a label.
-    Define $\alpha(\mathcal{E},L,l)$ to be a labelled event structure $(\alpha \mathcal{E},L',l')$
+    Define $\alpha(\mr{E},L,l)$ to be a labelled event structure 
+    $(\alpha \mr{E},L',l')$
     with labels:
     \begin{align*}
         L' = \s{\alpha} \cup L
@@ -42,12 +42,8 @@ an empty set of events and an empty set of labels.
             l(e)   & \text{if } e' = (1,e)
         \end{cases}
     $$
-    for all $e' \in \mathcal{E'}$.
+    for all $e' \in E'$.
 \end{definition}
-The configurations of $\alpha E$, a prefixed labeled event structure,
-have the simple and expected characterization.
-(By $\mathcal{F}(E)$ of a labeled event structure $E$ we shall understand the set
-of configurations of the underlying event structure)
 
 \subsubsection{Sum}
 
@@ -159,11 +155,11 @@ and * is a sort of undefined.
     labels in $\mc{A}$ as follows:
     \begin{align*}
         \sem{\bot}      & = (\emptyset,\emptyset)                  \\
-        \sem{\alpha; t} & = \alpha(\sem{t})                        \\
+        \sem{\alpha; t} & = \alpha\sem{t}                        \\
         \sem{t_1 \oplus t_2}
                         & = \sem{t_1} + \sem{t_2}                  \\
         \sem{\delta_{\mc{L}}(t)}
-                        & = \sem{t} \lceil \mc{A} \setminus \mc{L} \\
+                        & = \sem{t} \lceil (\mc{A} \setminus \mc{L}) \\
         \sem{t_1 \parallel t_2}
                         & = \sem{t_1} \times \sem{t_2}
     \end{align*}
