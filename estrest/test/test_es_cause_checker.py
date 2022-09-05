@@ -6,7 +6,7 @@ from causality.event_structure_cause_checker import EventStructureCausalChecker
 from event import Event
 from event_structure import ValidEventStructureTerm
 from event_structure.valid_event_structure import ValidEventStructure
-from mapper.event_structure_var import MinEnablingVar
+from mapper.event_structure_var import MinEnablingVar, ConflictVar
 
 
 class TestCausalModel(unittest.TestCase):
@@ -17,14 +17,26 @@ class TestCausalModel(unittest.TestCase):
         cd = ValidEventStructureTerm(set()) \
             .prefix('d').prefix('c')
         es = ab.plus(cd)
-        es.build_configurations()
+
         a = es.find_events_by_label('a').pop()
         b = es.find_events_by_label('b').pop()
-        v = MinEnablingVar({b}, a)
-        cause = PrimitiveEvent(v, False)
+        c = es.find_events_by_label('c').pop()
+        d = es.find_events_by_label('d').pop()
+
+        cause = PrimitiveEvent(MinEnablingVar({b}, a), False)
         witness = Witness(None, None, True)
         checker = EventStructureCausalChecker(es, [{a, b}], cause, witness)
         self.assertTrue(checker.is_cause())
+
+        cause = PrimitiveEvent(ConflictVar(a, b), False)
+        witness = Witness(None, None, True)
+        checker = EventStructureCausalChecker(es, [{a, b}], cause, witness)
+        self.assertTrue(checker.is_cause())
+
+        cause = PrimitiveEvent(MinEnablingVar({d}, c), False)
+        witness = Witness(None, None, True)
+        checker = EventStructureCausalChecker(es, [{a, b}], cause, witness)
+        self.assertFalse(checker.is_cause())
 
     def test_recursive_model(self):
         a, b, c = Event('a'), Event('b'), Event('c')
