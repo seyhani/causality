@@ -1,0 +1,157 @@
+\section{Event Structure}
+
+\begin{frame}{Event Structure}
+    \begin{definition}[Event Structure]
+        An event structure is a triple $\mr{E} = (E,\#,\vdash)$ where:
+        \begin{itemize}
+            \item $E$ is a set of events
+            \item \# is a binary symmetric, irreflexive relation on $E$,
+                  the conflict relation.
+                  We shall write $Con$ for the set of conflict-free subsets of $E$,
+                  i.e. those finite subsets $X \subseteq E$ for which:
+                  $\forall e,e' \in X . \neg (e\#e')$
+            \item $\vdash \subseteq Con \times E$ is the enabling relation which satisfies:
+                  $ X \vdash e \ \& \ X \subseteq Y \in Con \Rightarrow Y \vdash e$
+        \end{itemize}
+    \end{definition}
+    $\vdash_{min} \subseteq Con \times E$ is the minimal enabling relation
+    \begin{equation*}
+        X \vdash_{min} e \iff X \vdash e \wedge
+        ( \forall Y \subseteq X . Y \vdash e \Rightarrow Y = X )
+    \end{equation*}
+\end{frame}
+
+\begin{frame}{Event Structure: Configuration}
+    \begin{definition}[Configuration]
+        \label{conf}
+        Let $\mr{E} = (E,\#,\vdash)$ be an event structure.
+        Define a configuration of $\mr{E}$ to be a subset of events $x \subseteq E$ which is
+        \begin{itemize}
+            \item conflict-free: $x \in Con$
+            \item secured: $\forall e \in x. \exists e_0,...,e_n \in x. e_n = e \ \wedge
+                      \forall i \leq n. \s{e_0,...,e_{i-1}} \vdash e_i$
+        \end{itemize}
+    \end{definition}
+\end{frame}
+
+\begin{frame}{Labeled Event Structure}
+    \begin{definition}
+        A labelled event structure consists of $(E,\#,\vdash,L,l)$ where
+        $(E,\#,\vdash)$ is an event structure, $L$ is a set of labels,
+        not including the element *, and $l$ is a function $l: E \rightarrow L$
+        from its events to its labels.
+    \end{definition}
+\end{frame}
+
+\begin{frame}{Event Structure: Prefix}
+    Let $(\mr{E},L,l)$ be a labelled event structure.
+    Let $\alpha$ be a label.
+    Define $\alpha(\mr{E},L,l)$ to be a labelled event structure
+    $(\alpha \mr{E},L',l')$
+    with labels:
+    \begin{align*}
+        L' = \s{\alpha} \cup L
+    \end{align*}
+    and
+    $$
+        l'(e') = \begin{cases}
+            \alpha & \text{if } e' = (0,\alpha) \\
+            l(e)   & \text{if } e' = (1,e)
+        \end{cases}
+    $$
+    for all $e' \in E'$.
+\end{frame}
+
+\begin{frame}{Event Structure: Sum}
+    \begin{definition}
+        Let $\mr{E_0} = (E_0,\#_0,\vdash_0,L_0,l_0)$ and
+        $\mr{E_1} = (E_1,\#_1,\vdash_1,L_1,l_1)$ be labelled event structures.
+        Their sum $\mr{E_0} + \mr{E_1}$, is defined to be the structure $(E,\#,\vdash,l)$
+        with events $E = \s{(0,e)|e \in E_0} \cup \s{(1,e)|e \in E_1}$,
+        the disjoint union of sets $E_0$ and $E_1$,
+        with injections $\iota_k: E_k \rightarrow E$, given by
+        $\iota_k(e) = (k,e)$, for $k=0,1$, conflict relation
+        \begin{align*}
+            e \# e' \iff & \exists e_0,e_0'. e = \iota_0(e_0)
+            \wedge e' = \iota_0(e_0') \wedge e_0 \#_0e_0'                       \\
+                         & \text{or } \exists e_1,e_1'. e = \iota_1(e_1) \wedge
+            e' = \iota_1(e_1') \wedge e_1 \#_1 e_1'                             \\
+                         & \text{or } \exists e_0,e_1.(e=\iota_1(e_0)
+            \wedge e' =\iota_1(e_1)) \text{ or }
+            (e'=\iota_1(e_0) \wedge e =\iota_1(e_1))
+        \end{align*}
+        and enabling relation
+        \begin{align*}
+            X \vdash e \iff & X \in Con \wedge e \in E \wedge                   & \\
+                            & (\exists X_0 \in Con_0,e_0 \in E_0.X = \iota_0X_0
+            \wedge e = \iota_0(e_0) \wedge X_0 \vdash_0 e_0) \text{ or }          \\
+                            & (\exists X_1 \in Con_1,e_1 \in E_1.X = \iota_1X_1
+            \wedge e = \iota_1(e_1) \wedge X_1 \vdash_1 e_1)                      \\
+        \end{align*}
+        We define the set of labels as $L_0 \cup L_1$ and the labelling function as:
+        $$
+            l(e) = \begin{cases}
+                l_0(e_0) & \text{ if } e = \iota_0(e_0) \\
+                l_1(e_1) & \text{ if } e = \iota_1(e_1)
+            \end{cases}
+        $$
+    \end{definition}
+\end{frame}
+
+\begin{frame}{Event Structure: Product}
+    \begin{definition}
+        Let $\mr{E_0} = (E_0,\#_0,\vdash_0,L_0,l_0)$ and
+        $\mr{E_1} = (E_1,\#_1,\vdash_1,L_1,l_1)$
+        be labeled event structures.
+        Define their product $\mr{E_0} \times \mr{E_1}$ to be the structure $\mr{E} = (E,\#,\vdash,L,l)$
+        consisting of events $E$ of the form
+        \begin{align*}
+            E_0 \times_* E_1 = &
+            \s{(e_0,*)|e_0 \in E_0}
+            \cup \s{(*,e_1)|e_1 \in E_1} \\
+            & \cup \s{(e_0,e_1)| e_0 \in E_0 \wedge e_1 \in E_1}
+        \end{align*}
+        with projections $\pi_i : E \rightarrow_* E_i$,
+        given by $\pi_i(e_0,e_1) = e_i$, for $i=0,1$, reflexive conflict relation $\doublevee$ given by
+        \begin{align*}
+            e \doublevee e' \iff \pi_0(e) \doublevee_0 \pi_0(e') \text{ or }
+            \pi_1(e) \doublevee_1 \pi_1(e')
+        \end{align*}
+        for all $e,e'$ 
+    \end{definition}
+\end{frame}
+
+\begin{frame}{Event Structure: Product}
+    \begin{definition}
+        We use $Con$ for the conflict-free finite sets,
+        enabling relation $\vdash$ given by
+        \begin{align*}
+             & X \vdash e \iff X \in Con \wedge e \in E \wedge                  \\
+             & (\pi_0(e)\text{ is defined } \Rightarrow \pi_0X\vdash_0\pi_0(e)) \\
+             & \wedge (\pi_1(e)\text{ is defined } \Rightarrow \pi_1X\vdash_1\pi_1(e))
+        \end{align*}
+        Its set of labels is
+        \begin{align*}
+            L_0 \times_* L_1 = & \s{ (\alpha_0,*)|\alpha_0 \in L_0}
+            \cup \s{(*,\alpha_1)|\alpha_1 \in L_1} \\
+            & \cup \s{(\alpha_0,\alpha_1)|\alpha_0 \in L_0 \wedge \alpha_1 \in L_1}
+        \end{align*}
+        with projections: $\lambda_i: E \rightarrow_* E_i$ given by
+        $\lambda_i(\alpha_0,\alpha_1) = \alpha_i$, for $i=0,1$.
+        Its labeling function is defined to act on an event $e$ so
+        \begin{align*}
+            l(e) = (l_0\pi_0(e),l_1\pi_1(e))
+        \end{align*}
+    \end{definition}
+\end{frame}
+
+\begin{frame}{Event Structure: Restriction}
+    \begin{definition}
+        Let $\mr{E} = (E,\#,\vdash,L,l)$ be a labelled event structure.
+        Let $\Lambda$ be a subset of labels.
+        Define the restriction $\mr{E}\lceil \Lambda$ to be $(E',\#',\vdash',L\cap \Lambda,l')$
+        where $(E',\#',\vdash')$ is the restriction of $(E,\#,\vdash)$
+        to events $\s{e \in E|l(e) \in \Lambda}$ and the labeling function $l'$
+        is the restriction of the original labeling function to the domain $L \cap \Lambda$.
+    \end{definition}
+\end{frame}

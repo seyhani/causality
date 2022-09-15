@@ -2,21 +2,13 @@
 
 \usepackage{preamble}
 
-\defbeamertemplate{footline}{centered page number}
-{%
-  \hspace*{\fill}%
-  \usebeamercolor[fg]{page number in head/foot}%
-  \usebeamerfont{page number in head/foot}%
-  \insertpagenumber\,/\,\insertpresentationendpage%
-  \hspace*{\fill}\vskip2pt%
-}
-
-\setbeamertemplate{footline}[centered page number]
-\setbeamertemplate{navigation symbols}{}
-
 \date{\today}
-\title{Causality in DyNetKAT}
+
+\title{Explaining Failures in Software Defined Networks 
+Using Causality }
+
 \author{Amir Hossein Seyhani}
+
 \institute{
     University of Tehran \linebreak \  \\
     \includegraphics[height=1.5cm]{./resources/ut.png}
@@ -31,29 +23,30 @@
 
 \frame[plain]{\titlepage}
 
+\begin{frame}{Outline}
+    \tableofcontents
+\end{frame}
 
-% \begin{frame}{Outline}
-%     \tableofcontents
-% \end{frame}
+\input{sections/intro.tex}
 
-\section{Introduction}
+\input{sections/causal.tex}
 
-% \input{examples/congestion.tex}
-\input{examples/intrusion.tex}
-% \input{examples/firewall.tex}
+\input{sections/netkat.tex}
 
-\input{teias/intro.tex}
+\input{sections/dynetkat.tex}
 
-\section{Example}
+\input{sections/es.tex}
 
-\input{teias/blacklist.tex}
+\input{sections/semantic.tex}
 
-\input{teias/loop.tex}
+\input{sections/es-example.tex}
 
-\input{teias/congestion.tex}
+\input{sections/es-model.tex}
 
-\input{teias/blackhole.tex}
+\input{sections/loop.tex}
 
-\input{teias/composition.tex}
+\input{sections/implement.tex}
+
+\input{sections/related.tex}
 
 \end{document}

@@ -1,0 +1,53 @@
+\section{Overview}
+
+\begin{frame}{Motivation: Example}
+    \begin{figure}
+        \centering
+        \begin{tikzpicture}[node distance={20mm},main/.style = {draw, circle,minimum size=8mm}]
+            \node[main] (a)  {$a$};
+            \node[main] (b) [above of=a]  {$b$};
+            \node[main] (c) [left of=b] {$c$};
+            \node[main] (d)  [below of=c] {$d$};
+            \draw [->,green,thick] (a) -- (b);
+            \draw [->,green,thick] (b) edge[bend right] (c);
+            \draw [->,orange,thick] (c) -- (d);
+            \draw [->,green,thick,dashed] (a) -- (c);
+            \draw [->,orange,thick,dashed] (c) -- (b);
+            \draw [->,orange,thick,dashed] (b) -- (d);
+            \draw pic["$\alpha$",
+            draw=blue,->,thick,angle eccentricity=1.2,
+            angle radius=1.2cm] {angle=b--a--c} ;
+            \draw pic["$\beta$",
+            draw=blue,<-,thick,angle eccentricity=1.2,
+            angle radius=0.8cm] {angle=b--c--d} ;
+        \end{tikzpicture}
+    \end{figure} 
+    \begin{itemize}
+        \item Two concurrent updates $\alpha$ and $\beta$
+        \item Assume that $\beta$ happen followed by the arrival of a packet on $b$
+        \item Loop-freedom property is violated
+        \item \textbf{Why} the property is violated?
+        \item Use the actual cause of the violation to answer to this question
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Actual Cause of Property Violation in DyNetKAT}
+    \begin{itemize}
+        \item DyNetKAT: a software defined network programming language
+        \item Event Structure: a non-interleaving computation model of processes
+        \item Actual Cause: a mathematical formulation for explaining phenomenons
+        \item Goal: reason about the actual cause of property violation 
+        in the DyNetKAT programs using event structure as a semantic
+        model
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Contributions}
+    \begin{itemize}
+        \item Event structure semantic for Normal DyNetKAT terms
+        \item Event structure semantic for unsafe behavior (property violation)
+        \item Causal model of unsafe behavior in event structure
+        \item Applying the causal reasoning on some categories of network properties
+        \item Implementing a prototype of EStResT
+    \end{itemize}
+\end{frame}
