@@ -1,0 +1,37 @@
+\ProvidesPackage{custom}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz} 
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usepackage{forest}
+\usepackage{forest}
+\usepackage[final]{listings} 
+\usepackage{MnSymbol}
+\usepackage{ stmaryrd }
+\usepackage{hyperref}
+\usepackage[toc,page]{appendix}
+\usepackage{import}
+\usepackage{comment}
+\usepackage{mathrsfs}
+\usepackage{eufrak}
+\usepackage{xcolor}
+
+\allowdisplaybreaks
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[subsection]
+\newtheorem{proposition}{Proposition}
+\newtheorem{example}{Example}[subsection]
+\newtheorem{notion}{Notion}
+\newtheorem{theorem}{Theorem}
+
+\input{commands.tex}

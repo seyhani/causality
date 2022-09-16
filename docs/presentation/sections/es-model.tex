@@ -1,0 +1,97 @@
+\section{Causal Model}
+
+\begin{frame}{Causal Model}
+    Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure where
+    $E = \s{e_1, e_2, ...,e_n}$ we define the causal model
+    $\mc{M} = (\mc{S},\mc{F},\mc{E})$ of unsafe behavior
+    in $\mr{E}$ where
+    $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$.
+    We define $\mathcal{U}$ to be empty and $\mathcal{V}$
+    consisting of boolean variables as follows:
+    \begin{align*}
+        \mathcal{V} = & \s{C_{e_i,e_j} ~|~  1 \leq i < j \leq n.
+        e_i \in E \wedge e_j \in E}                                \\
+                      & \cup \s{EN_{s,e} ~|~ s \in \mathcal{P}(E),
+        e \in E. e \not \in s }                                    \\
+                      & \cup \s{M_{s,e} ~|~ s \in \mathcal{P}(E),
+            e \in E. e \not \in s } \cup \s{PV}
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Causal Model: Functions}
+    We define the functions in $\mathcal{F}$ as follows:
+    $$
+        \f{C_{e,e'}} = \begin{cases}
+            true  & \text{ if } e \# e' \\
+            false & \text{ otherwise }
+        \end{cases}
+    $$
+    $$
+        \f{M_{s,e}} = \begin{cases}
+            Min(s,e) \wedge Con(s) & \text{ if } s \vdash_{min} e \\
+            false                  & \text{ otherwise }
+        \end{cases}
+    $$
+    \begin{align*}
+        \f{EN_{s,e}} & =
+        \left(
+        M_{s,e} \bigvee
+        \left(
+        \bigvee_{s'\prec s}EN_{s',e}
+        \right)
+        \right)
+        \bigwedge
+        Con(s)                    \\
+        Con(s)       & =   \left(
+        \bigwedge_{ 1\leq j<j' \leq n \wedge e_j,e_{j'} \in s}
+        \neg C_{e_j,e_{j'}}
+        \right)                   \\
+        Min(s,e)     & = \left(
+        \bigwedge_{s' \subseteq E. (s' \subset s \vee s \subset s')
+            \wedge e \notin s'}
+        \neg M_{s',e}
+        \right)
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Causal Model: Unsafe Behavior}
+    Let $\mathbb{E}$ be the all triples of the form
+    $(E,\#',\vdash')$ on the set of events $E$ where:
+    \begin{itemize}
+        \item  $\#' \subseteq E \times E$
+        \item $\vdash' \subseteq \mc{P}(E) \times E$
+    \end{itemize}
+    \vspace{\baselineskip}
+    We define a function to derive an event structure from values of the variables:
+    \begin{equation*}
+      ES: \times_{V \in \mc{V}\setminus \s{PV}} \mc{R}(V) \rightarrow \mathbb{E}  
+    \end{equation*}
+    For which if $ES(\vec v) = (E,\#',\vdash')$ we have:
+    \begin{align*}
+        \forall e,e' \in E. e \#' e' \wedge e' \#' e
+         & \iff \vec{v}(C_{e,e'}) = \T \\
+        \forall s \in \mathcal{P}(E), e \in E.  s \vdash' e
+         & \iff \vec{v}(EN_{s,e}) = \T
+    \end{align*}
+    We define the set of all allowable settings to be the vector of
+    values such as $\vec v'$ where $ES(\vec v)$ is an
+    event structure.
+\end{frame}
+
+\begin{frame}
+    \begin{itemize}
+        \item The $ES$ is an auxiliary function that helps us to specify the 
+    unsafe behavior
+        \item We specify unsafe behavior using the configurations of the $ES$
+        \item Unsafe behavior as a set of unsafe configurations:
+        \begin{equation*}
+            \label{eq:unsafe}
+            \f{PV} = \bigvee_{c \in C} c \in \mc{F}(ES(\vec v))
+        \end{equation*}
+        \item Unsafe behavior using a set of unsafe labels:
+        \begin{align*}
+            \f{PV} & = \exists c \in \mc{F}(ES(\vec v)).\exists e \in c.
+            l(e) \in U
+        \end{align*}
+    \end{itemize}
+\end{frame}

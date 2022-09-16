@@ -1,0 +1,39 @@
+\section{Composition of Actual Cause}
+Let $\mr{E} = (E,\#,\vdash)$ and $C$ be a set of events.
+\begin{equation*}
+    \mr{E} \vDash C \iff C \subseteq E \wedge  C \in \mc{F}(\mr{E})
+\end{equation*}
+
+
+Let $\mr{E}_0 = (E_0,\#_0,\vdash_0)$ and
+$\mr{E}_1 = (E_1,\#_1,\vdash_1)$ be event structures.
+Let $\mr{E} = (E,\#,\vdash)$ be the sum of $\mr{E}_0$ and $\mr{E}_1$.
+$E$ is the disjoint union of $E_0$ and $E_1$.
+Let $\pi_i: E_i \ra E$ for $i = 0,1$ be functions such that
+$\pi_i(e) = (i,e)$.
+For a set of events $X$ we define $\pi_i(X) = \s{\pi_i(e)| e\in X}$.
+For the configurations of $\mr{E}$ we have:
+\begin{equation*}
+    \mr{E} \vDash X \iff
+    (\exists X_0 \subseteq E_0. X = \pi_0(X_0)
+    \wedge  \mr{E}_0 \vDash X_0 )
+    \vee
+    (\exists X_1 \subseteq E_1. X = \pi_1(X_1)
+    \wedge  \mr{E}_1 \vDash X_1 )
+\end{equation*}
+Assume that $C \in \mc{F}(\mr{E})$ we wish to find the cause of
+$\mr{E} \vDash C$.
+Let $\mc{M}$ be the causal model of $\mr{E} \vDash C$ with
+variables $\mc{U} \cup \mc{V}$.
+and $\mc{M}_i$ be the causal model of $\mr{E}_i \vDash C_i$ with 
+variables $\mc{U}_0 \cup \mc{V}_0$.
+We define injections
+$\rho_i: \mc{U}_i \cup \mc{V}_i \ra \mc{U} \cup \mc{V}$ for 
+$i = 0,1$ mapping variables in $\mc{M}_i$ to variables in $\mc{M}$.
+
+We say that:
+\begin{equation*}
+    \vec X_0 = \vec x \text{ Cause } \mr{E}_0 \vDash C_0
+    \iff
+    \rho(\vec X_0) = \vec x \text{ Cause } \mr{E} \vDash C
+\end{equation*}

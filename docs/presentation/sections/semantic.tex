@@ -1,0 +1,45 @@
+\begin{frame}{Event Structure Semantics of DyNetKAT}
+    \begin{itemize}
+        \item $F = \s{f_1,...,f_n}$ set of field with values in $V_i$
+        \item $\alpha \triangleq f_1=v_1\cdot f_2 = v_2 \cdot  ... \cdot f_n = v_n$ 
+        is a complete test with $v_i \in V_i$
+        \item $\pi \triangleq f_1\la v_1\cdot f_2 \la v_2 \cdot  ... \cdot f_n \la v_n$ 
+        is a complete test with $v_i \in V_i$
+    \end{itemize}
+    For each $NetKAT^{-dup}$ policy $p$ there exists a policy $q$ 
+    of shape $\Sigma_{\alpha\cdot\pi \in \mc{A}}\alpha\cdot\pi$
+    such that $\vdash p \equiv q$
+
+    Axiom:
+    \begin{align*}
+        (z+y);p & \equiv z;p \oplus y;p \\
+        p \in & DyNetKAT \text{ and } z,y \in NetKAT^{-dup}
+    \end{align*}
+    We define the Normal DyNetKAT grammar as follows:
+    \begin{align*}
+        F ::= & \alpha\cdot\pi                                                                           \\
+        D ::= & \bot ~|~ F;D ~|~ x?F;D ~|~ x!F;D ~|~ D \parallel D ~|~ D \oplus D ~|~ \delta_{\mc{L}}(D) \\
+              & \mc{L} = \s{c ~|~ c ::= x?F ~|~ x!F}
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Event Structure Semantics of DyNetKAT}
+    Let $\mc{A}$ be an alphabet of letters of the form
+    $\alpha \cdot \pi$,
+    $x?F$, and $x!F$.
+    We define the semantic map of Normal DyNetKAT terms
+    $\sem{ \ }: D \ra \mathbb{E}$ where
+    $\mathbb{E}$ is the set of all event structures with
+    labels in $\mc{A}$ as follows:    
+    \begin{align*}
+        \sem{\bot}      & = (\emptyset,\emptyset)                  \\
+        \sem{\alpha; t} & = \alpha\sem{t}                        \\
+        \sem{t_1 \oplus t_2}
+                        & = \sem{t_1} + \sem{t_2}                  \\
+        \sem{\delta_{\mc{L}}(t)}
+                        & = \sem{t} \lceil (\mc{A} \setminus \mc{L}) \\
+        \sem{t_1 \parallel t_2}
+                        & = \sem{t_1} \times \sem{t_2}
+    \end{align*}
+    Where $\mc{L}$ is a subset of $\mc{A}$.
+\end{frame}

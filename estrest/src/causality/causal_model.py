@@ -10,7 +10,10 @@ class PrimitiveEvent:
     val: bool
 
     def __init__(self, var, val):
-        self.var = var
+        if not isinstance(var, str):
+            self.var = repr(var)
+        else:
+            self.var = var
         self.val = val
 
     def negate(self):

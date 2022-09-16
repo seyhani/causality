@@ -85,6 +85,9 @@ class EventStructure:
     def get_labels(self):
         return set(map(lambda x: repr(x.label).replace("\'", ""), self.events))
 
+    def find_events_by_label(self, label: str):
+        return set(filter(lambda event: event.label == label, self.events))
+
     # Pre-conditions:
     # * x is a subset of self.events
     # * If event e is enabled by the null set, we have:

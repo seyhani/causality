@@ -51,7 +51,7 @@ class ValidEventStructureTerm(ValidEventStructure):
                 )
             )
         )
-
+        es.build_configurations()
         return es
 
     def plus(self, es1):
@@ -74,6 +74,7 @@ class ValidEventStructureTerm(ValidEventStructure):
         for i in (0, 1):
             res.configurations.update(es[i].configurations)
 
+        res.build_configurations()
         return res
 
     def times(self, es1):

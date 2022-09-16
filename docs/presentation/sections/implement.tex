@@ -1,0 +1,30 @@
+\section{Implementation}
+
+\begin{frame}{EStResT}
+    \begin{itemize}
+        \item $a,b,c,d:$ DyNetKAT actions
+        \item $a;b \oplus c;d$
+        \item What is the cause of $\s{(0,0,a),(0,1,0,b)}$?
+    \end{itemize}
+    \begin{figure}
+        \centering
+        \begin{tikzpicture}
+            \crd[above]{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{(0,0,a)}$}
+            \crd[left]{-2}{2}{$\s{(0,0,a),(0,1,0,b)}$}
+            \crd[right]{2}{1}{$\s{(1,0,c)}$}
+            \crd[right]{2}{2}{$\s{(1,0,c),(1,1,0,d)}$}
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (-2,1) -- (-2,2);
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (2,1) -- (2,2);
+        \end{tikzpicture}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \begin{figure}
+        \centering
+        \includegraphics[width=9cm]{resources/impl.png}
+    \end{figure}
+\end{frame}

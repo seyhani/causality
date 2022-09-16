@@ -1,0 +1,85 @@
+\ProvidesPackage{preamble}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{tikz} 
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usetikzlibrary{angles, quotes}
+\usepackage{forest}
+\usepackage{forest}
+\usepackage[final]{listings} 
+\usepackage{MnSymbol}
+\usepackage{stmaryrd}
+\usepackage{hyperref}
+\usepackage[toc,page]{appendix}
+\usepackage{import}
+\usepackage{comment}
+\usepackage{mathrsfs}
+\usepackage{eufrak}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{textpos}
+\usepackage{graphbox}
+\usepackage{ragged2e}
+
+\allowdisplaybreaks
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+
+\tikzset{g/.style={
+            prefix after command= {\pgfextra{\tikzset{every label/.style={color=green,above left}}}}
+}
+}
+
+\tikzset{r/.style={
+            prefix after command= {\pgfextra{\tikzset{every label/.style={red,above left}}}}
+}
+}
+
+\tikzset{o/.style={
+            prefix after command= {\pgfextra{\tikzset{every label/.style={orange,above left}}}}
+}
+}
+
+\apptocmd{\frame}{}{\justifying}{}
+
+
+\defbeamertemplate{footline}{centered page number}
+{%
+  \hspace*{\fill}%
+  \usebeamercolor[fg]{page number in head/foot}%
+  \usebeamerfont{page number in head/foot}%
+  \insertpagenumber\,/\,\insertpresentationendpage%
+  \hspace*{\fill}\vskip2pt%
+}
+
+\setbeamertemplate{footline}[centered page number]
+\setbeamertemplate{navigation symbols}{}
+
+% \AtBeginSection[]{
+%   \begin{frame}
+%   \vfill
+%   \centering
+%   \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+%     \usebeamerfont{title}\insertsectionhead\par%
+%   \end{beamercolorbox}
+%   \vfill
+%   \end{frame}
+% }
+
+\AtBeginSection[]
+{
+ \begin{frame}<beamer>
+ \frametitle{}
+ \tableofcontents[currentsection]
+ \end{frame}
+}
+
+\input{commands.sty}

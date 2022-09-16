@@ -4,7 +4,7 @@ from utils import sem
 
 class EventStructureExpression:
     def __init__(self):
-        self.es = ValidEventStructureTerm()
+        self.es = ValidEventStructureTerm(set())
         self.expr = 'nil'
         self.expr_eq = sem('nil')
 
