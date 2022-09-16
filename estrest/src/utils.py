@@ -1,4 +1,5 @@
-from typing import Set, List
+from itertools import chain, combinations
+from typing import Set, List, Iterable, FrozenSet
 
 from event import Event, SyncedEvent, STAR
 
@@ -13,7 +14,7 @@ def repr_conflict(es):
 
 def repr_enabling(es):
     res = ""
-    for e, enabling in es.enabling.items():
+    for e, enabling in es.min_enabling.items():
         for enabling_set in enabling:
             res += "{" + ",".join([repr(ee.label) for ee in enabling_set]) + "} -> " + repr(e.label) + "\n"
     return res
@@ -47,12 +48,12 @@ def is_conflict_free(es: set, conflict):
     return True
 
 
-def ids(events: Set[Event]):
-    return set(map(lambda e: e.idx(), events))
+def ids(events: Iterable[Event]):
+    return frozenset(map(lambda e: e.idx(), events))
 
 
-def list_ids(event_sets: List[Set[Event]]):
-    return list(map(lambda event_set: ids(event_set), event_sets))
+def ids_set(event_sets: Set[FrozenSet[Event]]):
+    return frozenset(map(lambda event_set: ids(event_set), event_sets))
 
 
 def dual(i):
@@ -64,3 +65,17 @@ def async_event(e, i):
         return SyncedEvent(e, STAR)
     else:
         return SyncedEvent(STAR, e)
+
+
+def powerset(iterable):
+    s = set(iterable)
+    return map(
+        set,
+        chain.from_iterable(
+            combinations(s, r) for r in range(len(s) + 1)
+        )
+    )
+
+
+def superset_closure(elements: FrozenSet, subset: FrozenSet):
+    return set(map(lambda s: frozenset(s.union(subset)), powerset(elements - subset)))

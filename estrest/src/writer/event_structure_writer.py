@@ -3,12 +3,14 @@ from .evnet_structure_expression import EventStructureExpression
 from utils import sem
 from .latex_writer import LatexWriter
 from .word_list import WordList
+from os import path
 
-OUTPUT_FILE = '../out/derivation.tex'
+OUTPUT_DIR = '../../out'
 
 
 class EventStructureWriter:
-    def __init__(self):
+    def __init__(self, output_file="derivation.tex"):
+        self.output_file = output_file
         self.writer = LatexWriter()
 
     def write_expr(self, expr):
@@ -66,5 +68,5 @@ class EventStructureWriter:
         self.writer.end()
 
     def export(self):
-        with open(OUTPUT_FILE, "w+") as file:
+        with open(path.join(OUTPUT_DIR, self.output_file), "w+") as file:
             file.write(self.writer.out)

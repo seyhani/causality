@@ -1,10 +1,10 @@
-from event_structure import EventStructure
+from event_structure import ValidEventStructureTerm
 from utils import sem
 
 
 class EventStructureExpression:
     def __init__(self):
-        self.es = EventStructure()
+        self.es = ValidEventStructureTerm(set())
         self.expr = 'nil'
         self.expr_eq = sem('nil')
 
@@ -42,6 +42,6 @@ class EventStructureExpression:
         return "({}, {}, {}, {})".format(
             len(self.es.events),
             sum(map(len, self.es.conflict.values())),
-            sum(map(len, self.es.enabling.values())),
+            sum(map(len, self.es.min_enabling.values())),
             len(self.es.get_labels())
         )

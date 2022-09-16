@@ -1,0 +1,4 @@
+1 - Can there be two securing sequences?
+2 - Searching for cause in sub-components
+3 - Add/Remove events to/from the cause.
+4 - Enabling variables do not imply a valid enabling relation

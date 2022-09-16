@@ -1,8 +1,11 @@
 \ProvidesPackage{custom}
 
 \usepackage[utf8]{inputenc}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath,amssymb,amsthm}
 \usepackage{tikz} 
+\usetikzlibrary{calc}
+\usetikzlibrary{positioning}
+\usepackage{forest}
 \usepackage{forest}
 \usepackage[final]{listings} 
 \usepackage{MnSymbol}
@@ -10,6 +13,10 @@
 \usepackage{hyperref}
 \usepackage[toc,page]{appendix}
 \usepackage{import}
+\usepackage{comment}
+\usepackage{mathrsfs}
+\usepackage{eufrak}
+\usepackage{xcolor}
 
 \allowdisplaybreaks
 \hypersetup{
@@ -20,11 +27,11 @@
     urlcolor=black
 }
 
-\newcommand{\s}[1]{\{#1\}}
-\newcommand{\es}{$E = (\mathcal{E,\#,\vdash})$}
-\newcommand{\tc}[1]{\textcircled{#1}}
-\newcommand{\sem}[1]{\llbracket #1 \rrbracket}
-\newcommand{\amp}{\ \& \ }
-
+\theoremstyle{definition}
 \newtheorem{definition}{Definition}[subsection]
 \newtheorem{proposition}{Proposition}
+\newtheorem{example}{Example}[subsection]
+\newtheorem{notion}{Notion}
+\newtheorem{theorem}{Theorem}
+
+\input{commands.tex}
