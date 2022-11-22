@@ -1,8 +1,9 @@
-import pprint
 import itertools
-import networkx as nx
-from matplotlib import pyplot as plt
 from typing import Set
+
+# import networkx as nx
+# from matplotlib import pyplot as plt
+
 
 EN, M, C, PI = ('EN', 'M', 'C', 'Pi')
 
@@ -10,6 +11,7 @@ def label(label, *args):
     return f'{label}{args}'
 
 n = int(input())
+mode = input()
 
 var = []
 
@@ -70,8 +72,10 @@ for v in var:
 print(len(var), len(e))
 for (i, j) in e:
     print(i, j)
+
+dest = (PI, frozenset(x for x in range(1, (n+1)//2))) \
+    if mode == 'half' else (PI, frozenset(x for x in range(1, n+1)))
+
 print(
-    var2idx[(C, 1, 2)],
-    # var2idx[(PI, frozenset(x for x in range(1, n+1)))]
-    var2idx[(PI, frozenset(x for x in range(1, (n+1)//2)))]
+    var2idx[(C, 1, 2)], var2idx[dest]
 )
