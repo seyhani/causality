@@ -32,6 +32,10 @@ visited_2 = [False for _ in range(n+1)]
 dfs(in_, out, visited_1, src, False)
 dfs(in_, out, visited_2, dest, True)
 
-onpath = map(operator.and_, visited_1, visited_2)
+onpath = list(map(operator.and_, visited_1, visited_2))
+
+for i in range(1, n+1): 
+    for j in out[i]:
+        onpath[i] |= onpath[j]
 
 print(*[int(x) for x in onpath])

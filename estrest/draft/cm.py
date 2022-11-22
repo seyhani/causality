@@ -72,5 +72,6 @@ for (i, j) in e:
     print(i, j)
 print(
     var2idx[(C, 1, 2)],
-    var2idx[(PI, frozenset(x for x in range(1, n+1)))]
+    # var2idx[(PI, frozenset(x for x in range(1, n+1)))]
+    var2idx[(PI, frozenset(x for x in range(1, (n+1)//2)))]
 )

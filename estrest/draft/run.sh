@@ -1,4 +1,4 @@
-echo > data
+echo "n,N" > data
 for i in {5..14}; do
     printf "Running for $i... "
     printf "$i\n" |

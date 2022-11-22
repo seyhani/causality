@@ -24,4 +24,8 @@ onpath = [False for _ in range(n+1)]
 
 pathvert(adj, visited, onpath, dest, src)
 
+for i in range(1, n+1): 
+    for j in adj[i]:
+        onpath[i] |= onpath[j]
+
 print(*[int(x) for x in onpath])
