@@ -19,19 +19,18 @@ $p$ there exists a DyNetKAT term in normal form $q$ for which we have:
 where $E_{DNK}$ is DyNetKAT axiom system.
 
 \subsection{Constructions on Labeled Event Structures \cite{es}}
-We use $(\e,\e)$ to denote an empty labeled event structure with
-an empty set of events and an empty set of labels.
+We use $(\e,\e)$, an empty set of events and an empty set of labels, to denote an empty labeled event structure with.
 In the following, we define four types of constructions on labeled 
 event structures.
 
 \subsubsection{Prefix}
 
 \begin{definition}
-    Let $(\mr{E},L,l)$ be a labelled event structure.
+    Let $(E,\#,\vdash,L,l)$ be a labelled event structure.
     Let $\alpha$ be a label.
-    Define $\alpha(\mr{E},L,l)$ to be a labelled event structure 
-    $(\alpha \mr{E},L',l')$
-    with labels:
+    Define $\alpha(E,\#,\vdash,L,l)$ to be a labelled event structure 
+    $(E',\#',\vdash',L',l')$ where $(E',\#',\vdash') = \alpha(E,\#,\vdash)$
+    and labels are defined as follows:
     \begin{align*}
         L' = \s{\alpha} \cup L
     \end{align*}
@@ -56,11 +55,12 @@ event structures.
     with injections $\iota_k: E_k \rightarrow E$, given by
     $\iota_k(e) = (k,e)$, for $k=0,1$, conflict relation
     \begin{align*}
-        e \# e' \iff & \exists e_0,e_0'. e = \iota_0(e_0)
+        \forall e,e' \in E.
+        e \# e' \iff & \exists e_0,e_0' \in E_0. e = \iota_0(e_0)
         \wedge e' = \iota_0(e_0') \wedge e_0 \#_0e_0'                       \\
-                     & \text{or } \exists e_1,e_1'. e = \iota_1(e_1) \wedge
+                     & \text{or } \exists e_1,e_1' \in E_1. e = \iota_1(e_1) \wedge
         e' = \iota_1(e_1') \wedge e_1 \#_1 e_1'                             \\
-                     & \text{or } \exists e_0,e_1.(e=\iota_1(e_0)
+                     & \text{or } \exists e_0 \in E_0,e_1 \in E_1.(e=\iota_1(e_0)
         \wedge e' =\iota_1(e_1)) \text{ or }
         (e'=\iota_1(e_0) \wedge e =\iota_1(e_1))
     \end{align*}
@@ -72,6 +72,7 @@ event structures.
                         & (\exists X_1 \in Con_1,e_1 \in E_1.X = \iota_1X_1
         \wedge e = \iota_1(e_1) \wedge X_1 \vdash_1 e_1)                      \\
     \end{align*}
+    Where $Con_0,Con_1$ are defined on $\mr{E}_0$ and $\mr{E}_1$ respectively.
     We define the set of labels as $L_0 \cup L_1$ and the labelling function as:
     $$
         l(e) = \begin{cases}
@@ -87,10 +88,25 @@ if $e_0$ is labelled $\alpha_0$ and $e_1$ is labelled $\alpha_1$ the synchroniza
 then labelled $(\alpha_0,\alpha_1)$.
 Events need not synchronize however; an event in one component may not synchronize with
 any event in the other.
-We shall use events of the form $(e_0,*)$ to stand for the occurrence of an event $e_0$
+We shall use events of the form $(e_0,*)$/$(*,e_1)$ to stand for the occurrence of an event $e_0$/$e_1$
 from one component unsynchronized with any event of the other.
 Such an event will be labeled by $(\alpha_0,*)$ where $\alpha_0$ is the original label of $e_0$
 and * is a sort of undefined.
+
+\begin{notion}
+   In an event structure, we shall write $\doublevee$ for the reflexive conflict
+   relation by which we mean that $E \doublevee e'$ in event structure
+   iff either $e\#e'$ or $e=e'$.
+   With this notation instead of describing the conflict-free sets of an 
+   event structure as those sets $X$ such that 
+   \begin{align*}
+        \forall e,e' \in X. \neg(e \# e') 
+   \end{align*}
+   we can say they are those sets $X$ for which 
+   \begin{align*}
+        \forall e,e' \in X . e \doublevee e' \Rightarrow e = e'
+   \end{align*}
+\end{notion}
 
 \begin{definition}
     Let $\mr{E_0} = (E_0,\#_0,\vdash_0,L_0,l_0)$ and
@@ -203,7 +219,7 @@ For simplicity, here we use $a,b,c$ to denote DyNetKAT actions.
     $(E,\#,\vdash,L,l)$ where:
     \begin{align*}
         E & = \s{(0,a),(1,b)}                \\
-          & (0,a) \# (1,b) , (1,b) \# (0,a)  \\
+          & (0,a) \# (1,b)   \\
           & \e \vdash (0,a), \e \vdash (1,b) \\
         L & = \s{a,b}                        \\
           & l((0,a)) = a, l((1,b)) = b       
