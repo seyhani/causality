@@ -190,12 +190,16 @@ It follows that for stable event structures
     \end{align*}
 \end{definition}
 
+
 \begin{definition}
     A labelled event structure consists of $(E,\#,\vdash,L,l)$ where
     $(E,\#,\vdash)$ is an event structure, $L$ is a set of labels,
     not including the element *, and $l$ is a function $l: E \rightarrow L$
     from its events to its labels.
 \end{definition}
+In the following, for simplicity in notation, we use $(a_1,a_2,...,a_n)$ to 
+denote the event $(a_1,(a_2,...(a_{n_1},a_n)...))$.
+
 \subsection{Causal Model \cite{hp}}
 
 A signature $\mathcal{S}$ is a tuple $(\mathcal{U},\mathcal{V},\mathcal{R})$,

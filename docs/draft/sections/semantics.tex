@@ -11,12 +11,8 @@ We define the Normal DyNetKAT grammar as follows:
     D ::= & \bot ~|~ F;D ~|~ x?F;D ~|~ x!F;D ~|~ D \parallel D ~|~ D \oplus D ~|~ \delta_{\mc{L}}(D) \\
           & \mc{L} = \s{c ~|~ c ::= x?F ~|~ x!F}
 \end{align*}
-Lemma 9 in \cite{dynetkat} says that for a given guarded DyNetKAT term
-$p$ there exists a DyNetKAT term in normal form $q$ for which we have:
-\begin{equation*}
-    E_{DNK} \vdash p \equiv q
-\end{equation*}
-where $E_{DNK}$ is DyNetKAT axiom system.
+In the following we use Normal DyNetKAT as a subset of DyNetKAT programs
+to provide event structure semantics.
 
 \subsection{Constructions on Labeled Event Structures \cite{es}}
 We use $(\e,\e)$, an empty set of events and an empty set of labels, to denote an empty labeled event structure with.
@@ -126,7 +122,7 @@ and * is a sort of undefined.
         e \doublevee e' \iff \pi_0(e) \doublevee_0 \pi_0(e') \text{ or }
         \pi_1(e) \doublevee_1 \pi_1(e')
     \end{align*}
-    for all $e,e'$ we use $Con$ for the conflict-free finite sets,
+    for all $e,e' \in E$ we use $Con$ for the conflict-free finite sets,
     enabling relation $\vdash$ given by
     \begin{align*}
          & X \vdash e \iff X \in Con \wedge e \in E \wedge                  \\

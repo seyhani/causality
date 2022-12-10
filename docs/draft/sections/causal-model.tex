@@ -16,6 +16,14 @@ consisting of boolean variables as follows:
                   & \cup \s{M_{s,e} ~|~ s \in \mathcal{P}(E),
         e \in E. e \not \in s } \cup \s{PV}
 \end{align*}
+Intuitively, these variables model the existence of specific elements in 
+each of the event structure relations: $\#$, $\vdash_{min}$, and $\vdash$.
+For two events $e,e' \in E$, variables of the form $C_{e,e'}$ represent whether $e\#e'$.
+Similarly, for a subset of events $s \subseteq E$ and an event $e \in E$,
+we use variables of the form $M_{s,e}$ and $EN_{s,e}$ to represent 
+whether $s \vdash_{min} e$ and $s \vdash e$ respectively.
+Finally, we use a single boolean variable, $PV$, which denote the 
+violation of property in the event structure.
 For each variable $X \in \mathcal{V}$ we define $\vec V_X$ 
 as a vector of all variables in $\mathcal{V} \setminus \s{X}$.
 For $x,y \in \mathcal{P}(E)$ we say $x$ is covered by $y$ written $ x \prec y$ iff:
@@ -74,8 +82,7 @@ in $\mc{V} \setminus \s{PV}$ and $\vec v(V)$ be the value of
 We define the function $ES$ so that if
 $ES(\vec v) = (E,\#',\vdash')$ we have:
 \begin{align*}
-    \forall e,e' \in E. e \#' e' \wedge e' \#' e
-     & \iff \vec{v}(C_{e,e'}) = \T \\
+    \forall e,e' \in E. e \#' e' & \iff \vec{v}(C_{e,e'}) = \T \\
     \forall s \in \mathcal{P}(E), e \in E.  s \vdash' e
      & \iff \vec{v}(EN_{s,e}) = \T
 \end{align*}
