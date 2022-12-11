@@ -3,7 +3,7 @@ name: Compile Latex and Release PDF
 on:
   push:
     paths:
-      - 'latex/**'
+      - 'docs/draft/**'
       - '.github/workflows/release.yml'
 
 jobs:
@@ -18,14 +18,14 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: latex/main.tex
+          root_file: docs/draft/main.tex
           work_in_root_file_dir: true
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: PDF
-          path: latex/main.pdf
+          path: docs/draft/main.pdf
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.7
@@ -39,7 +39,7 @@ jobs:
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
         uses: softprops/action-gh-release@v1
         with:
-          files: latex/main.pdf
+          files: docs/draft/main.pdf
           tag_name: ${{ env.GitVersion_MajorMinorPatch }}
           prerelease: ${{  github.ref == 'refs/heads/dev' }}
           generate_release_notes: true

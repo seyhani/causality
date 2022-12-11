@@ -35,6 +35,30 @@ And enabling relation as follows:
     is a witness of $X$ being an actual cause of $C \in \mc{A}$ in $\mc{M}$.
 \end{notion}
 
+\begin{notion}
+    Let $\m$ be a causal model with the set of endogenous variables $\mc{V}$.
+    Let $X,Y \in \mc{V}$ be two variables of $\m$.
+    Given a context $\vec u$, we say that $Y$ depends on $X$ denoted by
+    $X \to Y$ if there exists a set of variables $\vec W$ and values
+    $\vec w, x', y'$ where $x \neq x'$ and $y \neq y'$ that satisfy the
+    following conditions:
+    \begin{align*}
+        (\m,\vec u) \vDash[\vec W \la \vec w] X = x \wedge Y = y \\
+        (\m,\vec u) \vDash[\vec W \la \vec w, X \la x'] Y = y'
+    \end{align*}
+    The dependency intuitively captures the idea that the value of $Y$
+    can be changed by changing the value of $X$.
+\end{notion}
+
+\begin{notion}
+    Let $\m$ be a causal model with the set of endogenous variables $\mc{V}$.
+    For a variable $X \in \mc{V}$, we use $\mc{D}(X)$ to denote the set of
+    variables that depend on $X$:
+    \begin{equation*}
+        \mc{D}(X) = \s{Y \in \mc{V} | X \to Y }
+    \end{equation*}
+\end{notion}
+
 \begin{definition}
     Sum of causal models. Let $\mr{E}_0$ and $\mr{E}_1$ be event structures,
     $C \subseteq \mc{A}$ and $\mc{M}_0,\mc{M}_1$ be causal models of
@@ -82,17 +106,87 @@ Let $\vec u$ be the settings of exogenous variables in $\m$.
     no effect on $\es \vDash C$.
 \end{lemma}
 \begin{lemma}
-First we prove that for each variable $X \in \mc{V}$, if $X \in \mc{V}_0$
-then function of $X$ in $\m$ equals to its function in $\m_0$.
+    First we prove that for each variable $X \in \mc{V}$, if $X \in \mc{V}_0$
+    then function of $X$ in $\m$ equals to its function in $\m_0$.
 \end{lemma}
-\begin{lemma}
-Next, we prove that for each variable $X \in \mc{V}$ if we have
-$X \in \mc{V}_0$ then $D(X)$ in $\m$ equals $D(X)$ in $\m_0$.
-\end{lemma}
-Using the previous lemmas we can prove the following:
+\begin{proof}
+    For a variable $X$ let we use $F^0$ for its function in
+    $\mc{M}_0$ and $F$ for its function in $\mc{M}$.
+    Let $C = C_{e,e'}$ be a variable in $\mc{V}_0$.
+    We have $e\#_0e' \iff e\#e'$, thus we can simply
+    conclude that $F^0_C = F_C$.
+    Next let $M = M_{s,e}$ be variable in $\mc{V}_0$.
+    Again we have $s \vdash_{min}^0 e \iff s \vdash_{min} e$.
+    Thus, in case $s \not \vdash_{min}^0 e$, $F^0_M$ and
+    $F_M$ have the same value which is false.
+    Now, assume that $s \vdash_{min} e$.
+    We have $F_M = Min(s,e) \wedge Con(s)$.
+    The only difference in functions is that $Min(s,e)$
+    depends on the variables $M_{s',e}$ where
+    $s'$ is a superset of $s$.
+    As a result, these supersets are different in $\m$ and $\m_0$.
+    Let $S$ and $S'$ be the set of all supersets of $s$ in $\m$ and $\m_0$
+    respectively.
+    For each $s' \in S$ that is not in $S'$, $M_{s',e}$ is an exogenous
+    variable with the false value.
+    Hence, in such a context, by omitting all such variables from
+    $Min(s,e)$ we essentially achieve the same function.
+    Thus, we can conclude that $F_M^0 = F_M$.
+    Finally, let $EN = EN_{s,e}$ be a variable in $\mc{V}_0$.
+    The function of $EN$ only includes variables corresponding to events in
+    $s$, so they already exist in $\mc{V}_0$ and as a result they have equal
+    functions in $\m_0$ and $\m$.
 
-\begin{align*}
-    \m_0 \vDash [\vec W \la \vec w]\vec V = \vec v
-    \Rightarrow (\m,\vec u) \vDash [\vec W \la \vec w] \vec V = \vec v
-\end{align*}
-for all $\vec W, \vec V \subseteq \mc{V}$.
+\end{proof}
+\begin{lemma}
+    Next, we prove that for each variable $X \in \mc{V}$ if we have
+    $X \in \mc{V}_0$ then $\mc{D}(X)$ in $\m$ equals $\mc{D}(X)$ in $\m_0$.
+\end{lemma}
+\begin{proof}
+    For a given variable $X \in \mc{V}_0$, let $\mc{D}_0(X),\mc{D}(X)$
+    be the set of dependent variables to $X$ in $\m_0$ and $\m$ respectively.
+    Let $X = C_{e,e'}$.
+    In $\m$, all variables of the form $M_{s,e''}$ and $EN_{s,e''}$ has
+    $X$ in their function if $e,e' \in s$.
+    Such variables include the term $Con(s)$ in their function.
+    Now assume a variable $Y \in \mc{D}(X)$ on the set $s$.
+    If $s \subseteq E_0$, then we have $Y \in \mc{D}_0(X)$.
+    Now assume that $s \not \subseteq E_0$.
+    Thus there exists $e'' \in s$ such that $e'' \in E_1$.
+    As a result we already defined it as an exogenous variable and hence
+    it must not be included in $\mc{D}(X)$.
+    So, we can conclude that $\mc{D}(X) = \mc{D}_0(X)$.
+    Now, let $X = M_{s,e}$.
+    The variable $EN_{s,e}$ and variables $M_{s',e}$ where
+    $s' \subset s$ or $s \subset s'$ include $X$ in their function.
+    $EN_{s,e}$ and all variables of the form $M_{s',e}$ where
+    $s' \subset s$ are exist in $\mc{D}_0(X)$.
+    For variables where $s \subset s'$ then if $s' \subseteq E_0$ then
+    it exists in $\mc{D}_0(X)$.
+    If $s' \not \subseteq E_0$ then it is an exogenous variable thus it does
+    not belong to $\mc{D}(X)$.
+    This completes the proof that $\mc{D}_0(X) = \mc{D}(X)$.
+    Finally, let $X = EN_{s,e}$.
+    Variables of the form $EN_{s',e}$ where $s \prec s'$ have $EN_{s',e}$
+    in their function.
+    If $s' \subseteq E_0$ then $EN_{s',e}$ exists in $\mc{D}_0(X)$
+    otherwise it is an exogenous variable.
+    This completes the proof.
+
+
+\end{proof}
+
+\begin{lemma}
+    For all $\vec W, \vec V \subseteq \mc{V}_0$ we have:
+    \begin{align*}
+        (\m_0,\vec u_0) \vDash [\vec W \la \vec w]\vec V = \vec v
+        \Rightarrow (\m,\vec u) \vDash [\vec W \la \vec w] \vec V = \vec v
+    \end{align*}
+    Assume that we set $\vec W \la \vec w$ in $\m$.
+    Since for each variable $X \in \mc{V}_0$ we have 
+    $\mc{D}(X) \subseteq \mc{V}_0$, thus using the lemma 3 the new setting 
+    only affects variables in $\mc{V}_0$.
+    Using the lemma 2 we can conclude that the new values of each affected 
+    variable has the same value as in $(\mc{M}_0,\vec u_0)$.
+\end{lemma}
+
