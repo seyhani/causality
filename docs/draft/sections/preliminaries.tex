@@ -148,7 +148,7 @@ Thus for stable event structures, we have:
 \end{align*}
 It follows that for stable event structures
 \begin{align*}
-    X \vdash_{min} e \wedge Y \vdash_{min} \wedge
+    X \vdash_{min} e \wedge Y \vdash_{min} e \wedge
     X \cup Y \cup e \in Con \Rightarrow X = Y
 \end{align*}
 \begin{definition}
@@ -157,9 +157,9 @@ It follows that for stable event structures
     \begin{align*}
         \mr{E_0} \trianglelefteq \mr{E_1} \iff
          & E_0 \subseteq E_1,                            \\
-         & \forall e,e'. e\#_0e'  \iff e,e' \in E_0
+         & \forall e,e' \in E_0. e\#_0e'  \iff e,e' \in E_1
         \ \wedge \ e\#_1 e' \text{ and }                 \\
-         & \forall X,e.X\vdash_0 e  \iff X \subseteq E_0
+         & \forall X \subseteq E_0,e \in E_0.X\vdash_0 e  \iff X \subseteq E_0
         \ \wedge \ e \in E_0\ \wedge \ X \vdash_1 e
     \end{align*}
     In this case say $\mr{E_0}$ is a substructure of $\mr{E_1}$.
@@ -184,11 +184,12 @@ It follows that for stable event structures
     For an event structure $\mr{E} = (E,\#,\vdash)$ define $a\mr{E}$ to be the event structure $(E',\#',\vdash')$ where:
     \begin{align*}
          & E' = \s{(0,a)} \cup \s{(1,e)|e \in E},                                                                               \\
-         & e_0' \#' e_1'  \iff \exists e_0,e_1.e_0' = (1,e_0)
+         & \forall e_0',e_1'\in E' . e_0' \#' e_1'  \iff \exists e_0,e_1.e_0' = (1,e_0)
         \ \wedge \ e_1' = (1,e_1) \ \wedge \ e_0 \# e_1                                                                         \\
-         & X \vdash' e' \iff e' = (0,a) \text{ or } [e' = (1,e_1) \ \wedge \ (0,a)\in X \ \wedge \ \s{e|(1,e)\in X} \vdash e_1]
+         & \forall X \subseteq E' . X \vdash' e' \iff e' = (0,a) \text{ or } [e' = (1,e_1) \ \wedge \ (0,a)\in X \ \wedge \ \s{e|(1,e)\in X} \vdash e_1]
     \end{align*}
 \end{definition}
+
 
 \begin{definition}
     A labelled event structure consists of $(E,\#,\vdash,L,l)$ where
@@ -196,6 +197,9 @@ It follows that for stable event structures
     not including the element *, and $l$ is a function $l: E \rightarrow L$
     from its events to its labels.
 \end{definition}
+In the following, for simplicity in notation, we use $(a_1,a_2,...,a_n)$ to 
+denote the event $(a_1,(a_2,...(a_{n_1},a_n)...))$.
+
 \subsection{Causal Model \cite{hp}}
 
 A signature $\mathcal{S}$ is a tuple $(\mathcal{U},\mathcal{V},\mathcal{R})$,
