@@ -183,10 +183,38 @@ Let $\vec u$ be the settings of exogenous variables in $\m$.
         \Rightarrow (\m,\vec u) \vDash [\vec W \la \vec w] \vec V = \vec v
     \end{align*}
     Assume that we set $\vec W \la \vec w$ in $\m$.
-    Since for each variable $X \in \mc{V}_0$ we have 
-    $\mc{D}(X) \subseteq \mc{V}_0$, thus using the lemma 3 the new setting 
+    Since for each variable $X \in \mc{V}_0$ we have
+    $\mc{D}(X) \subseteq \mc{V}_0$, thus using the lemma 3 the new setting
     only affects variables in $\mc{V}_0$.
-    Using the lemma 2 we can conclude that the new values of each affected 
+    Using the lemma 2 we can conclude that the new values of each affected
     variable has the same value as in $(\mc{M}_0,\vec u_0)$.
 \end{lemma}
 
+
+\begin{theorem}
+\end{theorem}
+\begin{proof}
+    Let $(X,\vec W) \hookrightarrow \es_0 \vDash C$.
+    This means that $(X,\vec W)$ satisfies the AC conditions.
+    To satisfy the AC conditions, we check whether effect holds or not
+    under specific intervention.
+    To be more precise, we check formulas of the form:
+    \begin{equation*}
+        (\m_0,\vec u_0)\vDash[\vec R \la \vec r] \psi
+    \end{equation*}
+    where $\psi$ is either $\varphi$ or $\neg \varphi$.
+    Since all possible set of variables $\vec R$ we have
+    $\vec R \subseteq \mc{V}_0$, thus using the lemma 4 we have:
+    \begin{equation*}
+        (\m_0,\vec u_0)\vDash[\vec R \la \vec r] \vec V = \vec v
+        \Rightarrow
+        (\m,\vec u)\vDash[\vec R \la \vec r] \vec V = \vec v
+    \end{equation*}
+    Also note that the $\varphi$ here determines whether $C$ 
+    is a configuration of $\es$ or not. 
+    Thus, it only depends on the variables in $\mc{V}_0$.
+    So, since the values of these variables has same value after 
+    the intervention in $\m_0$, thus we can conclude the 
+    the $\psi$ formulas also holds in $\m$ so, the AC conditions 
+    are satisfied in $\m$ too.
+\end{proof}
