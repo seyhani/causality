@@ -1,43 +1,82 @@
 \section{Composition of Actual Cause}
-Let $\mr{E}_0 = (E_0,\#_0,\vdash_0)$ and
-$\mr{E}_1 = (E_1,\#_1,\vdash_1)$ be event structures.
-Assume that $E_0 \cup E_1 = \emptyset$.
-We can simplify the sum operation over these event structures.
-To do so let $ \mr{E} = \mr{E}_0 + \mr{E}_1$ where
-$\mr{E} = (E,\#,\vdash)$.
-We define $E = E_0 \cup E_1$.
-The conflict relation as:
-\begin{align*}
-    \forall e,e' \in E. e \# e' & \iff
-    \exists e_0,e_0' \in E_0. e_0 \#_0 e_0'
-    \vee \exists e_1,e_1' \in E_1. e_1 \#_1 e_1'                                 \\
-                                & \vee \left(e \in E_0 \wedge e' \in E_1 \right)
-    \vee \left(e \in E_1 \wedge e' \in E_0 \right)
-\end{align*}
-And enabling relation as follows:
-\begin{align*}
-    \forall X \in Con, e \in E. X \vdash e \iff
-    \left( X \in Con_0 \wedge X \vdash_0 e \right)
-    \vee \left( X \in Con_1 \wedge X \vdash_1 e \right)
-\end{align*}
+
 \begin{notion}
-    Let $\mc{A}$ be a universal set of events and $\mr{E} = (E,\#,\vdash)$
+    Let $\mc{A}$ be a universal set of events and $\es = (E,\#,\vdash)$
     be an event structure where $E \subseteq \mc{A}$.
-    For a subset $C \in \mc{A}$ we write $\mr{E} \vDash C$ iff
-    $C \in \mc{F}(\mr{E})$.
+    For a subset $C \subseteq \mc{A}$ we write $\es \vDash C$ iff
+    $C \in \mc{F}(\es)$.
 \end{notion}
 
 \begin{notion}
-    Let $\mr{E} = (E,\#,\vdash)$ be an event structure and
-    $\mc{M}$ be the causal model of $ \mr{E} \vDash C$  for $C \in \mc{A}$.
-    We $(X,\vec W) \hookrightarrow \mr{E} \vDash C$ to denote that
-    $(X,\vec W)$ where $X$ and $\vec W$ are variables of $\mc{M}$
-    is a witness of $X$ being an actual cause of $C \in \mc{A}$ in $\mc{M}$.
+    Let $\es = (E,\#,\vdash)$ be an event structure and
+    $\mc{M}$ be the causal model of $\es \vDash C$  for $C \in \mc{A}$.
+    We use $(X,\vec W, \vec w) \hookrightarrow_{\m} \es \vDash C$ to denote
+    that $(X,\vec W,\vec w)$ where $X$ and $\vec W$ are variables of
+    $\mc{M}$ is a witness of $X$ being an actual cause of
+    $\es \vDash C$ in $\mc{M}$.
 \end{notion}
+
+\begin{definition}
+    Let $\mr{E}_0 = (E_0,\#_0,\vdash_0)$ and
+    $\mr{E}_1 = (E_1,\#_1,\vdash_1)$ be event structures
+    such that $E_0 \cup E_1 = \emptyset$.
+    We redefine the sum operation under this condition.
+    Let $ \mr{E} = \mr{E}_0 + \mr{E}_1$ where
+    $\mr{E} = (E,\#,\vdash)$.
+    We define $E = E_0 \cup E_1$ and the conflict relation as follows:
+    \begin{align*}
+        \forall e,e' \in E. e \# e' & \iff
+        \exists e_0,e_0' \in E_0. e_0 \#_0 e_0'
+        \vee \exists e_1,e_1' \in E_1. e_1 \#_1 e_1'                                 \\
+                                    & \vee \left(e \in E_0 \wedge e' \in E_1 \right)
+        \vee \left(e \in E_1 \wedge e' \in E_0 \right)
+    \end{align*}
+    And finally we define the enabling relation as follows:
+    \begin{align*}
+        \forall X \in Con, e \in E. X \vdash e \iff
+        \left( X \in Con_0 \wedge X \vdash_0 e \right)
+        \vee \left( X \in Con_1 \wedge X \vdash_1 e \right)
+    \end{align*}
+\end{definition}
+
+\begin{definition}
+    Let $\mc{A} = E_0 \cup E_1$ be a set of events such that
+    $E_0 \cap E_1 = \e$ and $\mr{E}_0 = (E_0,\#_0,\vdash_0)$,
+    $\mr{E}_1 = (E_1,\#_1,\vdash_1)$ be event structures.
+    Let $C \subseteq \mc{A}$ be a subset of events.
+    Let $\m_0,\m_1$ be causal models of $\es_0 \vDash C,\es_1 \vDash C$
+    respectively and let $\mc{V}_0,\mc{V}_1$ be the set of endogenous
+    variables of these models.
+    Let $\es = \es_0 + \es_1$ and $\m$ be the causal model of
+    $\es \vDash C$ with the set of endogenous variables $\mc{V}$.
+    Note that we have $\mc{V}_0 \cup \mc{V}_1 \subset \mc{V}$.
+    We define the structured causal model $\m^+$ by making all variables
+    in $\mc{V}\setminus (\mc{V}_0 \cup \mc{V}_1)$ exogenous and
+    defining the context $\vec u^+$ with values of these variables in
+    $\m$.
+\end{definition}
+
+\begin{theorem}
+    Let $\es_0$ and $\es_1$ be event structures and
+    $\es = (E,\#,\vdash)$ be their sum.
+    Let $C \subseteq E$ be a configuration of $\es_0$
+    and $\m_0$, $\m_1$, and $\m$ be the causal models
+    of $\es_0 \vDash C$,$\es_1 \vDash C$, and $\es \vDash C$ respectively.
+    We have:
+    \begin{align*}
+        (X,\vec W,\vec w) \hookrightarrow_{\m_0} \es_0 \vDash C
+        \Rightarrow (X,\vec W,\vec w) \hookrightarrow_{\m^+} \es \vDash C
+    \end{align*}
+    The theorem intuitively states that a witness of the actual cause
+    of $\es_0 \vDash C$ is also a witness of the actual cause of
+    $\es \vDash C$ in $\m^+$.
+\end{theorem}
+
+To prove this theorem first we define some new notions and prove some lemmas.
 
 \begin{notion}
     Let $\m$ be a causal model with the set of endogenous variables $\mc{V}$.
-    Let $X,Y \in \mc{V}$ be two variables of $\m$.
+    Let $X,Y \in \mc{V}$ be two endogenous variables of $\m$.
     Given a context $\vec u$, we say that $Y$ depends on $X$ denoted by
     $X \to Y$ if there exists a set of variables $\vec W$ and values
     $\vec w, x', y'$ where $x \neq x'$ and $y \neq y'$ that satisfy the
@@ -46,7 +85,7 @@ And enabling relation as follows:
         (\m,\vec u) \vDash[\vec W \la \vec w] X = x \wedge Y = y \\
         (\m,\vec u) \vDash[\vec W \la \vec w, X \la x'] Y = y'
     \end{align*}
-    The dependency intuitively captures the idea that the value of $Y$
+    The dependency intuitively captures the fact that the value of $Y$
     can be changed by changing the value of $X$.
 \end{notion}
 
@@ -58,39 +97,6 @@ And enabling relation as follows:
         \mc{D}(X) = \s{Y \in \mc{V} | X \to Y }
     \end{equation*}
 \end{notion}
-
-\begin{definition}
-    Sum of causal models. Let $\mr{E}_0$ and $\mr{E}_1$ be event structures,
-    $C \subseteq \mc{A}$ and $\mc{M}_0,\mc{M}_1$ be causal models of
-    $\mr{E}_0$ and $\mr{E}_1$ respectively.
-    Let $\mc{V}_0$ and $\mc{V}_1$ represent the set of variables in
-    $\m_0$ and $\m_1$ respectively.
-    Let $\m$ be the causal model of $\es_0 + \es_1$.
-    We construct $\m'$ by making some variables of $\m$ exogenous
-    and setting their value regarding $\es$.
-    For each pair of events $e,e' \in E$ that satisfies
-    $\neg (e,e' \in E_0 \vee e,e' \in E_1)$ we make the following
-    variables exogenous with a fixed value:
-    \begin{itemize}
-        \item $C_{e,e'} = \T$
-        \item $\forall s \subseteq E, e'' \in E. \s{e,e'}
-                  \subseteq s \cup \s{e''}: M_{s,e''} = \F, EN_{s,e''} = \F $
-    \end{itemize}
-    Intuitively, variables in $\m$ is either exists in
-    $\mc{V}_0 \cup \mc{V}_1$ or is an exogenous variable.
-\end{definition}
-
-\noindent Now let $\mr{E}_0 = (E_0,\#_0,\vdash_0)$ and
-$\mr{E}_1 = (E_1,\#_1,\vdash_1)$ be event structures and
-$\mr{E} = (E,\#,\vdash)$ be their sum.
-Let $C \subseteq E$.
-Let $\mc{M}_0$ and $\mc{M}_1$ be the causal models of
-$\mr{E}_0 \vDash C$ and $\mr{E}_1 \vDash C$ respectively.
-We wish to prove the following:
-\begin{align*}
-    (X,\vec W) \hookrightarrow \mr{E}_0 \vDash C
-    \Rightarrow (X,\vec W) \hookrightarrow \mr{E} \vDash C
-\end{align*}
 Now assume that there exists a witness $(X,\vec W)$ in $\m_0$ for
 which we have $(X,\vec W) \hookrightarrow \mr{E}_0 \vDash C$.
 Note that $\mc{V}_0 \subset \mc{V}$, thus all the variables $X$ and
@@ -101,85 +107,96 @@ In a causal model $\m$ with the set of endogenous variables
 $\mc{V}$, for a variable $X \in \mc{V}$ we use $D(X) \subseteq \mc{V}$
 to denote the set of variables in $\mc{V}$ that have $X$ in their function.
 Let $\vec u$ be the settings of exogenous variables in $\m$.
+
 \begin{lemma}
-    If $C \subseteq E_0$, then values of the variables in $\mc{V}_1$ has
-    no effect on $\es \vDash C$.
+    Let $\es_0 = (E_0,\#_0,\vdash_0)$ and $\es_1 = (E_1,\#_1,\vdash_1)$
+    be event structures with sum $\es = \es_0 + \es_1$.
+    Let $\m_0,\m_1,\m$ be their causal models for an arbitrary
+    configuration with the set of endogenous variables $\V_0,\V_1,\V$.
+    Let $\m^+$ be the structured causal model of $\m$ with the context
+    $\vec u^+$ and set of endogenous variables $\V^+$.
+    For each variable $X \in \V^+$, if $X \in \mc{V}_0$
+    then the function of $X$ in $(\m^+,\vec u^+)$ equals to its function in $\m_0$.
 \end{lemma}
-\begin{lemma}
-    First we prove that for each variable $X \in \mc{V}$, if $X \in \mc{V}_0$
-    then function of $X$ in $\m$ equals to its function in $\m_0$.
-\end{lemma}
+
 \begin{proof}
-    For a variable $X$ let we use $F^0$ for its function in
-    $\mc{M}_0$ and $F$ for its function in $\mc{M}$.
-    Let $C = C_{e,e'}$ be a variable in $\mc{V}_0$.
+    Let $X \in \V^+$ be a variable for which we have $X \in \V_0$ with the
+    function $F_0$ in $\m_0$ and $F^+$ in $(\m^+,\vec u^+)$.
+    We consider $X$ regarding different type of variables.
+    First, let $X = C_{e,e'}$.
     We have $e\#_0e' \iff e\#e'$, thus we can simply
-    conclude that $F^0_C = F_C$.
-    Next let $M = M_{s,e}$ be variable in $\mc{V}_0$.
-    Again we have $s \vdash_{min}^0 e \iff s \vdash_{min} e$.
-    Thus, in case $s \not \vdash_{min}^0 e$, $F^0_M$ and
-    $F_M$ have the same value which is false.
+    conclude that $F^+ = F_0$ since the function returns a constant value.
+    Next let $X = M_{s,e}$.
+    We have $s \vdash_{min}^0 e \iff s \vdash_{min} e$.
+    Thus, in case $s \not \vdash_{min}^0 e$, $F^+$ and
+    $F_0$ return the same false value.
     Now, assume that $s \vdash_{min} e$.
-    We have $F_M = Min(s,e) \wedge Con(s)$.
-    The only difference in functions is that $Min(s,e)$
+    We have $F^+ = Min^+(s,e) \wedge Con^+(s)$.
+    The only difference in functions is that $Min^+(s,e)$
     depends on the variables $M_{s',e}$ where
     $s'$ is a superset of $s$.
-    As a result, these supersets are different in $\m$ and $\m_0$.
-    Let $S$ and $S'$ be the set of all supersets of $s$ in $\m$ and $\m_0$
+    As a result, these supersets are different in $\m$ and $\m^+$.
+    Let $S^+$ and $S_0$ be the set of all supersets of $s$ in $\m^+$ and $\m_0$
     respectively.
-    For each $s' \in S$ that is not in $S'$, $M_{s',e}$ is an exogenous
-    variable with the false value.
+    For each $s' \in S^+$ that is not in $S_0$, $M_{s',e}$ is an exogenous
+    variable with the value of false.
     Hence, in such a context, by omitting all such variables from
-    $Min(s,e)$ we essentially achieve the same function.
-    Thus, we can conclude that $F_M^0 = F_M$.
-    Finally, let $EN = EN_{s,e}$ be a variable in $\mc{V}_0$.
+    $Min^+(s,e)$ we essentially achieve the same function.
+    Thus, we have $F^+ = F_0$.
+    Finally, let $X = EN_{s,e}$.
     The function of $EN$ only includes variables corresponding to events in
-    $s$, so they already exist in $\mc{V}_0$ and as a result they have equal
-    functions in $\m_0$ and $\m$.
-
+    $s$, so they already exist in $\V_0$ and as a result they have equal
+    functions in $\m_0$ and $\m^+$.
 \end{proof}
+
 \begin{lemma}
-    Next, we prove that for each variable $X \in \mc{V}$ if we have
-    $X \in \mc{V}_0$ then $\mc{D}(X)$ in $\m$ equals $\mc{D}(X)$ in $\m_0$.
+    Let $\es_0 = (E_0,\#_0,\vdash_0)$ and $\es_1 = (E_1,\#_1,\vdash_1)$
+    be event structures with sum $\es = \es_0 + \es_1$.
+    Let $\m_0,\m_1,\m$ be their causal models for an arbitrary
+    configuration with the set of endogenous variables $\V_0,\V_1,\V$.
+    Let $\m^+$ be the structured causal model of $\m$ with the context
+    $\vec u^+$ and set of endogenous variables $\V^+$.
+    For a variable $X$ let $D^+(X)$ denotes the of its dependent variables
+    in $(\m^+,\vec u^+)$.
+    For each variable $X \in \V^+$, if $X \in \mc{V}_0$
+    we have $\mc{D}(X) = \mc{D}^+(X)$.
 \end{lemma}
 \begin{proof}
-    For a given variable $X \in \mc{V}_0$, let $\mc{D}_0(X),\mc{D}(X)$
-    be the set of dependent variables to $X$ in $\m_0$ and $\m$ respectively.
+    For a given variable $X \in \mc{V}_0$, let $\mc{D}_0(X),\mc{D}^+(X)$
+    be the set of dependent variables to $X$ in $\m_0$ and $(\m^+,\vec u^+)$
+    respectively.
     Let $X = C_{e,e'}$.
-    In $\m$, all variables of the form $M_{s,e''}$ and $EN_{s,e''}$ has
+    In $\m^+$, all variables of the form $M_{s,e''}$ and $EN_{s,e''}$ has
     $X$ in their function if $e,e' \in s$.
-    Such variables include the term $Con(s)$ in their function.
-    Now assume a variable $Y \in \mc{D}(X)$ on the set $s$.
-    If $s \subseteq E_0$, then we have $Y \in \mc{D}_0(X)$.
-    Now assume that $s \not \subseteq E_0$.
-    Thus there exists $e'' \in s$ such that $e'' \in E_1$.
-    As a result we already defined it as an exogenous variable and hence
-    it must not be included in $\mc{D}(X)$.
-    So, we can conclude that $\mc{D}(X) = \mc{D}_0(X)$.
-    Now, let $X = M_{s,e}$.
+    IF $s \cup e'' \subseteq E_0$ so these variables are included in
+    $\mc{D}_0$.
+    Otherwise, we have $s\cup e'' \not \subseteq E_0$ and
+    $s \cup e'' \not \subseteq E_1$.
+    Thus these variables are exogenous and can not be included in $\mc{D}^+$.
+    Next, let $X = M_{s,e}$.
     The variable $EN_{s,e}$ and variables $M_{s',e}$ where
     $s' \subset s$ or $s \subset s'$ include $X$ in their function.
     $EN_{s,e}$ and all variables of the form $M_{s',e}$ where
     $s' \subset s$ are exist in $\mc{D}_0(X)$.
     For variables where $s \subset s'$ then if $s' \subseteq E_0$ then
     it exists in $\mc{D}_0(X)$.
+    Otherwise,
     If $s' \not \subseteq E_0$ then it is an exogenous variable thus it does
-    not belong to $\mc{D}(X)$.
-    This completes the proof that $\mc{D}_0(X) = \mc{D}(X)$.
+    not belong to $\mc{D}^+(X)$ either.
     Finally, let $X = EN_{s,e}$.
     Variables of the form $EN_{s',e}$ where $s \prec s'$ have $EN_{s',e}$
     in their function.
     If $s' \subseteq E_0$ then $EN_{s',e}$ exists in $\mc{D}_0(X)$
-    otherwise it is an exogenous variable.
-    This completes the proof.
-
-
+    otherwise, it is an exogenous variable.
+    This completes the proof that for each variable $X$ we have
+    $\mc{D}^+(X) = \mc{D}(X)$.
 \end{proof}
 
 \begin{lemma}
-    For all $\vec W, \vec V \subseteq \mc{V}_0$ we have:
+    For all $\vec W, \vec V \subseteq \mc{V}_0$ and a vector of values $\vec v$
+    for $\vec V$ we have:
     \begin{align*}
-        (\m_0,\vec u_0) \vDash [\vec W \la \vec w]\vec V = \vec v
+        \m_0 \vDash [\vec W \la \vec w]\vec V = \vec v
         \Rightarrow (\m,\vec u) \vDash [\vec W \la \vec w] \vec V = \vec v
     \end{align*}
     Assume that we set $\vec W \la \vec w$ in $\m$.
@@ -187,34 +204,41 @@ Let $\vec u$ be the settings of exogenous variables in $\m$.
     $\mc{D}(X) \subseteq \mc{V}_0$, thus using the lemma 3 the new setting
     only affects variables in $\mc{V}_0$.
     Using the lemma 2 we can conclude that the new values of each affected
-    variable has the same value as in $(\mc{M}_0,\vec u_0)$.
+    variable has the same value as in $\m_0$.
 \end{lemma}
 
-
-\begin{theorem}
-\end{theorem}
+Now we can purpose the proof of the theorem 4.1.
 \begin{proof}
-    Let $(X,\vec W) \hookrightarrow \es_0 \vDash C$.
+    Let $\es_0 = (E_0,\#_0,\vdash_0)$ and $\es_1 = (E_1,\#_1,\vdash_1)$ be event
+    structures and $\es = (E,\#,\vdash)$ be their sum.
+    Let $C \subseteq E$ be a configuration of $\es_0$
+    and $\m_0$, $\m_1$, and $\m$ be the causal models
+    of $\es_0 \vDash C$,$\es_1 \vDash C$, and $\es \vDash C$ respectively.
+    Let $(X,\vec W) \hookrightarrow_{\m_0} \es_0 \vDash C$.
     This means that $(X,\vec W)$ satisfies the AC conditions.
     To satisfy the AC conditions, we check whether effect holds or not
     under specific intervention.
     To be more precise, we check formulas of the form:
     \begin{equation*}
-        (\m_0,\vec u_0)\vDash[\vec R \la \vec r] \psi
+        \m_0\vDash[\vec R \la \vec r] \psi
     \end{equation*}
-    where $\psi$ is either $\varphi$ or $\neg \varphi$.
+    where $\psi$ is either $\es_0 \vDash C$ or $\es_0 \not \vDash C$.
     Since all possible set of variables $\vec R$ we have
     $\vec R \subseteq \mc{V}_0$, thus using the lemma 4 we have:
     \begin{equation*}
-        (\m_0,\vec u_0)\vDash[\vec R \la \vec r] \vec V = \vec v
+        \m_0\vDash[\vec R \la \vec r] \vec V = \vec v
         \Rightarrow
-        (\m,\vec u)\vDash[\vec R \la \vec r] \vec V = \vec v
+        (\m^+,\vec u^+)\vDash[\vec R \la \vec r] \vec V = \vec v
     \end{equation*}
-    Also note that the $\varphi$ here determines whether $C$ 
-    is a configuration of $\es$ or not. 
-    Thus, it only depends on the variables in $\mc{V}_0$.
-    So, since the values of these variables has same value after 
-    the intervention in $\m_0$, thus we can conclude the 
-    the $\psi$ formulas also holds in $\m$ so, the AC conditions 
-    are satisfied in $\m$ too.
+    For each $\vec V \subseteq \V_0$.
+    This means that if the value of the variables in $\V_0$ be $\vec v$
+    after making the intervention $\vec R \la \vec r$ in $\m_0$,
+    then doing the same intervention in $\m^+$ causes these variables to
+    have the same value as they had in $\m_0$.
+    Moreover, note that determining whether $C$ is a configuration of
+    $\es$ or not only depends on the variables in $\mc{V}_0$.
+    So, since the values of these variables has same value after
+    the intervention in $\m_0$, thus we can conclude the
+    the $\psi$ formulas also holds in $\m$ so, the AC conditions
+    are satisfied in $\m^+$ too.
 \end{proof}
