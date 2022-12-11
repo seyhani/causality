@@ -5,6 +5,7 @@ on:
     paths:
       - 'docs/draft/**'
       - '.github/workflows/release.yml'
+      - GitVersion.yml
 
 jobs:
   build_latex:
