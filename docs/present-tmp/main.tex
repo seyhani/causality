@@ -1,7 +1,7 @@
 \documentclass{beamer}
 
 \usepackage{tikz}
-\usetikzlibrary{graphs}
+\usetikzlibrary{graphs, decorations.pathmorphing}
 
 \title{Optimizing Causal Reasoning in Concurrent Systems}
 \author{Mahyar Karimi}
@@ -125,6 +125,30 @@ Adding new \textit{reason} vertices:
   \draw[->,red] (m) -- (reason);
 \end{tikzpicture}
 \end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Lattice-Based Causality}
+
+Using the ``improved'' lattice to check causality:
+\begin{itemize}
+  \item Very straight-forward when the underlying lattice is a tree
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}
+  \node[rectangle,draw] (m) at (-2, 0) {$s \vdash e$};
+  \node[circle,draw] (reason) at (0, 0) {};
+  \node[circle,draw] (effect) at (0, -3) {$Y$};
+  \node (dots) at (1, -1) {$\ddots$};
+  \node[circle,red,draw] at (2, -2) {$Y'$};
+  \draw[->] (m) -- (reason);
+  \draw[->,decorate,decoration=snake] (reason) -- (effect);
+\end{tikzpicture}
+\end{center}
+
+For a generic improved lattice, the problem has more challenges.
 
 \end{frame}
 \end{document}
