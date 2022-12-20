@@ -1,0 +1,149 @@
+\documentclass{beamer}
+
+\usepackage{tikz}
+\usetikzlibrary{graphs, decorations.pathmorphing}
+\usepackage{cancel}
+
+\begin{document}
+
+\begin{frame}{Improved Lattice}
+We add new \textit{reason} vertices to the configurations lattice:
+
+\begin{center}
+\begin{tikzpicture}
+  \node (X) at (0, 1) {$X$};
+  \node[green] (s-e) at (-1.5, 0) {$s \vdash e$};
+  \node[circle,draw] (reason) at (0, 0) {};
+  \node[circle,draw] (reason-X) at (0, -2) {};
+  \node[green] (X-f) at (0, -3) {$X_f$};
+  \node (X') at (2, -1) {$X'$};
+  \node[circle,draw] (reason-X') at (1, -2) {};
+
+  \draw[->] (X) -- (reason);
+  \draw[->] (s-e) -- (reason);
+  \draw[->,decorate,decoration=snake] (reason) -- (reason-X);
+  \draw[->] (reason-X) -- (X-f);
+  \draw[->] (X') -- (reason-X');
+  \draw[->] (reason-X') -- (X-f);
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+  \item Cause: $s \vdash e$
+  \item Effect: At least one configuration from a given set of configurations
+  (including $X_f$) is \textbf{valid}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{HP: AC1}
+Both the cause and the effect hold.
+
+\begin{itemize}
+  \item Cause: $s \vdash e$
+  \item Effect: $X_f$ is valid.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{HP: AC2.a}
+
+\begin{center}
+\begin{tikzpicture}
+  \node (X) at (0, 1) {$X$};
+  \node[red] (s-e) at (-1.5, 0) {$s \vdash e$};
+  \node[blue] (s'-e') at (1.5, 0) {$s' \vdash e'$};
+  \node[circle,draw] (reason) at (0, 0) {};
+  \node[circle,draw] (reason-X) at (0, -2) {};
+  \node[red] (X-f) at (0, -3) {$X_f$};
+  \node[blue] (X') at (2, -1) {$X'$};
+  \node[circle,draw] (reason-X') at (1, -2) {};
+
+  \draw[->] (X) -- (reason);
+  \draw[->] (s-e) -- (reason);
+  \draw[->] (s'-e') -- (reason);
+  \draw[->,decorate,decoration=snake] (reason) -- (reason-X);
+  \draw[->] (reason-X) -- (X-f);
+  \draw[->] (X') -- (reason-X');
+  \draw[->] (reason-X') -- (X-f);
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+  \item HP's $x'$: $s \not \vdash e$
+  \item HP's Witness: We turn off the following:
+  \begin{itemize}
+    \item All vertices similar to $s \vdash e$
+    \item All configurations similar to $X'$
+    \item All other configurations of the effect set
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{HP: AC2.b}
+
+\begin{center}
+\begin{tikzpicture}
+  \node (X) at (0, 1) {$X$};
+  \node[green] (s-e) at (-1.5, 0) {$s \vdash e$};
+  \node[blue] (s'-e') at (1.5, 0) {$s' \vdash e'$};
+  \node[circle,draw] (reason) at (0, 0) {};
+  \node[circle,draw] (reason-X) at (0, -2) {};
+  \node[green] (X-f) at (0, -3) {$X_f$};
+  \node[blue] (X') at (2, -1) {$X'$};
+  \node[circle,draw] (reason-X') at (1, -2) {};
+
+  \draw[->] (X) -- (reason);
+  \draw[->] (s-e) -- (reason);
+  \draw[->] (s'-e') -- (reason);
+  \draw[->,decorate,decoration=snake] (reason) -- (reason-X);
+  \draw[->] (reason-X) -- (X-f);
+  \draw[->] (X') -- (reason-X');
+  \draw[->] (reason-X') -- (X-f);
+\end{tikzpicture}
+\end{center}
+
+Turning $s \vdash e$ on again will make $X_f$ valid again.
+Resetting any other variable (except the witness variables)
+will keep $X_f$ valid.
+\end{frame}
+
+\begin{frame}{Improved Lattice with Conflicts}
+Checking causality with a conflict as a cause
+($e \cancel{\#} e_1$):
+
+\begin{center}
+\begin{tikzpicture}
+  \node (X) at (0, 1) {$X$};
+  \node[red] (e-c-e1) at (-1.5, 0) {$e \cancel{\#} e_1$};
+  \node (e-c-e2) at (1.5, 0) {$e \cancel{\#} e_2$};
+  \node[rectangle,draw] (reason) at (0, 0) {};
+  \node[rectangle,draw] (reason-X) at (0, -2) {};
+  \node[green] (X-f) at (0, -3) {$X_f$};
+  \node[blue] (X') at (3, -1) {$X'$};
+  \node[rectangle,draw] (reason-X') at (2, -2) {};
+
+  \node[circle,draw] (reason-old) at (0, -0.7) {};
+  \node[circle,draw] (reason-X'-old) at (1, -2.7) {};
+
+  \draw[->] (X) -- (reason);
+  \draw[->] (e-c-e1) -- (reason);
+  \draw[->] (e-c-e2) -- (reason);
+  \draw[->,decorate,decoration=snake] (reason-old) -- (reason-X);
+  \draw[->] (reason-X) -- (X-f);
+  \draw[->] (X') -- (reason-X');
+  \draw[->] (reason) -- (reason-old);
+  \draw[->] (reason-X') -- (reason-X'-old);
+  \draw[->] (reason-X'-old) -- (X-f);
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Non-Singleton Causes}
+To check AC1, AC2.\{a,b\}, We pick the shortest path from the set of causes to the set
+of effects $\rightarrow$ no other cause on the path.
+
+To check AC3, our current solution is to brute-force on all subsets.
+
+\end{frame}
+
+\end{document}
