@@ -1,0 +1,27 @@
+\documentclass{article}
+
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{cancel}
+\usepackage{tikz}
+
+\usetikzlibrary{decorations.pathmorphing}
+
+\newcommand{\es}{\mathcal{E}}
+\newcommand{\conf}[1]{\mathcal{F} \left( #1 \right) }
+\newcommand{\set}[1]{ \left\{ #1 \right\} }
+\newcommand{\In}[1]{ \text{In} \left( #1 \right) }
+
+\newtheorem{thm}{Theorem}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{exmp}[thm]{Example}
+
+\begin{document}
+
+\input{prelim}
+\input{causal-graph}
+\input{causal-model}
+\input{hp}
+
+\end{document}

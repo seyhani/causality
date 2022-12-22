@@ -1,0 +1,27 @@
+\section{Causal Model}
+
+With the causal graph described in the previous section,
+a causal model can be defined:
+
+For each vertex $v$ in this causal graph, we define a
+boolean variable with the same label as $v$.
+
+We define $\In{v}$ for a given vertex $v$ as the set of vertices
+which have an incoming edge to $v$.
+
+We define the value for each variable in this system as follows:
+
+\begin{itemize}
+  \item $x_{S}$ ($S \subseteq E$): if $S = \varnothing$, $x_S$
+  takes the constant value of True; otherwise, it is defined as:
+  \[ x_S = \bigvee_{r_{T,S} \in \In{x_S}} r_{T,S} \]
+  Informally, a configuration is valid if it is obtained (by induction)
+  from at least another configuration. 
+  \item $r_{S,S'}$ ($S,S' \subseteq E$): We have:
+  \[ r_{S,S'} = x_S \wedge
+    \left( \bigvee_{m_{S,e} \in \In{r_{S,S'}}} m_{S,e} \right) \]
+  Informally, a reason variable $r_{S,S'}$ checks the induction step for
+  obtaining configuration $S'$ from $S$.
+  \item $m_{S,e}$ ($S \subseteq E$ and $e \in E$): These variables hold
+  the constant value of True.  
+\end{itemize}
