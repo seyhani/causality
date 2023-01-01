@@ -9,7 +9,7 @@ where $X, X' \subseteq E$ and $e \in E$,
 we add a new vertex $r_{X,X'}$, remove the edge $X \rightarrow X'$,
 and add two new edges $X \rightarrow r_{X,X'}$, $r_{X,X'} \rightarrow X'$.
 
-For each $S, e$ such that $S \vdash e$, we add a new vertex
+For each $S, e$ such that $S \vdash_{min} e$, we add a new vertex
 (labelled as $m_{S,e}$) to the graph. For any pair of vertices
 $X, X'$ in the graph, where $r_{X,X'}$ is also in the graph, we add
 an edge from $m_{S,e}$ to $r_{X,X'}$ iff $S \subseteq X$ and
@@ -40,6 +40,7 @@ The causal graph for $\es$ is as depicted in Fig. \ref{fig:es-causal-graph}.
 \end{exmp}
 
 \begin{prop}
-Given an event structure with $n$ events, constructing the
-described causal graph requires $\mathcal{O}(2^n)$ operations.
+Given an event structure with $n$ configurations
+and $m$ minimal enabling relations,
+constructing the described causal graph requires $\mathcal{O}(mn)$ operations.
 \end{prop}

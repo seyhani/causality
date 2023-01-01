@@ -1,6 +1,8 @@
 \section{HP Causality}
 
-\begin{thm}
+\subsection{Minimal Enabling as a Cause}
+
+\begin{thm}\label{thm:hp-x-y}
 Given an event structure $\es$, a cause $X = S \vdash\,e$
 where $(S, e) \in \vdash$, and an effect $Y = S_f$
 where $S_f \in \conf{\es}$, $X$ is a cause of $Y$
@@ -23,14 +25,14 @@ For AC2.\{a,b\}, assume $(W, w, x')$ is the witness discussed by HP.
   such that the effect holds as long as the cause.
   
   Assume the path from cause to effect is as follows:
-  \[
+  \begin{equation}\label{eq:validating-path}
     m_{S,e} \rightarrow
     r_{S_1,S_2} \rightarrow
     x_{S_2} \rightarrow
     r_{S_2, S_3} \rightarrow
     \cdots \rightarrow
     r_{S_{k-1}, S_k} \rightarrow x_{S_k} = x_{S_f}
-  \]
+  \end{equation}
 
   We also define $W$ as:
   \[ \left( \In{r_{S_1, S_2}} \setminus \set{x_{S_1}, m_{S,e}} \right) \cup
@@ -40,15 +42,43 @@ For AC2.\{a,b\}, assume $(W, w, x')$ is the witness discussed by HP.
   All variables in $W$ are set to False ($w$ is an all-False valuation).
   $x'$ sets $r_{S,e}$ to False as well.
   
+  \textbf{The choice of $W$ and validating path:}
+  By defining $W$ as explained above, and setting it to all-False,
+  the value for each vertex of the \textit{validating} path
+  (as shown in Eq. \ref{eq:validating-path})
+  can be determined by its predecessor. For $i \geq 2$, we have:
+  \begin{equation}\label{eq:x-Si-restrict}
+    x_{S_i} = r_{S_{i-1}, S_i}
+  \end{equation}
+  
+  By definition, each reason vertex consists of
+  an \textit{enabling} and a \textit{configuration} component.
+  We know the validating path is in the causal graph. Hence, for $i \geq 2$,
+  the enabling component for $r_{S_i, S_{i+1}}$ is satisfied; so we have:
+  \begin{equation}\label{eq:r-Si-Si+1-restrict}
+    r_{S_i, S_{i+1}} = x_{S_i} \wedge \text{True} = x_{S_i}
+  \end{equation}
+  
+  For $r_{S_1,S_2}$, after setting $W$ to all-False, we have:
+  \begin{equation}\label{eq:r-S1-S2-restrict}
+    r_{S_1,S_2} = \text{True} \wedge m_{S,e} = m_{S,e}
+  \end{equation}
+  
   \input{./fig/fig:witness}
+
+  As shown in Eqs.
+  \ref{eq:x-Si-restrict}, \ref{eq:r-Si-Si+1-restrict}, \ref{eq:r-S1-S2-restrict},
+  Setting $m_{S,e}$ to False and $W$ to all-False will set all vertices
+  in the validating path to False.
 
   With the witness described above, we can see that the effect $x_{S_f}$
   is also valuated as False; therefore, condition AC2.a is satisfied.
   
   
   \item \textbf{AC2.b:} After setting $m_{S,e}$ to True,
-  while maintaining $w$ as all-False, $x_{S_f}$ is valuated to True again.
-  The \textit{validating} edges for $x_{S_f}$ are shown with thick lines
+  while maintaining $W$ as all-False, $x_{S_f}$ is valuated to True again;
+  this follows from the equations of the validating path when $W$ is set to all-False.
+  The \textit{validating edges} for $x_{S_f}$ are shown with thick lines
   in Fig. \ref{fig:ac2.b}. Observe that, re-setting any variable $v \not\in W$
   does \textbf{not} \textit{invalidate} the specified path for $x_{S_f}$.
 
@@ -59,3 +89,81 @@ For AC2.\{a,b\}, assume $(W, w, x')$ is the witness discussed by HP.
 \end{itemize}
 
 \end{proof}
+
+\begin{thm}\label{thm:hp-x-disj-Y}
+Given an event structure $\es$, a cause $X = S \vdash\,e$
+where $(S, e) \in \vdash$, and an effect $Y = \bigvee_{f} S_{f}$
+where $\forall f.\;S_f \in \conf{\es}$, $X$ is a cause of $Y$
+(according to the HP definition) if there exists $f$ such that
+there is at least one path from $m_{S,e}$ to $x_{S_f}$
+in the causal graph of $\es$.
+\end{thm}
+
+\begin{proof}
+Assume there is a path from $m_{S,e}$ to $x_{S_f}$ for some $f$.
+Also assume $W$ is defined as in Thm. \ref{thm:hp-x-y}. For this problem,
+we construct the new witness $W'$ as follows:
+\[ W' = W \cup \left( \bigcup_{f' \neq f} x_{S_{f'}} \right) \]
+
+$W'$ is set to all-False, as before.
+
+With the new witness, both AC2.a and AC2.b can be satisfied
+for the new problem.
+\end{proof}
+
+\begin{thm}\label{thm:hp-x-conj-Y}
+Given an event structure $\es$, a cause $X = S \vdash\,e$
+where $(S, e) \in \vdash$, and an effect $Y = \bigwedge_{f} S_{f}$
+where $\forall f.\;S_f \in \conf{\es}$, $X$ is a cause of $Y$
+(according to the HP definition) if there exists $f$ such that
+there is at least one path from $m_{S,e}$ to $x_{S_f}$
+in the causal graph of $\es$.  
+\end{thm}
+
+\begin{proof}
+The set $W$ is selected just as done in Thm. \ref{thm:hp-x-disj-Y}.
+For any $w \in W \cap Y$, we set $w$ to True.
+\end{proof}
+
+\begin{thm}\label{thm:hp-X-Y}
+Given an event structure $\es$,
+a cause $X = \set{S_1 \vdash\, e_1, \cdots, S_k \vdash\, e_k}$
+where $(S_i, e_i) \in \vdash$, and an effect $Y = x_{S_f}$
+where $S_f \in \conf{\es}$, $X$ is not a cause of $Y$. 
+\end{thm}
+
+\begin{proof}
+The result holds if there is no path from $X$ to $Y$.
+Assume there is a path from $X$ to $Y$.
+this path starts from a vertex $m_{S_i,e_i}$, where $(S_i \vdash e_i) \in X$.
+As stated in Thm. \ref{thm:hp-x-y}, $S_i \vdash e_i$ is a cause of $Y$.
+Hence, AC3 does not hold for $X$.
+\end{proof}
+
+\subsection{False Minimal Enabling as a Cause}
+
+In the previous section, we showed how to check causality for
+true minimal enabling relations
+(i.e. $S \vdash e =$ True in the given event structure).
+Now we want to improve the existing causal graph
+to include false minimal enabling relations as well.
+
+Given event structure $\es = (E, \#, \vdash)$,
+For each $S \subseteq E$ and $e \in E$, we define vertex $r_{S,e}$.
+The value associated with this vertex will be as follows:
+
+\[ m_{S,e} =
+  \begin{cases}
+    \Min{S}{e}   & \text{if } S \vdash_{min} e \\
+    \text{False} & \text{otherwise}
+  \end{cases}
+\]
+
+Where $\Min{S}{e}$ is defined as follows:
+\[ \Min{S}{e} =
+  \bigwedge_{S' \subseteq E.\;(S' \subset S) \vee (S \subset S')}
+  \neg m_{S',e}
+\]
+
+Informally, if $S$ minimally enables $e$, no pure sub- or super-set of $S$
+minimally enables $e$. 
