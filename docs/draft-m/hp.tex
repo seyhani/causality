@@ -1,4 +1,4 @@
-\section{HP Causality}
+\section{Finding Root Causes for Unsafe Behavior}
 
 \subsection{Minimal Enabling as a Cause}
 
@@ -6,12 +6,14 @@
 Given an event structure $\es$, a cause $X = S \vdash\,e$
 where $(S, e) \in \vdash$, and an effect $Y = S_f$
 where $S_f \in \conf{\es}$, $X$ is a cause of $Y$
-(according to the HP definition) if there is at least one path
+(according to the HP definition) iff there is at least one path
 from $m_{S,e}$ to $x_{S_f}$ in the causal graph of $\es$.
 \end{thm}
 
 \begin{proof}
-We check the conditions of HP causality for the given cause and effect.
+We prove for both directions.
+
+$\Leftarrow$: We check the conditions of HP causality for the given cause and effect.
 
 \begin{itemize}
   \item \textbf{AC1:} Both the cause and effect hold in the factual scenario;
@@ -48,7 +50,7 @@ For AC2.\{a,b\}, assume $(W, w, x')$ is the witness discussed by HP.
   (as shown in Eq. \ref{eq:validating-path})
   can be determined by its predecessor. For $i \geq 2$, we have:
   \begin{equation}\label{eq:x-Si-restrict}
-    x_{S_i} = r_{S_{i-1}, S_i}
+    (x_{S_i})_w = r_{S_{i-1}, S_i}
   \end{equation}
   
   By definition, each reason vertex consists of
@@ -56,12 +58,12 @@ For AC2.\{a,b\}, assume $(W, w, x')$ is the witness discussed by HP.
   We know the validating path is in the causal graph. Hence, for $i \geq 2$,
   the enabling component for $r_{S_i, S_{i+1}}$ is satisfied; so we have:
   \begin{equation}\label{eq:r-Si-Si+1-restrict}
-    r_{S_i, S_{i+1}} = x_{S_i} \wedge \text{True} = x_{S_i}
+    r_{S_i, S_{i+1}} = (r_{S_i, S_{i+1}})_w = x_{S_i} \wedge \text{True} = x_{S_i}
   \end{equation}
   
   For $r_{S_1,S_2}$, after setting $W$ to all-False, we have:
   \begin{equation}\label{eq:r-S1-S2-restrict}
-    r_{S_1,S_2} = \text{True} \wedge m_{S,e} = m_{S,e}
+    (r_{S_1,S_2})_w = \text{True} \wedge m_{S,e} = m_{S,e}
   \end{equation}
   
   \input{./fig/fig:witness}
@@ -88,82 +90,130 @@ For AC2.\{a,b\}, assume $(W, w, x')$ is the witness discussed by HP.
   this condition is also satisfied.
 \end{itemize}
 
+$\Rightarrow$: Assume there is no path from $m_{S,e}$ to $x_{S_f}$
+in the causal graph. The vertices remaining after a W-projection will be
+$m_{S,e}$, $x_{S_f}$, and all parent vertices of $x_{S_f}$ (unreachable from $m_{S,e}$).
+Assume we have chosen $(W, w, x')$ such that AC2.a is satisfied
+(i.e. $Y_{wx'} = \text{False}$).
+As there is no path from $m_{S,e}$ to $x_{S,f}$, we have: $Y_{wx} = Y_{w} = \text{False}$.
+Hence, AC2.b cannot be satified, for any arbitrary $W$, which contradicts our assumption
+$m_{S,e} \propto x_{S_f}$.
+
 \end{proof}
 
 \begin{thm}\label{thm:hp-x-disj-Y}
-Given an event structure $\es$, a cause $X = S \vdash\,e$
-where $(S, e) \in \vdash$, and an effect $Y = \bigvee_{f} S_{f}$
+Given an event structure $\es$, a cause $X = S \minen e$,
+and an effect $Y = \bigvee_{f} S_{f}$
 where $\forall f.\;S_f \in \conf{\es}$, $X$ is a cause of $Y$
-(according to the HP definition) if there exists $f$ such that
+(according to the HP definition) iff there exists $f$ such that
 there is at least one path from $m_{S,e}$ to $x_{S_f}$
 in the causal graph of $\es$.
 \end{thm}
 
 \begin{proof}
-Assume there is a path from $m_{S,e}$ to $x_{S_f}$ for some $f$.
+We prove for both directions.
+
+$\Leftarrow$: Assume there is a path from $m_{S,e}$ to $x_{S_f}$ for some $f$.
 Also assume $W$ is defined as in Thm. \ref{thm:hp-x-y}. For this problem,
 we construct the new witness $W'$ as follows:
 \[ W' = W \cup \left( \bigcup_{f' \neq f} x_{S_{f'}} \right) \]
 
 $W'$ is set to all-False, as before.
 
-With the new witness, both AC2.a and AC2.b can be satisfied
+With the new witness, AC2.\{a,b\} can be satisfied
 for the new problem.
+
+$\Rightarrow$: Using an argument similar to the proof for Thm. \ref{thm:hp-x-y},
+we can show that if $x \propto y$, there is at least one path from $m_{S,e}$ to $x_{S_f}$ for some $f$.
 \end{proof}
 
 \begin{thm}\label{thm:hp-x-conj-Y}
-Given an event structure $\es$, a cause $X = S \vdash\,e$
-where $(S, e) \in \vdash$, and an effect $Y = \bigwedge_{f} S_{f}$
-where $\forall f.\;S_f \in \conf{\es}$, $X$ is a cause of $Y$
-(according to the HP definition) if there exists $f$ such that
-there is at least one path from $m_{S,e}$ to $x_{S_f}$
-in the causal graph of $\es$.  
+Given an event structure $\es$, a cause $X = S \minen e$,
+and an effect $Y = \bigwedge_{f} S_{f}$ where $\forall f.\;S_f \in \conf{\es}$,
+$X$ is a cause of $Y$ (according to the HP definition)
+iff there exists $f$ such that there is at least one path from $m_{S,e}$ to $x_{S_f}$
+in the causal graph of $\es$.
 \end{thm}
 
 \begin{proof}
-The set $W$ is selected just as done in Thm. \ref{thm:hp-x-disj-Y}.
+$\Leftarrow$: The set $W$ is selected just as done in Thm. \ref{thm:hp-x-disj-Y}.
 For any $w \in W \cap Y$, we set $w$ to True.
+
+$\Rightarrow$: Similar to Thms. \ref{thm:hp-x-y}, \ref{thm:hp-x-disj-Y}.
 \end{proof}
 
-\begin{thm}\label{thm:hp-X-Y}
-Given an event structure $\es$,
-a cause $X = \set{S_1 \vdash\, e_1, \cdots, S_k \vdash\, e_k}$
-where $(S_i, e_i) \in \vdash$, and an effect $Y = x_{S_f}$
-where $S_f \in \conf{\es}$, $X$ is not a cause of $Y$. 
-\end{thm}
+% \subsection{False Minimal Enabling as a Cause}
 
-\begin{proof}
-The result holds if there is no path from $X$ to $Y$.
-Assume there is a path from $X$ to $Y$.
-this path starts from a vertex $m_{S_i,e_i}$, where $(S_i \vdash e_i) \in X$.
-As stated in Thm. \ref{thm:hp-x-y}, $S_i \vdash e_i$ is a cause of $Y$.
-Hence, AC3 does not hold for $X$.
-\end{proof}
+% In the previous section, we showed how to check causality for
+% true minimal enabling relations
+% (i.e. $S \vdash e =$ True in the given event structure).
+% Now we want to improve the existing causal graph
+% to include false minimal enabling relations as well.
 
-\subsection{False Minimal Enabling as a Cause}
+% Given event structure $\es = (E, \#, \vdash)$,
+% For each $S \subseteq E$ and $e \in E$, we define vertex $r_{S,e}$.
+% The value associated with this vertex will be as follows:
 
-In the previous section, we showed how to check causality for
-true minimal enabling relations
-(i.e. $S \vdash e =$ True in the given event structure).
-Now we want to improve the existing causal graph
-to include false minimal enabling relations as well.
+% \[ m_{S,e} =
+%   \begin{cases}
+%     \Min{S}{e}   & \text{if } S \vdash_{min} e \\
+%     \text{False} & \text{otherwise}
+%   \end{cases}
+% \]
 
-Given event structure $\es = (E, \#, \vdash)$,
-For each $S \subseteq E$ and $e \in E$, we define vertex $r_{S,e}$.
-The value associated with this vertex will be as follows:
+% Where $\Min{S}{e}$ is defined as follows:
+% \[ \Min{S}{e} =
+%   \bigwedge_{S' \subseteq E.\;(S' \subset S) \vee (S \subset S')}
+%   \neg m_{S',e}
+% \]
 
-\[ m_{S,e} =
-  \begin{cases}
-    \Min{S}{e}   & \text{if } S \vdash_{min} e \\
-    \text{False} & \text{otherwise}
-  \end{cases}
-\]
+% Informally, if $S$ minimally enables $e$, no pure sub- or super-set of $S$
+% minimally enables $e$.
 
-Where $\Min{S}{e}$ is defined as follows:
-\[ \Min{S}{e} =
-  \bigwedge_{S' \subseteq E.\;(S' \subset S) \vee (S \subset S')}
-  \neg m_{S',e}
-\]
+\subsection{False Conflict as a Cause}
 
-Informally, if $S$ minimally enables $e$, no pure sub- or super-set of $S$
-minimally enables $e$. 
+As we construct the configurations lattice for an event structure, we check for both
+conflicts and enablings. The causal graph described before only contains the enabling
+steps. We can refine the previous model to account for conflicts as well.
+
+\subsubsection{Causal Graph}
+
+We add new vertices $c_{e,e'}$ to the graph previously described, where
+$c_{e,e'}$ shows the conflict between the events $e, e'$.
+For any edge $x_S \rightarrow r_{S,S'}$, we remove this edge,
+add the new vertex $r^{(c)}_{S,S'}$, and add edges $x_S \rightarrow r^{(c)}_{S,S'}$ and
+$r^{(1)}_{S,S'} \rightarrow r_{S,S'}$. We also re-label all previous $r$-vertices to $r^{(m)}$-vertices.
+For each vertex $r^{(c)}_{S,S'}$, we add edges $c_{f,e} \rightarrow r^{(c)}_{S,S'}$,
+where $e = S' \setminus S$ and $f \in S$.
+
+\subsubsection{Causal Model}
+
+All $m$- and $x$-variables are defined exactly as before.
+We only re-define $r$-variables, and define $c$-variables.
+
+\begin{itemize}
+  \item $r^{(c)}_{S,S'}$ ($S,S' \subseteq E$): We have:
+  \[ r^{(c)}_{S,S'} = x_S \wedge
+    \left( \bigwedge_{ c_{f,e} \in \In{ r^{(c)}_{S,S'} } } \neg c_{f,e} \right) \]
+  
+  Informally, a reason variable $r^{(c)}_{S,S'}$ checks the conflict part for
+  the induction step for obtaining configuration $S'$ from $S$.
+  \item $r^{(c)}_{S,S'}$ ($S,S' \subseteq E$): We have:
+  \[ r^{(m)}_{S,S'} = r^{(c)}_{S,S'} \wedge
+    \left( \bigvee_{ m_{S,e} \in \In{ r^{(m)}_{S,S'} } } m_{S,e} \right) \]
+  
+  Informally, a reason variable $r^{(m)}_{S,S'}$ checks the enabling part for
+  the induction step for obtaining configuration $S'$ from $S$.
+  \item $c_{e,f}$ ($e,f \in E$): These variables hold the constant value of True.
+  To avoid duplication, we only define one $c$-variable (and $c$-vertex) for a given pair $e,f$.
+\end{itemize}
+
+\subsubsection{Causality}
+
+With the refined causal model, we can easily show
+Thms. \ref{thm:hp-x-y}, \ref{thm:hp-x-disj-Y}, \ref{thm:hp-x-conj-Y} hold
+when cause is a false conflict instead of a true minimal enabling relation.
+
+% \begin{thm}\label{thm:hp:c:x-y}
+
+% \end{thm}
