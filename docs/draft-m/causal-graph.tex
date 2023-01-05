@@ -1,20 +1,20 @@
 \section{Causal Graph}
 
-Given an event structure $\es = (E, \#, \vdash)$, we start by constructing
-the lattice of \textbf{valid} configurations for $\es$. We then apply the following
-transformations to this lattice:
+Given an event structure $\es = (E, \#, \minen)$, we start by constructing
+the lattice of \textbf{valid} configurations for $\es$ (i.e. $\conf{\es}$).
+We then apply the following transformations to this lattice:
 
 For each edge $X \rightarrow X' = X \cup \set{e}$ in the graph,
 where $X, X' \subseteq E$ and $e \in E$,
 we add a new vertex $r_{X,X'}$, remove the edge $X \rightarrow X'$,
 and add two new edges $X \rightarrow r_{X,X'}$, $r_{X,X'} \rightarrow X'$.
 
-For each $S, e$ such that $S \vdash_{min} e$, we add a new vertex
+For each $S, e$ such that $S \minen e$, we add a new vertex
 (labelled as $m_{S,e}$) to the graph. For any pair of vertices
 $X, X'$ in the graph, where $r_{X,X'}$ is also in the graph, we add
 an edge from $m_{S,e}$ to $r_{X,X'}$ iff $S \subseteq X$ and
 $\set{e} = X' \setminus X$. For consistency, we re-label the configuration vertices
-such that a given vertex $X$ is re-labelled as $x_{X}$.
+such that a given configuration vertex $X$ is re-labelled as $x_{X}$.
 
 Informally, the $r$- and $m$-vertices are added to show the
 induction steps, as defined in Prop. \ref{prop:es-induction},
