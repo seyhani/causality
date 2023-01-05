@@ -1,8 +1,35 @@
 \section{Preliminaries}
 
 \begin{prop}\label{prop:es-induction}
-For a given event structure $\es$, a set $X \in \conf{\es}$,
-and an event $e$, $X \cup \set{e} \in \conf{\es}$ iff
-\[ ( \forall e' \in X.\; e' \cancel{\#} e ) \wedge
-  ( \exists S \subseteq X.\; S \vdash e ) \]
+  For a given event structure $\es$, a set $X \in \conf{\es}$,
+  and an event $e$, $X \cup \set{e} \in \conf{\es}$ iff
+  \[ ( \forall e' \in X.\; e' \cancel{\#} e ) \wedge
+    ( \exists S \subseteq X.\; S \minen e ) \]
 \end{prop}
+
+\begin{defn}
+  Given sets $S, W$ of variables in a causal model
+  ($S \cap W = \varnothing$), and vector $w$ of values for $W$,
+  $S_w$ is the valuation of variables in $S$
+  after fixing all values in $W$ to $w$.
+\end{defn}
+
+\begin{defn}
+  Given disjoint sets $X,Y$ in a causal model, with respective values $x,y$,
+  we have $x \propto y$ iff $X=x$ is a cause of $Y=y$.
+\end{defn}
+
+\mah{Copied from the Hopkins paper:}
+\begin{defn}\label{defn:W-projection}
+  Let $M =(U,V,F)$ be a recursive causal model.
+  Suppose we have a causal world $(M,u)$ such that $V = \set{V_1, \cdots, V_n}$.
+  To delete a variable $V_i$ from $(M,u)$, $V_i$ is removed from $V$,
+  and the structural equation $F_X$ of each child $X$ of $V_i$
+  is replaced with $F_X |_{v_i}$ , where $v_i = V_i(u)$.
+  The projection of $(M,u)$ over variables $V_1, V_2, \cdots, V_k$ is a new causal model
+  % in which $V_{k+1},V_{k+2}, \cdots, V_n$ are deleted from $(M,u)$.
+  The \textit{W-projection} of $(M,u)$ with respect to $x \propto y$
+  is the projection of $(M, u)$ over $X$, $Y$, the variables $V^{XY}$
+  on a path from $X$ to $Y$ in the causal network of $M$,
+  and the parents of $V^{XY}$ and $Y$ in the causal network of $M$.
+\end{defn}
