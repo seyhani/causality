@@ -1,0 +1,69 @@
+\newcommand{\ra}    { \rightarrow }
+\newcommand{\sem}[1]{ \llbracket #1 \rrbracket }
+
+\begin{exmp}
+\input{fig/fig:blacklist}
+
+Blacklisted nodes are nodes in the network that must not
+be reachable.
+Let's assume the network in Fig. \ref{fig:blacklist} as
+an example where the node $d$ is blacklisted.
+For simplicity we assume that we require
+$d$ not reachable only from $a$.
+Consider the following DyNetKAT program for this network:
+\begin{equation*}
+\begin{aligned}[c]
+    P   & = p!1                             \\
+    Q   & = q!1                             \\
+    N   & = F \oplus p?1;N_p \oplus q?1;N_q \\
+    N_p & = F_p \oplus q?1;F_{pq}           \\
+    N_q & = F_q \oplus p?1;F_{pq}           \\
+    F   & = a\ra b \oplus c\ra b            \\
+\end{aligned}
+\qquad\qquad
+\begin{aligned}[c]
+    F_p         & = a\ra c \oplus c\ra b \oplus a\ra b \\
+    F_q         & = a\ra b \oplus c\ra d               \\
+    F_{pq}      & = a\ra c \oplus c\ra d \oplus a\ra d \\
+    SDN         & = \delta_{\mathcal{L}} (N
+    \parallel P \parallel Q)                           \\
+    \mathcal{L} & = \set{p!1,p?1,q?1,q?1}                \\
+\end{aligned}
+\end{equation*}
+We assume that there are two concurrent processes for updating
+the switches $a$ and $c$.
+Let we use $p$ and $q$ to denote $rcfg(p,1)$ and
+$rcfg(q,1)$ respectively.
+Thus, $p$ and $q$ replace the solid green and orange
+paths in the network with dashed paths respectively.
+
+Obviously, executing both $rcfg_{p,1}$ and $rcfg_{q,1}$ leads
+to a state where we can forward the $\sigma_a$ to $d$.
+To find the cause of error, let $\es = \sem{SDN}$ and $M$
+be the causal model of $\es$, where we encode the unsafe behavior 
+as:
+\begin{equation*}
+  \varphi = \exists X \in \conf{\es}.\;\exists e \in X.\;l(e) = a \ra d
+\end{equation*}
+
+The property above sets the value of $\varphi$ to True if $\es$ 
+contains a configuration with an event labeled $a \ra d$.
+In $SDN$ there are two orders of execution for $p$ and $q$; hence,
+there are two events for each of these labels in $\es$ 
+and thus, there are two events with the label $a \ra d$ as well.
+So, let's consider events $p_1,p_2$ with label $p$,
+events $q_1,q_2$ with label $q$ and events $ad_1,ad_2$ 
+with label $a \ra d$ in $E$. Fig. \ref{fig:blacklist:lattice}
+shows a portion of the $\conf{\es}$ lattice, which consists of configurations
+which lead to events labeled with $a\ra d$.
+
+\input{fig/fig:blacklist:lattice}
+
+\input{fig/fig:blacklist:causal-graph}
+
+The causal graph for this event structure is presented in Fig. \ref{fig:blacklist:causal-graph}.
+We claim that $p_1 \cancel{\#} q_1$ is a cause of $\varphi$. To check, we only need to see
+if there is a path from $c_{p_1,q_1}$ to either $x_{p_1,q_1,ad_1}$ or $x_{q_2,p_2,ad_2}$.
+In this case, there is such a path; so the causality claim holds.
+$q_2 \cancel{\#} p_2$ is also a cause of $\varphi$, due to symmetry.
+\end{exmp}
