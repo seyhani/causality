@@ -1,0 +1,20 @@
+\begin{figure}
+\centering
+\begin{tikzpicture} [
+    node distance={20mm},
+    main/.style = {draw, circle},
+    s/.style = {->,thick},
+    d/.style = {->,thick,dashed}
+  ]
+  \node[main] (b) {$b$};
+  \node[main] (a) [above right of=b] {$a$};
+  \node[main] (c) [below right of=a] {$c$};
+  \node[main] (d) [right of=c] {$d$};
+  \draw[thick,green,->] (a) -- (b);
+  \draw[thick,green,->,dashed] (a) -- (c);
+  \draw[thick,orange,->] (c) -- (b);
+  \draw[thick,orange,->,dashed] (c) -- (d);
+\end{tikzpicture}
+\caption{Failure of blacklist property}
+\label{fig:blacklist}
+\end{figure}

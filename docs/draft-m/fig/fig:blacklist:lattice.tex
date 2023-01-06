@@ -1,0 +1,24 @@
+\newcommand{\crd}[4][above]{
+  \node[draw,circle,inner sep=2pt,fill,label={[#1]:#4}] at (#2,#3) {};
+}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+  \crd{0}{0}{$\emptyset$}
+  \crd[left]{-2}{1}{$\set{p_1}$}
+  \crd[left]{-2}{2}{$\set{p_1,q_1}$}
+  \crd[left]{-2}{3}{$\set{p_1,q_1,ad_1}$}
+  \crd[right]{2}{1}{$\set{q_2}$}
+  \crd[right]{2}{2}{$\set{p_2,q_2}$}
+  \crd[right]{2}{3}{$\set{p_2,q_2,ad_2}$}
+  \draw [ultra thick] (-2,1) -- (-2,2);
+  \draw [ultra thick] (-2,2) -- (-2,3);
+  \draw [ultra thick] (0,0) -- (2,1);
+  \draw [ultra thick] (0,0) -- (-2,1);
+  \draw [ultra thick] (2,1) -- (2,2);
+  \draw [ultra thick] (2,1) -- (2,3);
+\end{tikzpicture}
+\caption{Configurations lattice for the blacklist network}
+\label{fig:blacklist:lattice}
+\end{figure}
