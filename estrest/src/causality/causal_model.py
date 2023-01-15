@@ -1,6 +1,8 @@
 from copy import deepcopy
 from typing import Dict, Callable, List, Optional
 
+from utils import topological_sort
+
 VALS = Dict[str, Optional[bool]]
 FN = Callable[[VALS], bool]
 
@@ -67,14 +69,21 @@ class CausalModel:
 # Inverse of the deps relation
     def __deps_inv(self):
         deps_inv = {}
-        for k, v in self.deps.items():
-            deps_inv[v] = deps_inv.get(v, []).append(k)
+
+        for k in self.deps:
+            if k not in deps_inv:
+                deps_inv[k] = []
+
+        for k, vs in self.deps.items():
+            for v in vs:
+                deps_inv[v].append(k)
         return deps_inv
 
     def evaluate(self):
-        for i in range(len(self.vals)):
-            for var, val in self.vals.items():
-                self.vals[var] = self.fns[var](self.vals)
-    
+        deps_inv = self.__deps_inv()
+        vars_sorted = topological_sort(deps_inv)
+        for var in vars_sorted:
+            self.vals[var] = self.fns[var](self.vals)
+
     def get_var_names(self):
         return self.fns.keys()
