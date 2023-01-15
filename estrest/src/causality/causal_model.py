@@ -37,25 +37,26 @@ class CausalModel:
     def add_constant(self, var: str, val: bool):
         self.add(var, lambda vals: val)
 
-    def __intervene_internal(self, var, val):
+    def __intervene_internal(self, ints: Dict[str, bool]):
         model = deepcopy(self)
-        model.fns[var] = lambda vals: val
+        for var, val in ints.items():
+            model.fns[var] = (
+                lambda val_=val: lambda vals: val_
+            )()
         return model
 
     def intervene(self, ints: Dict[str, bool]) -> 'CausalModel':
         model = self
         if not set(ints.keys()).issubset(self.get_var_names()):
             raise Exception("Unknown variables")
-        for var, val in ints.items():
-            model = model.__intervene_internal(var, val)
+        model = model.__intervene_internal(ints)
         return model
 
     def satisfies(self, event: PrimitiveEvent, ints: VALS = None) -> bool:
         if ints is None:
             ints = {}
         m = self
-        for var, val in ints.items():
-            m = m.intervene({var: val})
+        m = m.intervene(ints)
         m.evaluate()
         return m.vals[event.var] == event.val
 
