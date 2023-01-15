@@ -1,5 +1,5 @@
 from copy import deepcopy
-from typing import Dict, Callable, Optional
+from typing import Dict, Callable, List, Optional
 
 VALS = Dict[str, Optional[bool]]
 FN = Callable[[VALS], bool]
@@ -25,14 +25,17 @@ class PrimitiveEvent:
 class CausalModel:
     vals: VALS
     fns: Dict[str, FN]
+    deps: Dict[str, List[str]]
 
     def __init__(self):
         self.vals = {}
         self.fns = {}
+        self.deps = {}
 
-    def add(self, var: str, fn: FN) -> None:
+    def add(self, var: str, fn: FN, deps: List[str] = []) -> None:
         self.vals[var] = None
         self.fns[var] = fn
+        self.deps[var] = deps
 
     def add_constant(self, var: str, val: bool):
         self.add(var, lambda vals: val)
@@ -43,6 +46,7 @@ class CausalModel:
             model.fns[var] = (
                 lambda val_=val: lambda vals: val_
             )()
+            model.deps[var] = []
         return model
 
     def intervene(self, ints: Dict[str, bool]) -> 'CausalModel':
@@ -60,10 +64,17 @@ class CausalModel:
         m.evaluate()
         return m.vals[event.var] == event.val
 
+# Inverse of the deps relation
+    def __deps_inv(self):
+        deps_inv = {}
+        for k, v in self.deps.items():
+            deps_inv[v] = deps_inv.get(v, []).append(k)
+        return deps_inv
+
     def evaluate(self):
         for i in range(len(self.vals)):
             for var, val in self.vals.items():
                 self.vals[var] = self.fns[var](self.vals)
-
+    
     def get_var_names(self):
         return self.fns.keys()
