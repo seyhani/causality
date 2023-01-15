@@ -84,8 +84,8 @@ T = TypeVar("T")
 def __topol_sort_internal(
     v: T,
     out: Dict[T, List[T]],
-    visited: Set[T] = set(),
-    answer: List[T] = []
+    visited: Set[T],
+    answer: List[T]
 ) -> List[T]:
     visited.add(v)
     for u in out[v]:
@@ -105,5 +105,7 @@ def topological_sort(
     for v in out:
         if v not in visited:
             __topol_sort_internal(v, out, visited, answer)
-    return answer.reverse()
+    
+    answer.reverse()
+    return answer
     
