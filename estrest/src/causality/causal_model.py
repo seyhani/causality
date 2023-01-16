@@ -66,7 +66,7 @@ class CausalModel:
         m.evaluate()
         return m.vals[event.var] == event.val
 
-# Inverse of the deps relation
+    # Inverse of the deps relation
     def __deps_inv(self):
         deps_inv = {}
 
