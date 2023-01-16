@@ -71,8 +71,7 @@ class CausalModel:
         deps_inv = {}
 
         for k in self.deps:
-            if k not in deps_inv:
-                deps_inv[k] = []
+            deps_inv[k] = []
 
         for k, vs in self.deps.items():
             for v in vs:
