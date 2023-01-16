@@ -62,7 +62,6 @@ class TestCausalModel(unittest.TestCase):
         checker = EventStructureCausalChecker(es, [{a, b, c}], cause, witness)
         self.assertFalse(checker.is_cause())
 
-    # @unittest.skip
     def test_blacklist(self):
         ab1, ab2, ab3, ac1, ac2, ac3 = Event('ab1'), Event('ab2'), Event('ab3'), \
                                        Event('ac1'), Event('ac2'), Event('ac3')
