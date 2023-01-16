@@ -1,5 +1,5 @@
 from itertools import chain, combinations
-from typing import Set, List, Iterable, FrozenSet
+from typing import Dict, Set, List, Iterable, FrozenSet, TypeVar
 
 from event import Event, SyncedEvent, STAR
 
@@ -79,3 +79,27 @@ def powerset(iterable):
 
 def superset_closure(elements: FrozenSet, subset: FrozenSet):
     return set(map(lambda s: frozenset(s.union(subset)), powerset(elements - subset)))
+
+
+def __topol_sort_internal(
+    v, out: Dict, visited: Set, answer: List
+) -> List:
+    visited.add(v)
+    for u in out[v]:
+        if u not in visited:
+            __topol_sort_internal(u, out, visited, answer)
+    answer.append(v)
+    return answer
+
+
+# out represents the out-edge relation for a given graph G:
+# out[v] = { u | (v -> u) is in E(G) }
+def topological_sort(out: Dict) -> List:
+    visited = set()
+    answer = []
+    for v in out:
+        if v not in visited:
+            __topol_sort_internal(v, out, visited, answer)
+
+    answer.reverse()
+    return answer

@@ -11,7 +11,7 @@ class TestCausalModel(unittest.TestCase):
         m = CausalModel()
         m.add_constant('A', True)
         m.add_constant('B', True)
-        m.add('C', lambda vals: vals['A'] or vals['B'])
+        m.add('C', lambda vals: vals['A'] or vals['B'], ['A', 'B'])
         cause = PrimitiveEvent('A', True)
         effect = PrimitiveEvent('C', True)
         witness = Witness('B', False, False)

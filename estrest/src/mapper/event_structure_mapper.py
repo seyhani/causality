@@ -1,11 +1,11 @@
 from itertools import combinations
-from typing import Set
+from typing import List, Set
 
 from causality.causal_model import VALS
 from event import Event
 from event_structure.valid_event_structure import ValidEventStructure
 from mapper.event_structure_causal_model import EventStructureCausalModel
-from mapper.event_structure_var import ConflictVar, MinEnablingVar, EnablingVar
+from mapper.event_structure_var import ConflictVar, EventStructureVar, MinEnablingVar, EnablingVar
 from utils import powerset
 
 
@@ -34,14 +34,32 @@ class EventStructureToCausalModelMapper:
                 result = result and not vals[repr(MinEnablingVar(sp, e))]
         return result
 
+    def con_deps(self, s: Set[Event]) -> List[EventStructureVar]:
+        return [
+            ConflictVar(e, ep)
+            for e, ep in combinations(s, 2)
+        ]
+        
+    def min_deps(self, s: Set[Event], e: Event) -> List[EventStructureVar]:
+        return [
+            MinEnablingVar(sp, e)
+            for sp in powerset(self.es.events)
+            if (sp < s or s < sp) and (e not in sp)
+        ]
+
     def __add_min_en_vars(self):
         for s in powerset(self.es.events):
             for e in self.es.events - s:
                 if self.es.min_enables(s, e):
-                    self.cm.add_min_enabling(s, e, (
-                        lambda s_=s, e_=e: lambda vals: self.min(s_, e_, vals) and self.con(s_, vals))())
+                    self.cm.add_min_enabling(
+                        s, e, (
+                            lambda s_=s, e_=e: lambda vals:
+                                self.min(s_, e_, vals) and self.con(s_, vals)
+                        )(),
+                        self.con_deps(s) + self.min_deps(s, e)
+                    )
                 else:
-                    self.cm.add_min_enabling(s, e, lambda vals: False)
+                    self.cm.add_min_enabling(s, e, lambda vals: False, [])
 
     def __add_enabling_vars(self):
         def enabling_condition(vals, s_, e_):
@@ -50,10 +68,23 @@ class EventStructureToCausalModelMapper:
                 result = result or vals[repr(EnablingVar(s_ - {ep}, e_))]
             result = result and self.con(s_, vals)
             return result
+        
+        def enabling_condition_deps(s_, e_) -> List[EventStructureVar]:
+            return (
+                [EnablingVar(s_ - {ep}, e_) for ep in s_] +
+                [MinEnablingVar(s_, e_)] +
+                self.con_deps(s_)
+            )
 
         for s in powerset(self.es.events):
             for e in self.es.events - s:
-                self.cm.add_enabling(s, e, (lambda s_=s, e_=e: lambda vals: enabling_condition(vals, s_, e_))())
+                self.cm.add_enabling(
+                    s, e, (
+                        lambda s_=s, e_=e: lambda vals:
+                            enabling_condition(vals, s_, e_)
+                    )(),
+                    enabling_condition_deps(s, e)
+                )
 
     def map(self) -> EventStructureCausalModel:
         self.__add_conflict_vars()

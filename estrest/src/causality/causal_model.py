@@ -1,5 +1,7 @@
 from copy import deepcopy
-from typing import Dict, Callable, Optional
+from typing import Dict, Callable, List, Optional
+
+from utils import topological_sort
 
 VALS = Dict[str, Optional[bool]]
 FN = Callable[[VALS], bool]
@@ -25,44 +27,62 @@ class PrimitiveEvent:
 class CausalModel:
     vals: VALS
     fns: Dict[str, FN]
+    deps: Dict[str, List[str]]
 
     def __init__(self):
         self.vals = {}
         self.fns = {}
+        self.deps = {}
 
-    def add(self, var: str, fn: FN) -> None:
+    def add(self, var: str, fn: FN, deps: List[str] = []) -> None:
         self.vals[var] = None
         self.fns[var] = fn
+        self.deps[var] = deps
 
     def add_constant(self, var: str, val: bool):
         self.add(var, lambda vals: val)
 
-    def __intervene_internal(self, var, val):
+    def __intervene_internal(self, ints: Dict[str, bool]):
         model = deepcopy(self)
-        model.fns[var] = lambda vals: val
+        for var, val in ints.items():
+            model.fns[var] = (
+                lambda val_=val: lambda vals: val_
+            )()
+            model.deps[var] = []
         return model
 
     def intervene(self, ints: Dict[str, bool]) -> 'CausalModel':
         model = self
         if not set(ints.keys()).issubset(self.get_var_names()):
             raise Exception("Unknown variables")
-        for var, val in ints.items():
-            model = model.__intervene_internal(var, val)
+        model = model.__intervene_internal(ints)
         return model
 
     def satisfies(self, event: PrimitiveEvent, ints: VALS = None) -> bool:
         if ints is None:
             ints = {}
         m = self
-        for var, val in ints.items():
-            m = m.intervene({var: val})
+        m = m.intervene(ints)
         m.evaluate()
         return m.vals[event.var] == event.val
 
+    # Inverse of the deps relation
+    def __deps_inv(self):
+        deps_inv = {}
+
+        for k in self.deps:
+            deps_inv[k] = []
+
+        for k, vs in self.deps.items():
+            for v in vs:
+                deps_inv[v].append(k)
+        return deps_inv
+
     def evaluate(self):
-        for i in range(len(self.vals)):
-            for var, val in self.vals.items():
-                self.vals[var] = self.fns[var](self.vals)
+        deps_inv = self.__deps_inv()
+        vars_sorted = topological_sort(deps_inv)
+        for var in vars_sorted:
+            self.vals[var] = self.fns[var](self.vals)
 
     def get_var_names(self):
         return self.fns.keys()
