@@ -25,8 +25,7 @@ class EventStructureCausalChecker:
 
     def check_ac2a(self):
         ints = {self.cause.var: self.witness.vxp}
-        if self.witness.w is not None:
-            ints[self.witness.w] = self.witness.vw
+        ints.update(self.witness.vw)
         cm = self.cm.intervene(ints)
         return not self.check_effect(cm)
 
@@ -34,8 +33,7 @@ class EventStructureCausalChecker:
         self.cm.evaluate()
         Z = {z: self.cm.vals[z] for z in self.cm.vals if z != self.witness.w}
         ints = {self.cause.var: self.cause.val}
-        if self.witness.w is not None:
-            ints[self.witness.w] = self.witness.vw
+        ints.update(self.witness.vw)
         m = self.cm.intervene(ints)
         m.evaluate()
         return self.check_effect(m.intervene({z: Z[z] for z in Z}))
