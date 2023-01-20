@@ -10,8 +10,8 @@ class Witness:
     vw: Dict[str, bool]
     vxp: bool
 
-    def __init__(self, w, vw, vxp):
-        self.w = w
+    def __init__(self, vw, vxp):
+        self.w = vw.keys()
         self.vw = vw
         self.vxp = vxp
 
