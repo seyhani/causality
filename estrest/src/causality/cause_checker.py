@@ -1,11 +1,13 @@
+from typing import Set, Dict
+
 from causality import CausalModel
 from causality.causal_model import PrimitiveEvent
 from utils import powerset
 
 
 class Witness:
-    w: str
-    vw: bool
+    w: Set[str]
+    vw: Dict[str, bool]
     vxp: bool
 
     def __init__(self, w, vw, vxp):
@@ -33,14 +35,16 @@ class CauseChecker:
 
     def check_ac2a(self):
         m = self.model
-        ints = {self.cause.var: self.witness.vxp, self.witness.w: self.witness.vw}
+        ints = {self.cause.var: self.witness.vxp}
+        ints.update(self.witness.vw)
         return m.satisfies(self.effect.negate(), ints)
 
     def check_ac2b(self):
         m = self.model
         m.evaluate()
-        Z = {z: m.vals[z] for z in m.vals if z != self.witness.w}
-        ints = {self.cause.var: self.cause.val, self.witness.w: self.witness.vw}
+        Z = {z: m.vals[z] for z in m.vals if z not in self.witness.w}
+        ints = {self.cause.var: self.cause.val}
+        ints.update(self.witness.vw)
         m = m.intervene(ints)
         m.evaluate()
         for Zp in powerset(Z):
