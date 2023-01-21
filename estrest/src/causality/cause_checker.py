@@ -11,7 +11,7 @@ class Witness:
     vxp: bool
 
     def __init__(self, vw, vxp):
-        self.w = vw.keys()
+        self.w = set(vw.keys())
         self.vw = vw
         self.vxp = vxp
 
@@ -42,7 +42,7 @@ class CauseChecker:
     def check_ac2b(self):
         m = self.model
         m.evaluate()
-        Z = {z: m.vals[z] for z in m.vals if z not in self.witness.w}
+        Z = {z: m.vals[z] for z in m.vals if z not in self.witness.w.union([self.effect.var])}
         ints = {self.cause.var: self.cause.val}
         ints.update(self.witness.vw)
         m = m.intervene(ints)
