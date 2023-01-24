@@ -1,7 +1,7 @@
 from copy import deepcopy
-from typing import Dict, Callable, List, Optional
+from typing import Dict, Callable, List, Optional, Set
 
-from utils import topological_sort
+from utils import topological_sort, path_vertices
 
 VALS = Dict[str, Optional[bool]]
 FN = Callable[[VALS], bool]
@@ -34,13 +34,13 @@ class CausalModel:
         self.fns = {}
         self.deps = {}
 
-    def add(self, var: str, fn: FN, deps: List[str] = []) -> None:
+    def add(self, var: str, fn: FN, deps: List[str]) -> None:
         self.vals[var] = None
         self.fns[var] = fn
         self.deps[var] = deps
 
     def add_constant(self, var: str, val: bool):
-        self.add(var, lambda vals: val)
+        self.add(var, lambda vals: val, [])
 
     def __intervene_internal(self, ints: Dict[str, bool]):
         model = deepcopy(self)
@@ -86,3 +86,13 @@ class CausalModel:
 
     def get_var_names(self):
         return self.fns.keys()
+
+    def w_projection_vars(self, X: str, Y: str) -> Set[str]:
+        self.evaluate()
+        vars_ = set()
+        vars_.add(X)
+        pv = path_vertices(X, Y, self.__deps_inv(), self.deps)
+        for v in pv - {X}:
+            vars_.add(v)
+            vars_.update(self.deps[v])
+        return vars_
