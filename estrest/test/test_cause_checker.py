@@ -34,8 +34,12 @@ class TestCausalModel(unittest.TestCase):
         effect = PrimitiveEvent('BS', True)
         cause = PrimitiveEvent('BT', True)
         witness = Witness({'ST': False}, False)
-        checker = CauseChecker(m, cause, effect, witness)
+
         self.assertTrue(m.satisfies(effect))
+        self.assertRaises(Exception, lambda: CauseChecker(m, cause, effect, witness))
+
+        witness = Witness({'SH': False}, False)
+        checker = CauseChecker(m, cause, effect, witness)
         self.assertFalse(checker.check_acs())
 
     def test_compound_witness(self):
