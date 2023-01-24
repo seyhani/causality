@@ -98,29 +98,30 @@ class CausalModel:
         return vars_
 
     # W-projection is achieved with the following:
-    # * Updating fns to fix variables not included in the projection
-    # * Updating deps to clear deps[v] for any v not in projection variables
-    # * Removing any variable v where for any variable u: v not in deps[u]
-    #   (deps_inv[v] is empty.)
+    # * Updating deps to remove any v not in projection variables
+    #   from deps[u] for all u.
+    # * Fixing any variable v in projection variables where deps[v] is empty
+    #   (v only depended on variables not in the projection.)
+    # * Removing variables not in the projection
     def w_projection(
         self, X: PrimitiveEvent, Y: PrimitiveEvent
     ) -> 'CausalModel':
         model = deepcopy(self)
-
         pv = model._w_projection_vars(X.var, Y.var)
-        for var in model.fns.keys() - pv:
+
+        for var in model.deps:
+            deps = model.deps[var]
+            model.deps[var] = list(filter(lambda v: v in pv, deps))
+
+        for var in pv:
+            if len(model.deps[var]) > 0:
+                continue
             model.fns[var] = (
                 lambda val_=model.vals[var]: lambda vals: val_
             )()
 
-        for var in model.deps.keys() - pv:
-            model.deps[var].clear()
-
-        deps_inv = model.__deps_inv()
-        for var in deps_inv.keys() - pv:
-            if len(deps_inv[var]) == 0:
-                model.vals.pop(var)
-                model.fns.pop(var)
-                model.deps.pop(var)
+        model.vals = {var: model.vals[var] for var in pv}
+        model.fns = {var: model.fns[var] for var in pv}
+        model.deps = {var: model.deps[var] for var in pv}
 
         return model
