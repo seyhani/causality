@@ -87,7 +87,7 @@ class CausalModel:
     def get_var_names(self):
         return self.fns.keys()
 
-    def w_projection_vars(self, X: str, Y: str) -> Set[str]:
+    def _w_projection_vars(self, X: str, Y: str) -> Set[str]:
         self.evaluate()
         vars_ = set()
         vars_.add(X)
@@ -96,3 +96,31 @@ class CausalModel:
             vars_.add(v)
             vars_.update(self.deps[v])
         return vars_
+
+    # W-projection is achieved with the following:
+    # * Updating fns to fix variables not included in the projection
+    # * Updating deps to clear deps[v] for any v not in projection variables
+    # * Removing any variable v where for any variable u: v not in deps[u]
+    #   (deps_inv[v] is empty.)
+    def w_projection(
+        self, X: PrimitiveEvent, Y: PrimitiveEvent
+    ) -> 'CausalModel':
+        model = deepcopy(self)
+
+        pv = model._w_projection_vars(X.var, Y.var)
+        for var in model.fns.keys() - pv:
+            model.fns[var] = (
+                lambda val_=model.vals[var]: lambda vals: val_
+            )()
+
+        for var in model.deps.keys() - pv:
+            model.deps[var].clear()
+
+        deps_inv = model.__deps_inv()
+        for var in deps_inv.keys() - pv:
+            if len(deps_inv[var]) == 0:
+                model.vals.pop(var)
+                model.fns.pop(var)
+                model.deps.pop(var)
+
+        return model

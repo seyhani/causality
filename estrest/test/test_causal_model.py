@@ -1,6 +1,6 @@
 import unittest
 
-from causality.causal_model import CausalModel
+from causality.causal_model import CausalModel, PrimitiveEvent
 
 
 class TestCausalModel(unittest.TestCase):
@@ -37,15 +37,30 @@ class TestCausalModel(unittest.TestCase):
 
     def test_w_projection_vars(self):
         m = CausalModel()
-        m.add('A', lambda _: True, [])
-        m.add('B', lambda _: True, ['A'])
-        m.add('C', lambda _: True, ['A', 'B'])
-        m.add('D', lambda _: True, ['C'])
-        m.add('E', lambda _: True, ['C'])
-        m.add('F', lambda _: True, ['B'])
+        m.add('A', lambda vals: True, [])
+        m.add('B', lambda vals: False, [])
+        m.add('C', lambda vals: vals['A'] and vals['B'], ['A', 'B'])
+        m.add('D', lambda vals: vals['C'] and True, ['C'])
 
-        wp = m.w_projection_vars('A', 'D')
+        wp = m._w_projection_vars('A', 'D')
         self.assertEqual(wp, {'A', 'B', 'C', 'D'})
+
+    def test_w_projection(self):
+        m = CausalModel()
+        m.add('A', lambda vals: True, [])
+        m.add('B', lambda vals: False, [])
+        m.add('C', lambda vals: vals['A'] and vals['B'], ['A', 'B'])
+        m.add('D', lambda vals: vals['C'] and True, ['C'])
+        m_wp = m.w_projection(
+            PrimitiveEvent('A', True), PrimitiveEvent('D', True)
+        )
+
+        m_wp.evaluate()
+
+        self.assertEqual(m_wp.vals['A'], True)
+        self.assertEqual(m_wp.vals['B'], False)
+        self.assertEqual(m_wp.vals['C'], False)
+        self.assertEqual(m_wp.vals['D'], False)
 
 
 if __name__ == '__main__':
