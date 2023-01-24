@@ -81,15 +81,14 @@ def superset_closure(elements: FrozenSet, subset: FrozenSet):
     return set(map(lambda s: frozenset(s.union(subset)), powerset(elements - subset)))
 
 
-def __topol_sort_internal(
-    v, out: Dict, visited: Set, answer: List
-) -> List:
+# sort_rev represents the reversed topological sort
+# of the fully visited DFS subtree.
+def __dfs_internal(v, out: Dict, visited: Set, sort_rev: List):
     visited.add(v)
     for u in out[v]:
         if u not in visited:
-            __topol_sort_internal(u, out, visited, answer)
-    answer.append(v)
-    return answer
+            __dfs_internal(u, out, visited, sort_rev)
+    sort_rev.append(v)
 
 
 # out represents the out-edge relation for a given graph G:
@@ -99,7 +98,17 @@ def topological_sort(out: Dict) -> List:
     answer = []
     for v in out:
         if v not in visited:
-            __topol_sort_internal(v, out, visited, answer)
-
+            __dfs_internal(v, out, visited, answer)
     answer.reverse()
     return answer
+
+
+# A vertex v is on a path from src to dst iff there is a path
+# from src to v, and a path from v to dst.
+def path_vertices(src, dst, out: Dict, in_: Dict) -> Set:
+    visited_src_fwd, visited_dst_rev = set(), set()
+    _sort_rev = []
+    __dfs_internal(src, out, visited_src_fwd, _sort_rev)
+    __dfs_internal(dst, in_, visited_dst_rev, _sort_rev)
+    return visited_src_fwd.intersection(visited_dst_rev)
+
