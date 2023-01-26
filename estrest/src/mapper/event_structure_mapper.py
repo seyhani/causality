@@ -21,7 +21,8 @@ class EventStructureToCausalModelMapper:
             else:
                 self.cm.add_conflict(e, ep, False)
 
-    def con(self, s: Set[Event], vals: VALS):
+    @staticmethod
+    def con(s: Set[Event], vals: VALS):
         result = True
         for e, ep in combinations(s, 2):
             result = result and not vals[repr(ConflictVar(e, ep))]
@@ -34,7 +35,8 @@ class EventStructureToCausalModelMapper:
                 result = result and not vals[repr(MinEnablingVar(sp, e))]
         return result
 
-    def con_deps(self, s: Set[Event]) -> List[EventStructureVar]:
+    @staticmethod
+    def con_deps(s: Set[Event]) -> List[EventStructureVar]:
         return [
             ConflictVar(e, ep)
             for e, ep in combinations(s, 2)
