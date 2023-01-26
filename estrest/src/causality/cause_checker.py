@@ -23,9 +23,12 @@ class CauseChecker:
     witness: Witness
 
     def __init__(self, model, cause, effect, witness):
-        self.model = model
         self.cause = cause
         self.effect = effect
+
+        self.model = model.get_w_projection(cause, effect)
+        if not witness.w.issubset(self.model.vals):
+            raise Exception("Invalid w for witness")
         self.witness = witness
 
     def check_ac1(self):
