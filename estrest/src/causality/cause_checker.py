@@ -26,7 +26,7 @@ class CauseChecker:
         self.cause = cause
         self.effect = effect
 
-        self.model = model.w_projection(cause, effect)
+        self.model = model.get_w_projection(cause, effect)
         if not witness.w.issubset(self.model.vals):
             raise Exception("Invalid w for witness")
         self.witness = witness

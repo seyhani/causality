@@ -87,7 +87,7 @@ class CausalModel:
     def get_var_names(self):
         return self.fns.keys()
 
-    def _w_projection_vars(self, X: str, Y: str) -> Set[str]:
+    def __get_w_projection_vars(self, X: str, Y: str) -> Set[str]:
         self.evaluate()
         vars_ = set()
         vars_.add(X)
@@ -103,22 +103,21 @@ class CausalModel:
     # * Fixing any variable v in projection variables where deps[v] is empty
     #   (v only depended on variables not in the projection.)
     # * Removing variables not in the projection
-    def w_projection(
+    def get_w_projection(
         self, X: PrimitiveEvent, Y: PrimitiveEvent
     ) -> 'CausalModel':
         model = deepcopy(self)
-        pv = model._w_projection_vars(X.var, Y.var)
+        pv = model.__get_w_projection_vars(X.var, Y.var)
 
         for var in model.deps:
             deps = model.deps[var]
             model.deps[var] = list(filter(lambda v: v in pv, deps))
 
         for var in pv:
-            if len(model.deps[var]) > 0:
-                continue
-            model.fns[var] = (
-                lambda val_=model.vals[var]: lambda vals: val_
-            )()
+            if len(model.deps[var]) == 0:
+                model.fns[var] = (
+                    lambda val_=model.vals[var]: lambda vals: val_
+                )()
 
         model.vals = {var: model.vals[var] for var in pv}
         model.fns = {var: model.fns[var] for var in pv}
