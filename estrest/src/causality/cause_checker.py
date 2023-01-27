@@ -27,7 +27,7 @@ class CauseChecker:
         self.effect = effect
 
         self.model = model.get_w_projection(cause, effect)
-        if not witness.w.issubset(self.model.vals):
+        if not witness.w.issubset(self.model.get_var_names()):
             raise Exception("Invalid w for witness")
         self.witness = witness
 
@@ -45,7 +45,10 @@ class CauseChecker:
     def check_ac2b(self):
         m = self.model
         m.evaluate()
-        Z = {z: m.vals[z] for z in m.vals if z not in self.witness.w.union([self.effect.var])}
+        Z = {
+            z: m.vals[z] for z in m.get_var_names()
+            if z not in self.witness.w.union([self.effect.var])
+        }
         ints = {self.cause.var: self.cause.val}
         ints.update(self.witness.vw)
         m = m.intervene(ints)
