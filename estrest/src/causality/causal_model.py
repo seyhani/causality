@@ -99,27 +99,19 @@ class CausalModel:
 
     # W-projection is achieved with the following:
     # * Updating deps to remove any v not in projection variables
-    #   from deps[u] for all u.
-    # * Fixing any variable v in projection variables where deps[v] is empty
-    #   (v only depended on variables not in the projection.)
+    #   from deps[u] for all u in pv
     # * Removing variables not in the projection
+    #   (Values already existing in vals are cached.)
     def get_w_projection(
         self, X: PrimitiveEvent, Y: PrimitiveEvent
     ) -> 'CausalModel':
         model = deepcopy(self)
         pv = model.__get_w_projection_vars(X.var, Y.var)
 
-        for var in model.deps:
+        for var in pv:
             deps = model.deps[var]
             model.deps[var] = list(filter(lambda v: v in pv, deps))
 
-        for var in pv:
-            if len(model.deps[var]) == 0:
-                model.fns[var] = (
-                    lambda val_=model.vals[var]: lambda vals: val_
-                )()
-
-        model.vals = {var: model.vals[var] for var in pv}
         model.fns = {var: model.fns[var] for var in pv}
         model.deps = {var: model.deps[var] for var in pv}
 
