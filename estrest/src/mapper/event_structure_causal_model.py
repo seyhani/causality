@@ -1,11 +1,12 @@
-from typing import Set
+from typing import List, Set
+from itertools import combinations
 
 from causality import CausalModel
 from causality.causal_model import FN
 from event import Event
 from event_structure.event_structure import EventStructure
-from event_structure.valid_event_structure import ValidEventStructure
 from mapper.event_structure_var import EventStructureVar, ConflictVar, EnablingVar, MinEnablingVar
+from utils import powerset
 
 
 class EventStructureCausalModel(CausalModel):
@@ -20,15 +21,19 @@ class EventStructureCausalModel(CausalModel):
         self.vars.add(var)
         self.add_constant(repr(var), val)
 
-    def add_enabling(self, s: Set[Event], e: Event, fn: FN):
+    def add_enabling(
+        self, s: Set[Event], e: Event, fn: FN, deps: List[EventStructureVar]
+    ):
         var = EnablingVar(s, e)
         self.vars.add(var)
-        self.add(repr(var), fn)
+        self.add(repr(var), fn, [repr(d) for d in deps])
 
-    def add_min_enabling(self, s: Set[Event], e: Event, fn: FN):
+    def add_min_enabling(
+        self, s: Set[Event], e: Event, fn: FN, deps: List[EventStructureVar]
+    ):
         var = MinEnablingVar(s, e)
         self.vars.add(var)
-        self.add(repr(var), fn)
+        self.add(repr(var), fn, [repr(d) for d in deps])
 
     def get_es(self) -> EventStructure:
         es = EventStructure(set())
@@ -41,3 +46,15 @@ class EventStructureCausalModel(CausalModel):
                 if isinstance(var, EnablingVar):
                     es.add_enabling(var.s, var.e)
         return es
+
+    @staticmethod
+    def get_configuration_deps(s: Set[Event]) -> Set[EventStructureVar]:
+        deps = set()
+        deps.update(
+            ConflictVar(e, ep)
+            for e, ep in combinations(s, 2)
+        )
+        for x in powerset(s):
+            for e in s - x:
+                deps.add(EnablingVar(x, e))
+        return deps
