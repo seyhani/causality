@@ -45,6 +45,13 @@ class CauseChecker:
     def check_ac2b(self):
         m = self.model
         m.evaluate()
+        ints = {self.cause.var: self.cause.val}
+        ints.update(self.witness.vw)
+        return m.satisfies(self.effect, ints)
+
+    def check_ac2c(self):
+        m = self.model
+        m.evaluate()
         Z = {
             z: m.vals[z] for z in m.get_var_names()
             if z not in self.witness.w.union([self.effect.var])
@@ -52,11 +59,12 @@ class CauseChecker:
         ints = {self.cause.var: self.cause.val}
         ints.update(self.witness.vw)
         m = m.intervene(ints)
-        m.evaluate()
-        for Zp in powerset(Z):
-            if not m.satisfies(self.effect, {z: Z[z] for z in Zp}):
-                return False
-        return True
+        return m.satisfies(self.effect, Z)
 
     def check_acs(self):
-        return self.check_ac1() and self.check_ac2a() and self.check_ac2b()
+        return (
+            self.check_ac1()
+            and self.check_ac2a()
+            and self.check_ac2b()
+            and self.check_ac2c()
+        )

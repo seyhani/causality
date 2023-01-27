@@ -62,6 +62,12 @@ class EventStructureCausalChecker:
 
     def check_ac2b(self):
         self.cm.evaluate()
+        ints = {self.cause.var: self.cause.val}
+        ints.update(self.witness.vw)
+        return self.check_effect(self.cm.intervene(ints))
+
+    def check_ac2c(self):
+        self.cm.evaluate()
         Z = {
             z: self.cm.vals[z] for z in self.cm.get_var_names()
             if z != self.witness.w.union([ES_CM_EFFECT_EVENT.var])
@@ -70,11 +76,7 @@ class EventStructureCausalChecker:
         ints.update(self.witness.vw)
         m = self.cm.intervene(ints)
         m.evaluate()
-        return self.check_effect(m.intervene({z: Z[z] for z in Z}))
-        # for Zp in powerset(Z):
-        #     if not self.check_effect(m.intervene({z: Z[z] for z in Zp})):
-        #         return False
-        # return True
+        return self.check_effect(m.intervene(Z))
 
     def check_effect(self, cm: EventStructureCausalModel):
         cm.evaluate()
@@ -83,6 +85,9 @@ class EventStructureCausalChecker:
         return es.is_valid() and any([es.is_configuration(c) for c in self.ces])
 
     def is_cause(self):
-        return self.check_ac1() \
-               and self.check_ac2a() \
-               and self.check_ac2b()
+        return (
+            self.check_ac1()
+            and self.check_ac2a()
+            and self.check_ac2b()
+            and self.check_ac2c()
+        )
