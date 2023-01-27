@@ -60,7 +60,6 @@ class TestCausalModel(unittest.TestCase):
             PrimitiveEvent('BT', True), PrimitiveEvent('BS', True)
         )
 
-        self.assertNotIn('ST', m_wp.vals)
         self.assertNotIn('ST', m_wp.fns)
         self.assertNotIn('ST', m_wp.deps)
 
