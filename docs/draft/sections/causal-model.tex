@@ -2,7 +2,9 @@
 
 \subsection{Causal Model of Event Structure}
 Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure where
-$E = \s{e_1, e_2, ...,e_n}$ we define the causal model
+$E = \s{e_1, e_2, ...,e_n}$. 
+Let $S \subseteq \mc{P}(E)$ be the set of unsafe behaviors.
+We define the causal model
 $\mc{M} = (\mc{S},\mc{F},\mc{E})$ of unsafe behavior
 in $\mr{E}$ where
 $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$.
@@ -91,9 +93,10 @@ settings of the endogenous variables, to be the vector of
 values such as $\vec v'$ for which $ES(\vec v)$ is an
 event structure.
 
-Finally, we encode the property violation or unsafe behaviors
-as a predicate on the set of configurations of the
-event structure returned by $ES$.
+Finally, we encode the property violation using $ES$ as a function for $PV$:
+\begin{align*}
+    \f{PV}  = \T \iff S \cap \mc{F}(ES) \neq \emptyset
+\end{align*}
 
 \subsection{Actual Cause of Unsafe Behavior}
 

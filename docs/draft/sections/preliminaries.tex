@@ -60,9 +60,9 @@ We call such a sequence $e_0,e_1,...,e_n = e$ a \emph{securing} for $e$ in $x$.
     be event Structures. Define
     \begin{align*}
         \mr{E_0} \trianglelefteq \mr{E_1} \iff
-         & E_0 \subseteq E_1,                            \\
+         & E_0 \subseteq E_1,                                                  \\
          & \forall e,e' \in E_0. e\#_0e'  \iff e,e' \in E_1
-        \ \wedge \ e\#_1 e' \text{ and }                 \\
+        \ \wedge \ e\#_1 e' \text{ and }                                       \\
          & \forall X \subseteq E_0,e \in E_0.X\vdash_0 e  \iff X \subseteq E_0
         \ \wedge \ e \in E_0\ \wedge \ X \vdash_1 e
     \end{align*}
@@ -87,9 +87,9 @@ We call such a sequence $e_0,e_1,...,e_n = e$ a \emph{securing} for $e$ in $x$.
     Let $a$ be an event.
     For an event structure $\mr{E} = (E,\#,\vdash)$ define $a\mr{E}$ to be the event structure $(E',\#',\vdash')$ where:
     \begin{align*}
-         & E' = \s{(0,a)} \cup \s{(1,e)|e \in E},                                                                               \\
+         & E' = \s{(0,a)} \cup \s{(1,e)|e \in E},                                                                                                        \\
          & \forall e_0',e_1'\in E' . e_0' \#' e_1'  \iff \exists e_0,e_1.e_0' = (1,e_0)
-        \ \wedge \ e_1' = (1,e_1) \ \wedge \ e_0 \# e_1                                                                         \\
+        \ \wedge \ e_1' = (1,e_1) \ \wedge \ e_0 \# e_1                                                                                                  \\
          & \forall X \subseteq E' . X \vdash' e' \iff e' = (0,a) \text{ or } [e' = (1,e_1) \ \wedge \ (0,a)\in X \ \wedge \ \s{e|(1,e)\in X} \vdash e_1]
     \end{align*}
 \end{definition}
@@ -100,6 +100,143 @@ We call such a sequence $e_0,e_1,...,e_n = e$ a \emph{securing} for $e$ in $x$.
     $(E,\#,\vdash)$ is an event structure, $L$ is a set of labels,
     not including the element *, and $l$ is a function $l: E \rightarrow L$
     from its events to its labels.
+\end{definition}
+\subsection{Constructions on Labeled Event Structures \cite{es}}
+We use $(\e,\e)$, an empty set of events and an empty set of labels, to
+denote an empty labeled event structure.
+In the following, we define four types of constructions on labeled
+event structures.
+
+\subsubsection{Prefix}
+\begin{definition}[Prefix]
+    Let $(E,\#,\vdash,L,l)$ be a labelled event structure.
+    Let $\alpha$ be a label.
+    Define $\alpha(E,\#,\vdash,L,l)$ to be a labelled event structure
+    $(E',\#',\vdash',L',l')$ where $(E',\#',\vdash') = \alpha(E,\#,\vdash)$
+    and labels are defined as follows:
+    \begin{align*}
+        L' = \s{\alpha} \cup L
+    \end{align*}
+    and
+    $$
+        l'(e') = \begin{cases}
+            \alpha & \text{if } e' = (0,\alpha) \\
+            l(e)   & \text{if } e' = (1,e)
+        \end{cases}
+    $$
+    for all $e' \in E'$.
+\end{definition}
+
+\subsubsection{Sum}
+\begin{definition}[Sum]
+    Let $\mr{E_0} = (E_0,\#_0,\vdash_0,L_0,l_0)$ and
+    $\mr{E_1} = (E_1,\#_1,\vdash_1,L_1,l_1)$ be labelled event structures.
+    Their sum $\mr{E_0} + \mr{E_1}$, is defined to be the structure $(E,\#,\vdash,l)$
+    with events $E = \s{(0,e)|e \in E_0} \cup \s{(1,e)|e \in E_1}$,
+    the disjoint union of sets $E_0$ and $E_1$,
+    with injections $\iota_k: E_k \rightarrow E$, given by
+    $\iota_k(e) = (k,e)$, for $k=0,1$, conflict relation
+    \begin{align*}
+        \forall e,e' \in E.
+        e \# e' \iff & \exists e_0,e_0' \in E_0. e = \iota_0(e_0)
+        \wedge e' = \iota_0(e_0') \wedge e_0 \#_0e_0'                                                      \\
+                     & \text{or } \exists e_1,e_1' \in E_1. e = \iota_1(e_1) \wedge
+        e' = \iota_1(e_1') \wedge e_1 \#_1 e_1'                                                            \\
+                     & \text{or } \exists e_0 \in E_0,e_1 \in E_1.(e=\iota_1(e_0) \wedge e' =\iota_1(e_1)) \\
+                     & \text{or } (e'=\iota_1(e_0) \wedge e =\iota_1(e_1))
+    \end{align*}
+    and enabling relation
+    \begin{align*}
+        X \vdash e \iff & X \in Con \wedge e \in E \wedge                   & \\
+                        & (\exists X_0 \in Con_0,e_0 \in E_0.X = \iota_0X_0
+        \wedge e = \iota_0(e_0) \wedge X_0 \vdash_0 e_0) \text{ or }          \\
+                        & (\exists X_1 \in Con_1,e_1 \in E_1.X = \iota_1X_1
+        \wedge e = \iota_1(e_1) \wedge X_1 \vdash_1 e_1)                      \\
+    \end{align*}
+    Where $Con_0,Con_1$ are defined on $\mr{E}_0$ and $\mr{E}_1$ respectively.
+    We define the set of labels as $L_0 \cup L_1$ and the labelling function as:
+    $$
+        l(e) = \begin{cases}
+            l_0(e_0) & \text{ if } e = \iota_0(e_0) \\
+            l_1(e_1) & \text{ if } e = \iota_1(e_1)
+        \end{cases}
+    $$
+\end{definition}
+
+\subsubsection{Product}
+In the product of two event structures, their events of synchronization are those pairs of events $(e_0,e_1)$, one from each event structure;
+if $e_0$ is labelled $\alpha_0$ and $e_1$ is labelled $\alpha_1$ the synchronization event is
+then labelled $(\alpha_0,\alpha_1)$.
+Events need not synchronize however; an event in one component may not synchronize with
+any event in the other.
+We shall use events of the form $(e_0,*)$/$(*,e_1)$ to stand for the occurrence of an event $e_0$/$e_1$
+from one component unsynchronized with any event of the other.
+Such an event will be labeled by $(\alpha_0,*)$ where $\alpha_0$ is the original label of $e_0$
+and * is a sort of undefined.
+
+\begin{notion}
+    In an event structure, we shall write $\doublevee$ for the reflexive conflict
+    relation by which we mean that $E \doublevee e'$ in event structure
+    iff either $e\#e'$ or $e=e'$.
+    With this notation instead of describing the conflict-free sets of an
+    event structure as those sets $X$ such that
+    \begin{align*}
+        \forall e,e' \in X. \neg(e \# e')
+    \end{align*}
+    we can say they are those sets $X$ for which
+    \begin{align*}
+        \forall e,e' \in X . e \doublevee e' \Rightarrow e = e'
+    \end{align*}
+\end{notion}
+
+\begin{definition}[Product]
+    Let $\mr{E_0} = (E_0,\#_0,\vdash_0,L_0,l_0)$ and
+    $\mr{E_1} = (E_1,\#_1,\vdash_1,L_1,l_1)$
+    be labeled event structures.
+    Define their product $\mr{E_0} \times \mr{E_1}$ to be the structure $\mr{E} = (E,\#,\vdash,L,l)$
+    consisting of events $E$ of the form
+    \begin{align*}
+        E_0 \times_* E_1 =
+        \s{(e_0,*)|e_0 \in E_0}
+        \cup \s{(*,e_1)|e_1 \in E_1}
+        \cup \s{(e_0,e_1)| e_0 \in E_0 \wedge e_1 \in E_1}
+    \end{align*}
+    with projections $\pi_i : E \rightarrow_* E_i$,
+    given by $\pi_i(e_0,e_1) = e_i$, for $i=0,1$, reflexive conflict relation $\doublevee$ given by
+    \begin{align*}
+        e \doublevee e' \iff \pi_0(e) \doublevee_0 \pi_0(e') \text{ or }
+        \pi_1(e) \doublevee_1 \pi_1(e')
+    \end{align*}
+    for all $e,e' \in E$ we use $Con$ for the conflict-free finite sets,
+    enabling relation $\vdash$ given by
+    \begin{align*}
+         & X \vdash e \iff X \in Con \wedge e \in E \wedge                  \\
+         & (\pi_0(e)\text{ is defined } \Rightarrow \pi_0X\vdash_0\pi_0(e))
+        \wedge (\pi_1(e)\text{ is defined } \Rightarrow \pi_1X\vdash_1\pi_1(e))
+    \end{align*}
+    Its set of labels is
+    \begin{align*}
+        L_0 \times_* L_1 = \s{ (\alpha_0,*)|\alpha_0 \in L_0}
+        \cup \s{(*,\alpha_1)|\alpha_1 \in L_1}
+        \cup \s{(\alpha_0,\alpha_1)|\alpha_0 \in L_0 \wedge \alpha_1 \in L_1}
+    \end{align*}
+    with projections: $\lambda_i: E \rightarrow_* E_i$ given by
+    $\lambda_i(\alpha_0,\alpha_1) = \alpha_i$, for $i=0,1$.
+    Its labeling function is defined to act on an event $e$ so
+    \begin{align*}
+        l(e) = (l_0\pi_0(e),l_1\pi_1(e))
+    \end{align*}
+\end{definition}
+
+\subsubsection{Restriction}
+
+\begin{definition}[Restriction]
+    Let $\mr{E} = (E,\#,\vdash,L,l)$ be a labelled event structure.
+    Let $\Lambda$ be a subset of labels.
+    Define the restriction $\mr{E}\lceil \Lambda$ to be $(E',\#',\vdash',L\cap \Lambda,l')$
+    where $(E',\#',\vdash')$ is the restriction of $(E,\#,\vdash)$
+    to events $\s{e \in E|l(e) \in \Lambda}$ and the labeling function $l'$
+    is the restriction of the original labeling function to the domain $L \cap \Lambda$.
 \end{definition}
 
 \subsection{Causal Model \cite{hp}}
@@ -224,9 +361,9 @@ $(x_1,...,x_n) \in \mathcal{E}$ if $X_1 = x_1, ..., X_n=x_n$ is an
 allowable setting.
 We say that a setting of a subset of the endogenous variables is allowable if it can be extended to a setting in $\mathcal{E}$.
 
-In \cite{hp} there is no formal definition of the actual cause 
+In \cite{hp} there is no formal definition of the actual cause
 in extended causal models.
-So, here we provide a new definition of the actual cause 
+So, here we provide a new definition of the actual cause
 in the context of extended causal models.
 
 
@@ -236,14 +373,14 @@ in the context of extended causal models.
         \item  \textbf{AC1.} $(M,\vec u)\models (\vec X = \vec x) \wedge \varphi \wedge $.
         \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
 
-              (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi 
-              \wedge \vec V = \vec v
-              \wedge  \vec v \in \mathcal{E}$.
+              (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi
+                  \wedge \vec V = \vec v
+                  \wedge  \vec v \in \mathcal{E}$.
 
-              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W' 
-              \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
-              \vec V = \vec v \wedge (\vec v \in \mc{E} \Rightarrow \varphi)$
-                  for all subsets $Z'$ of $\vec Z$.
+              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W'
+                      \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
+                  \vec V = \vec v \wedge (\vec v \in \mc{E} \Rightarrow \varphi)$
+              for all subsets $Z'$ of $\vec Z$.
 
         \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
     \end{itemize}
