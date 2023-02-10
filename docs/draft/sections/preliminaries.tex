@@ -34,10 +34,6 @@
         X \vdash_{min} e \iff X \vdash e \wedge
         ( \forall Y \subseteq X . Y \vdash e \Rightarrow Y = X )
     \end{align*}
-    Then for any event structure:
-    \begin{align*}
-        Y \vdash e \Rightarrow \exists X \subseteq Y . X \vdash_{min} e
-    \end{align*}
 \end{notion}
 
 \begin{definition}[Configuration]
@@ -50,7 +46,7 @@
                   \forall i \leq n. \s{e_0,...,e_{i-1}} \vdash e_i$
     \end{enumerate}
 \end{definition}
-The set of all configurations of an event structure is written as $\mathcal{F}(E)$.
+\noindent The set of all configurations of an event structure is written as $\mathcal{F}(E)$.
 It is helpful to unwrap condition (2) a little. It says an event $e$ is secured in a set $x$
 iff there is a sequence of events $e_0,...,e_n = e$ in $x$ such that:
 \begin{align*}
@@ -58,100 +54,8 @@ iff there is a sequence of events $e_0,...,e_n = e$ in $x$ such that:
     \s{e_0,...,e_{n-1}} \vdash e_n.
 \end{align*}
 We call such a sequence $e_0,e_1,...,e_n = e$ a \emph{securing} for $e$ in $x$.
-We use $X \subseteq_{fin} Y$ to mean $X$ is a finite subset of $Y$.
 
-\begin{example}
-    Consider another network in which two hosts are connected
-    to a single switch.
-    This time both hosts are sending a packet concurrently to the
-    host.
-    Once the switch received a packet from either host it will
-    drop the packets received from the other host due to capacity
-    limit.
-    \begin{center}
-        \begin{tikzpicture}[node distance={15mm},minimum width=7mm,main/.style = {draw, circle}]
-            \node[main] (S) {$s$};
-            \node[main] (H1) [above of=S,left of=S] {$h_1$};
-            \node[main] (H2) [above of=S,right of=S] {$h_2$};
-            \draw[->] (H1) -- (S);
-            \draw[<-] (S) -- (H2);
-        \end{tikzpicture}
-    \end{center}
-    Let $r_1,r_2$ represent the events of receiving packet from
-    $h_1$ and $h_2$ and $d_1,d_2$ represent the events of dropping
-    packets from these hosts.
-    We need a conflict relation the least one for which we have
-    $r_1\#d_1$ and $r_2\#d_2$
-    and enabling relation the least one that satisfies:
-    \begin{align*}
-        \emptyset & \vdash_{min} r_1 \\
-        \emptyset & \vdash_{min} r_2 \\
-        \s{r_1}   & \vdash_{min} d_2 \\
-        \s{r_2}   & \vdash_{min} d_1 \\
-    \end{align*}
-    Thus the configurations have the form:
-    \begin{center}
-        \begin{tikzpicture}[scale=0.8]
-            \crd{0}{0}{$\emptyset$}
-            \crd[left]{-2}{1}{$\s{r_1}$}
-            \crd[right]{2}{1}{$\s{r_2}$}
-            \crd[right]{0}{2}{$\s{r_1,r_2}$}
-            \crd{-2}{3}{$\s{r_1,d_2}$}
-            \crd{2}{3}{$\s{r_2,d_1}$}
-            \draw [ultra thick] (0,0) -- (2,1);
-            \draw [ultra thick] (0,0) -- (-2,1);
-            \draw [ultra thick] (-2,1) -- (0,2);
-            \draw [ultra thick] (2,1) -- (0,2);
-            \draw [ultra thick] (-2,1) -- (-2,3);
-            \draw [ultra thick] (2,1) -- (2,3);
-        \end{tikzpicture}
-    \end{center}
-\end{example}
-
-\subsubsection*{Stable Event Structure}
-
-We look for a special class of event structures for which there is a
-the partial order of causal dependency on each configuration.
-This can not be done so obviously for all event structures.
-Consider the event structure of the previous example in which
-the event $b$ causally depends not on a unique set of events
-but rather on either the occurrence of 0 or on the occurrence of 1.
-It is incorrect to say $b$ causally depends on both 0 and 1 because
-the occurrence of only one of them enables the occurrence of $b$.
-The difficulty arises because there is a configuration $\s{0,1,b}$
-in which there is an event $b$ which is not enabled by a unique minimal
-set of event occurrences.
-We can rule out such possibilities by insisting on event structures
-satisfy the following stability axiom.
-\begin{definition}[Stable Event Structure]
-    Let $\mr{E} = (E,\#,\vdash)$ be an event structure. Say $E$ is stable if it satisfies the following axiom:
-    \begin{align*}
-        X \vdash e \ \wedge \ Y \vdash e \ \wedge \ X \cup Y \cup \{e\} \in Con \Rightarrow X \cap Y \vdash e
-    \end{align*}
-\end{definition}
-The stability axiom ensures that an event in a configuration is
-enabled in an essentially unique way.
-Assume $e$ belongs to a configuration $x$ of a stable event structure.
-Suppose $X \vdash e$ and $X \subseteq x$.
-Then $X \cup \s{e} \in Con$, the enabling $X\vdash e$ is consistent.
-Take
-\begin{align*}
-    X_0 = \bigcap \s{Y ~|~ Y \subseteq X \wedge Y \vdash e}
-\end{align*}
-Because $X$ is finite this is an intersection of a finite number of
-sets and we see by the stability axiom that $X_0 \vdash e$.
-Moreover $X_0$ is the unique minimal subset of $X$ which enables $e$.
-Thus for stable event structures, we have:
-\begin{align*}
-    Y \vdash e \wedge Y \cup \s{e} \in Con \Rightarrow
-    \exists ! X \subseteq Y.X \vdash_{min} e
-\end{align*}
-It follows that for stable event structures
-\begin{align*}
-    X \vdash_{min} e \wedge Y \vdash_{min} e \wedge
-    X \cup Y \cup e \in Con \Rightarrow X = Y
-\end{align*}
-\begin{definition}
+\begin{definition}[Sub-Structure]
     Let $\mr{E_0} = (E_0,\#_0,\vdash_0)$ and $\mr{E_1} = (E_1,\#_1,\vdash_1)$
     be event Structures. Define
     \begin{align*}
@@ -179,7 +83,7 @@ It follows that for stable event structures
     \end{align*}
 \end{definition}
 
-\begin{definition}
+\begin{definition}[Prefixing]
     Let $a$ be an event.
     For an event structure $\mr{E} = (E,\#,\vdash)$ define $a\mr{E}$ to be the event structure $(E',\#',\vdash')$ where:
     \begin{align*}
@@ -191,17 +95,14 @@ It follows that for stable event structures
 \end{definition}
 
 
-\begin{definition}
+\begin{definition}[Labelled Event Strtucture]
     A labelled event structure consists of $(E,\#,\vdash,L,l)$ where
     $(E,\#,\vdash)$ is an event structure, $L$ is a set of labels,
     not including the element *, and $l$ is a function $l: E \rightarrow L$
     from its events to its labels.
 \end{definition}
-In the following, for simplicity in notation, we use $(a_1,a_2,...,a_n)$ to 
-denote the event $(a_1,(a_2,...(a_{n_1},a_n)...))$.
 
 \subsection{Causal Model \cite{hp}}
-
 A signature $\mathcal{S}$ is a tuple $(\mathcal{U},\mathcal{V},\mathcal{R})$,
 where $\mathcal{U}$ is a set of exogenous variables, $\mathcal{V}$
 is a set of endogenous variables, and $R$ associates with every variable
@@ -277,7 +178,7 @@ All relevant events are known.
 The only question is picking out which of them are the cause of $\varphi$ or, alternatively, testing whether a given set of events can be considered the cause of $\varphi$.
 The types of events that we allow as actual causes are ones of the form $X_1 = x_1 \wedge ... \wedge X_k=x_k$-- that is, conjunctions of primitives events.
 We abbreviate this as $\vec X = \vec x$.
-\begin{definition}
+\begin{definition}[Actual Cause]
     $\vec X = \vec x$ is an actual cause of $\varphi$ in $(M,\vec u)$ if the following three conditions hold:
     \begin{itemize}
         \item  \textbf{AC1.} $(M,\vec u)\models (\vec X = \vec x) \wedge \varphi$.
@@ -286,14 +187,14 @@ We abbreviate this as $\vec X = \vec x$.
 
               (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi$.
 
-              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]\varphi$ for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]\varphi$ for all subsets $Z'$ of $\vec Z$.
 
         \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
     \end{itemize}
 \end{definition}
 We call the tuple $(\vec W, \vec w,\vec x')$ a witness to the fact that $\vec X=\vec x$ is a cause of $\varphi$.
 
-\begin{definition}
+\begin{definition}[But-For Cause]
     We say $\vec X = \vec x$ is a but-for cause of $\varphi$ in
     $(M,\vec u)$ if there exists a witness $(\vec W, \vec w, \vec x')$
     for $\vec X = \vec x$ being an actual cause of $\varphi$
@@ -342,7 +243,7 @@ in the context of extended causal models.
               (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W' 
               \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
               \vec V = \vec v \wedge (\vec v \in \mc{E} \Rightarrow \varphi)$
-                  for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+                  for all subsets $Z'$ of $\vec Z$.
 
         \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
     \end{itemize}
