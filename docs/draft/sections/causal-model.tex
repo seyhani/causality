@@ -93,9 +93,12 @@ settings of the endogenous variables, to be the vector of
 values such as $\vec v'$ for which $ES(\vec v)$ is an
 event structure.
 
-Finally, we encode the property violation using $ES$ as a function for $PV$:
+Finally, to encode the property violation,
+we define the function of $PV$ such that 
+if the value of the endogenous variables is
+$\vec v$ then we have:
 \begin{align*}
-    \f{PV}  = \T \iff S \cap \mc{F}(ES) \neq \emptyset
+    PV = \T \iff S \cap \mc{F}(ES(\vec v)) = \e
 \end{align*}
 
 \subsection{Actual Cause of Unsafe Behavior}
@@ -127,7 +130,7 @@ event structures as follows:
                   \wedge 
                   (\vec v \in \mathcal{E} \Rightarrow PV = \T)
                   $
-              for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+              for all subsets $Z'$ of $\vec Z$.
 
         \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
     \end{itemize}

@@ -10,25 +10,16 @@
               i.e. those finite subsets $X \subseteq E$ for which:
               $\forall e,e' \in X . \neg (e\#e')$
         \item $\vdash \subseteq Con \times E$ is the enabling relation which satisfies:
-              $ X \vdash e \ \& \ X \subseteq Y \in Con \Rightarrow Y \vdash e$
+              $ X \vdash e \ \wedge \ X \subseteq Y \in Con \Rightarrow Y \vdash e$
     \end{enumerate}
 
 \end{definition}
-\begin{notion}
+\begin{notion}{$(\doublevee)$}
     In an event structure we shall write $\doublevee$ for the reflexive conflict relation by which we mean
     that $e\doublevee e'$ in an event structure iff either $e\#e'$ or $e=e'$.
-    With this notion instead of describing the conflict-free sets of an event structure
-    as those sets $X$ such that
-    \begin{align*}
-        \forall e,e' \in X. \neg(e\#e')
-    \end{align*}
-    we can say they are those sets $X$ for which:
-    \begin{align*}
-        \forall e,e' \in X. e\doublevee e' \Rightarrow e=e'
-    \end{align*}
 \end{notion}
 
-\begin{notion}
+\begin{notion}{$(\vdash_{min})$}
     For any event structure we can define the minimal enabling relation $\vdash_{min}$ by:
     \begin{align*}
         X \vdash_{min} e \iff X \vdash e \wedge
@@ -39,7 +30,7 @@
 \begin{definition}[Configuration]
     \label{conf}
     Let $\mr{E} = (E,\#,\vdash)$ be an event structure.
-    Define a configuration of $\mr{E}$ to be a subset of events $x \subseteq E$ which is
+    Define a \textit{configuration} of $\mr{E}$ to be a subset of events $x \subseteq E$ which is
     \begin{enumerate}
         \item conflict-free: $x \in Con$
         \item secured: $\forall e \in x. \exists e_0,...,e_n \in x. e_n = e \ \wedge
@@ -55,6 +46,7 @@ iff there is a sequence of events $e_0,...,e_n = e$ in $x$ such that:
 \end{align*}
 We call such a sequence $e_0,e_1,...,e_n = e$ a \emph{securing} for $e$ in $x$.
 
+<<<<<<< HEAD
 \begin{definition}[Sub-Structure]
     Let $\mr{E_0} = (E_0,\#_0,\vdash_0)$ and $\mr{E_1} = (E_1,\#_1,\vdash_1)$
     be event Structures. Define
@@ -69,6 +61,8 @@ We call such a sequence $e_0,e_1,...,e_n = e$ a \emph{securing} for $e$ in $x$.
     In this case say $\mr{E_0}$ is a substructure of $\mr{E_1}$.
 \end{definition}
 
+=======
+>>>>>>> 54b253a (revise section 2)
 \begin{definition}[Restriction]
     Let $\mr{E} = (E,\#,\vdash)$ be an event structure.
     Let $A \subseteq E$.
@@ -173,21 +167,6 @@ We shall use events of the form $(e_0,*)$/$(*,e_1)$ to stand for the occurrence 
 from one component unsynchronized with any event of the other.
 Such an event will be labeled by $(\alpha_0,*)$ where $\alpha_0$ is the original label of $e_0$
 and * is a sort of undefined.
-
-\begin{notion}
-    In an event structure, we shall write $\doublevee$ for the reflexive conflict
-    relation by which we mean that $E \doublevee e'$ in event structure
-    iff either $e\#e'$ or $e=e'$.
-    With this notation instead of describing the conflict-free sets of an
-    event structure as those sets $X$ such that
-    \begin{align*}
-        \forall e,e' \in X. \neg(e \# e')
-    \end{align*}
-    we can say they are those sets $X$ for which
-    \begin{align*}
-        \forall e,e' \in X . e \doublevee e' \Rightarrow e = e'
-    \end{align*}
-\end{notion}
 
 \begin{definition}[Product]
     Let $\mr{E_0} = (E_0,\#_0,\vdash_0,L_0,l_0)$ and
