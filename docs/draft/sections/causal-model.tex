@@ -2,7 +2,9 @@
 
 \subsection{Causal Model of Event Structure}
 Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure where
-$E = \s{e_1, e_2, ...,e_n}$ we define the causal model
+$E = \s{e_1, e_2, ...,e_n}$. 
+Let $S \subseteq \mc{P}(E)$ be the set of unsafe behaviors.
+We define the causal model
 $\mc{M} = (\mc{S},\mc{F},\mc{E})$ of unsafe behavior
 in $\mr{E}$ where
 $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$.
@@ -91,9 +93,13 @@ settings of the endogenous variables, to be the vector of
 values such as $\vec v'$ for which $ES(\vec v)$ is an
 event structure.
 
-Finally, we encode the property violation or unsafe behaviors
-as a predicate on the set of configurations of the
-event structure returned by $ES$.
+Finally, to encode the property violation,
+we define the function of $PV$ such that 
+if the value of the endogenous variables is
+$\vec v$ then we have:
+\begin{align*}
+    PV = \T \iff S \cap \mc{F}(ES(\vec v)) = \e
+\end{align*}
 
 \subsection{Actual Cause of Unsafe Behavior}
 
@@ -124,7 +130,7 @@ event structures as follows:
                   \wedge 
                   (\vec v \in \mathcal{E} \Rightarrow PV = \T)
                   $
-              for all subsets $\vec W'$ of $\vec W$ and all subsets $Z'$ of $\vec Z$.
+              for all subsets $Z'$ of $\vec Z$.
 
         \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
     \end{itemize}

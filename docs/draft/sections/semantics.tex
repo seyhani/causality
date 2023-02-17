@@ -5,6 +5,14 @@ which will be used to provide denotational semantics for Normal
 DyNetKAT terms.
 
 \subsection{Normal DyNetKAT}
+
+Let $F = \s{f_1,...,f_n}$ be a set of field names with 
+values in $V_i$, for $i \in \s{1,...,n}$.
+We call complete test, denoted by $\alpha$,
+an expression $f_1 = v_1 \cdot ... \cdot f_n = v_n$ with $v_i \in V_i$ for $i \in \s{1,...,n}$.
+We call complete assignment, denoted by $\pi$, an expression 
+$f_1 \la v_1\cdot ... \cdot f_n \la v_n$ with $v_i \in V_i$ for 
+$i \in \s{1,...,n}$.
 We define the Normal DyNetKAT grammar as follows:
 \begin{align*}
     F ::= & \alpha\cdot\pi                                                                           \\
@@ -13,147 +21,6 @@ We define the Normal DyNetKAT grammar as follows:
 \end{align*}
 In the following we use Normal DyNetKAT as a subset of DyNetKAT programs
 to provide event structure semantics.
-
-\subsection{Constructions on Labeled Event Structures \cite{es}}
-We use $(\e,\e)$, an empty set of events and an empty set of labels, to denote an empty labeled event structure with.
-In the following, we define four types of constructions on labeled 
-event structures.
-
-\subsubsection{Prefix}
-
-\begin{definition}
-    Let $(E,\#,\vdash,L,l)$ be a labelled event structure.
-    Let $\alpha$ be a label.
-    Define $\alpha(E,\#,\vdash,L,l)$ to be a labelled event structure 
-    $(E',\#',\vdash',L',l')$ where $(E',\#',\vdash') = \alpha(E,\#,\vdash)$
-    and labels are defined as follows:
-    \begin{align*}
-        L' = \s{\alpha} \cup L
-    \end{align*}
-    and
-    $$
-        l'(e') = \begin{cases}
-            \alpha & \text{if } e' = (0,\alpha) \\
-            l(e)   & \text{if } e' = (1,e)
-        \end{cases}
-    $$
-    for all $e' \in E'$.
-\end{definition}
-
-\subsubsection{Sum}
-
-\begin{definition}
-    Let $\mr{E_0} = (E_0,\#_0,\vdash_0,L_0,l_0)$ and
-    $\mr{E_1} = (E_1,\#_1,\vdash_1,L_1,l_1)$ be labelled event structures.
-    Their sum $\mr{E_0} + \mr{E_1}$, is defined to be the structure $(E,\#,\vdash,l)$
-    with events $E = \s{(0,e)|e \in E_0} \cup \s{(1,e)|e \in E_1}$,
-    the disjoint union of sets $E_0$ and $E_1$,
-    with injections $\iota_k: E_k \rightarrow E$, given by
-    $\iota_k(e) = (k,e)$, for $k=0,1$, conflict relation
-    \begin{align*}
-        \forall e,e' \in E.
-        e \# e' \iff & \exists e_0,e_0' \in E_0. e = \iota_0(e_0)
-        \wedge e' = \iota_0(e_0') \wedge e_0 \#_0e_0'                       \\
-                     & \text{or } \exists e_1,e_1' \in E_1. e = \iota_1(e_1) \wedge
-        e' = \iota_1(e_1') \wedge e_1 \#_1 e_1'                             \\
-                     & \text{or } \exists e_0 \in E_0,e_1 \in E_1.(e=\iota_1(e_0)
-        \wedge e' =\iota_1(e_1)) \text{ or }
-        (e'=\iota_1(e_0) \wedge e =\iota_1(e_1))
-    \end{align*}
-    and enabling relation
-    \begin{align*}
-        X \vdash e \iff & X \in Con \wedge e \in E \wedge                   & \\
-                        & (\exists X_0 \in Con_0,e_0 \in E_0.X = \iota_0X_0
-        \wedge e = \iota_0(e_0) \wedge X_0 \vdash_0 e_0) \text{ or }          \\
-                        & (\exists X_1 \in Con_1,e_1 \in E_1.X = \iota_1X_1
-        \wedge e = \iota_1(e_1) \wedge X_1 \vdash_1 e_1)                      \\
-    \end{align*}
-    Where $Con_0,Con_1$ are defined on $\mr{E}_0$ and $\mr{E}_1$ respectively.
-    We define the set of labels as $L_0 \cup L_1$ and the labelling function as:
-    $$
-        l(e) = \begin{cases}
-            l_0(e_0) & \text{ if } e = \iota_0(e_0) \\
-            l_1(e_1) & \text{ if } e = \iota_1(e_1)
-        \end{cases}
-    $$
-\end{definition}
-
-\subsubsection{Product}
-In the product of two event structures, their events of synchronization are those pairs of events $(e_0,e_1)$, one from each event structure;
-if $e_0$ is labelled $\alpha_0$ and $e_1$ is labelled $\alpha_1$ the synchronization event is
-then labelled $(\alpha_0,\alpha_1)$.
-Events need not synchronize however; an event in one component may not synchronize with
-any event in the other.
-We shall use events of the form $(e_0,*)$/$(*,e_1)$ to stand for the occurrence of an event $e_0$/$e_1$
-from one component unsynchronized with any event of the other.
-Such an event will be labeled by $(\alpha_0,*)$ where $\alpha_0$ is the original label of $e_0$
-and * is a sort of undefined.
-
-\begin{notion}
-   In an event structure, we shall write $\doublevee$ for the reflexive conflict
-   relation by which we mean that $E \doublevee e'$ in event structure
-   iff either $e\#e'$ or $e=e'$.
-   With this notation instead of describing the conflict-free sets of an 
-   event structure as those sets $X$ such that 
-   \begin{align*}
-        \forall e,e' \in X. \neg(e \# e') 
-   \end{align*}
-   we can say they are those sets $X$ for which 
-   \begin{align*}
-        \forall e,e' \in X . e \doublevee e' \Rightarrow e = e'
-   \end{align*}
-\end{notion}
-
-\begin{definition}
-    Let $\mr{E_0} = (E_0,\#_0,\vdash_0,L_0,l_0)$ and
-    $\mr{E_1} = (E_1,\#_1,\vdash_1,L_1,l_1)$
-    be labeled event structures.
-    Define their product $\mr{E_0} \times \mr{E_1}$ to be the structure $\mr{E} = (E,\#,\vdash,L,l)$
-    consisting of events $E$ of the form
-    \begin{align*}
-        E_0 \times_* E_1 =
-        \s{(e_0,*)|e_0 \in E_0}
-        \cup \s{(*,e_1)|e_1 \in E_1}
-        \cup \s{(e_0,e_1)| e_0 \in E_0 \wedge e_1 \in E_1}
-    \end{align*}
-    with projections $\pi_i : E \rightarrow_* E_i$,
-    given by $\pi_i(e_0,e_1) = e_i$, for $i=0,1$, reflexive conflict relation $\doublevee$ given by
-    \begin{align*}
-        e \doublevee e' \iff \pi_0(e) \doublevee_0 \pi_0(e') \text{ or }
-        \pi_1(e) \doublevee_1 \pi_1(e')
-    \end{align*}
-    for all $e,e' \in E$ we use $Con$ for the conflict-free finite sets,
-    enabling relation $\vdash$ given by
-    \begin{align*}
-         & X \vdash e \iff X \in Con \wedge e \in E \wedge                  \\
-         & (\pi_0(e)\text{ is defined } \Rightarrow \pi_0X\vdash_0\pi_0(e))
-        \wedge (\pi_1(e)\text{ is defined } \Rightarrow \pi_1X\vdash_1\pi_1(e))
-    \end{align*}
-    Its set of labels is
-    \begin{align*}
-        L_0 \times_* L_1 = \s{ (\alpha_0,*)|\alpha_0 \in L_0}
-        \cup \s{(*,\alpha_1)|\alpha_1 \in L_1}
-        \cup \s{(\alpha_0,\alpha_1)|\alpha_0 \in L_0 \wedge \alpha_1 \in L_1}
-    \end{align*}
-    with projections: $\lambda_i: E \rightarrow_* E_i$ given by
-    $\lambda_i(\alpha_0,\alpha_1) = \alpha_i$, for $i=0,1$.
-    Its labeling function is defined to act on an event $e$ so
-    \begin{align*}
-        l(e) = (l_0\pi_0(e),l_1\pi_1(e))
-    \end{align*}
-\end{definition}
-
-\subsubsection{Restriction}
-
-\begin{definition}
-
-    Let $\mr{E} = (E,\#,\vdash,L,l)$ be a labelled event structure.
-    Let $\Lambda$ be a subset of labels.
-    Define the restriction $\mr{E}\lceil \Lambda$ to be $(E',\#',\vdash',L\cap \Lambda,l')$
-    where $(E',\#',\vdash')$ is the restriction of $(E,\#,\vdash)$
-    to events $\s{e \in E|l(e) \in \Lambda}$ and the labeling function $l'$
-    is the restriction of the original labeling function to the domain $L \cap \Lambda$.
-\end{definition}
 
 \subsection{Denotational Semantics of Normal DyNetKAT}
 
