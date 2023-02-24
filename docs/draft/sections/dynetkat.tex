@@ -1,45 +1,60 @@
-\section{Semantics of Communicating Processes}
-In this section, first, we define a simple language
-and we define the event structure semantics of this language.
+\section{Event Structure Semantics of DyNetKAT}
+In this section, first, we introduce Normal DyNetKAT grammar.
+Then we define different constructions on labeled event structures
+which will be used to provide denotational semantics for Normal
+DyNetKAT terms.
 
 \subsection{Normal DyNetKAT}
 
-Let $\mc{A}$ be the set of possible labels for event structures.
-We define a language with the following syntax:
-
+Let $F = \s{f_1,...,f_n}$ be a set of field names with 
+values in $V_i$, for $i \in \s{1,...,n}$.
+We call complete test, denoted by $\alpha$,
+an expression $f_1 = v_1 \cdot ... \cdot f_n = v_n$ with $v_i \in V_i$ for $i \in \s{1,...,n}$.
+We call complete assignment, denoted by $\pi$, an expression 
+$f_1 \la v_1\cdot ... \cdot f_n \la v_n$ with $v_i \in V_i$ for 
+$i \in \s{1,...,n}$.
+We define the Normal DyNetKAT grammar as follows:
 \begin{align*}
-    p ::= nil ~|~ \alpha p ~|~ p_0 + p_1 ~|~ p_0 \times p_1
-    ~|~ p\lceil \Lambda
+    F ::= & \alpha\cdot\pi                                                                           \\
+    D ::= & \bot ~|~ F;D ~|~ x?F;D ~|~ x!F;D ~|~ D \parallel D ~|~ D \oplus D ~|~ \delta_{\mc{L}}(D) \\
+          & \mc{L} = \s{c ~|~ c ::= x?F ~|~ x!F}
 \end{align*}
+In the following we use Normal DyNetKAT as a subset of DyNetKAT programs
+to provide event structure semantics.
 
-where $\alpha \in \mc{A}$ and $\Lambda \subseteq \mc{A}$.
-
-\subsection{Denotational Semantics}
+\subsection{Denotational Semantics of Normal DyNetKAT}
 
 \begin{definition}
-    We define the semantic map $\sem{ \ }: p \ra \mathbb{E}$ where
+    Let $\mc{A}$ be an alphabet of letters of the form
+    $\alpha \cdot \pi$,
+    $x?F$, and $x!F$.
+    We define the semantic map of Normal DyNetKAT terms
+    $\sem{ \ }: D \ra \mathbb{E}$ where
     $\mathbb{E}$ is the set of all event structures with
     labels in $\mc{A}$ as follows:
     \begin{align*}
-        \sem{nil}      & = (\emptyset,\emptyset)                  \\
-        \sem{\alpha t} & = \alpha\sem{t}                        \\
-        \sem{t_1 + t_2}
+        \sem{\bot}      & = (\emptyset,\emptyset)                  \\
+        \sem{\alpha; t} & = \alpha\sem{t}                        \\
+        \sem{t_1 \oplus t_2}
                         & = \sem{t_1} + \sem{t_2}                  \\
-        \sem{t \lceil \Lambda}
-                        & = \sem{t} \lceil \Lambda \\
-        \sem{t_1 \times t_2}
+        \sem{\delta_{\mc{L}}(t)}
+                        & = \sem{t} \lceil (\mc{A} \setminus \mc{L}) \\
+        \sem{t_1 \parallel t_2}
                         & = \sem{t_1} \times \sem{t_2}
     \end{align*}
+    Where $\mc{L}$ is a subset of $\mc{A}$.
 \end{definition}
 
 \subsection{Examples}
 In the following, we provide some examples to illustrate
 how the prefix, sum, and product operators can be used to 
 compose event structures.
-For simplicity, assume that $ \mc{A} = \s{a,b,c}$. 
+For simplicity, here we use $a,b,c$ to denote DyNetKAT actions.
 
 \begin{example}
-    $\mr{E} = \sem{ab}$ is an event structure
+    Let $a,b\in \mc{A}$ be some DyNetKAT actions and $a;b$ a
+    normal DyNetKAT term.
+    $\mr{E} = \sem{a;b}$ is an event structure
     $(E,\#,\vdash,L,l)$ where:
     \begin{align*}
         E  & = \s{(0,a),(1,0,b)}                       \\
@@ -61,7 +76,9 @@ For simplicity, assume that $ \mc{A} = \s{a,b,c}$.
 \end{example}
 
 \begin{example}
-    $\mr{E} = \sem{a + b}$ is an event structure
+    Let $a,b\in \mc{A}$ be some DyNetKAT actions and $a\oplus b$ a
+    normal DyNetKAT term.
+    $\mr{E} = \sem{a\oplus b}$ is an event structure
     $(E,\#,\vdash,L,l)$ where:
     \begin{align*}
         E & = \s{(0,a),(1,b)}                \\
@@ -84,7 +101,9 @@ For simplicity, assume that $ \mc{A} = \s{a,b,c}$.
 
 
 \begin{example}
-    $\mr{E} = \sem{a \times b}$ is an event structure
+    Let $a,b\in \mc{A}$ be some DyNetKAT actions and $a\parallel b$ a
+    normal DyNetKAT term.
+    $\mr{E} = \sem{a\parallel b}$ is an event structure
     $(E,\#,\vdash,L,l)$ where:
     \begin{align*}
         E  & = \s{(a,*),(*,b),(a,b)}                           \\
