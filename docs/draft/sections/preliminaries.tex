@@ -177,30 +177,3 @@ That is, if the endogenous variables are $X_1,...,X_n$ then
 $(x_1,...,x_n) \in \mathcal{E}$ if $X_1 = x_1, ..., X_n=x_n$ is an
 allowable setting.
 We say that a setting of a subset of the endogenous variables is allowable if it can be extended to a setting in $\mathcal{E}$.
-
-In \cite{hp} there is no formal definition of the actual cause
-in extended causal models.
-So, here we provide a new definition of the actual cause
-in the context of extended causal models.
-
-
-\begin{definition}
-    $\vec X = \vec x$ is an actual cause of $\varphi$ in $(M,\vec u)$ if the following three conditions hold:
-    \begin{itemize}
-        \item  \textbf{AC1.} $(M,\vec u)\models (\vec X = \vec x) \wedge \varphi \wedge $.
-        \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
-
-              (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi
-                  \wedge \vec V = \vec v
-                  \wedge  \vec v \in \mathcal{E}$.
-
-              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W'
-                      \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
-                  \vec V = \vec v \wedge (\vec v \in \mc{E} \Rightarrow \varphi)$
-              for all subsets $Z'$ of $\vec Z$.
-
-        \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
-    \end{itemize}
-    Where $\vec v$ is the value of endogenous variables.
-\end{definition}
-

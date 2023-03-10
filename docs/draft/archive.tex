@@ -251,3 +251,60 @@ For simplicity, assume that $ \mc{A} = \s{a,b,c}$.
         \end{tikzpicture}
     \end{center}
 \end{example}
+
+In \cite{hp} there is no formal definition of the actual cause
+in extended causal models.
+So, here we provide a new definition of the actual cause
+in the context of extended causal models.
+
+
+\begin{definition}
+    $\vec X = \vec x$ is an actual cause of $\varphi$ in $(M,\vec u)$ if the following three conditions hold:
+    \begin{itemize}
+        \item  \textbf{AC1.} $(M,\vec u)\models (\vec X = \vec x) \wedge \varphi \wedge $.
+        \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
+
+              (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi
+                  \wedge \vec V = \vec v
+                  \wedge  \vec v \in \mathcal{E}$.
+
+              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W'
+                      \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
+                  \vec V = \vec v \wedge (\vec v \in \mc{E} \Rightarrow \varphi)$
+              for all subsets $Z'$ of $\vec Z$.
+
+        \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
+    \end{itemize}
+    Where $\vec v$ is the value of endogenous variables.
+\end{definition}
+
+Let $\mathbb{E}$ be the all triples of the form
+$(E,\#',\vdash')$ on the set of events $E$ where
+$\#' \subseteq E \times E$ and
+$\vdash' \subseteq \mc{P}(E) \times E$.
+We define a function
+$ES: \times_{V \in \mc{V}\setminus \s{PV}} \mc{R}(V) \rightarrow \mathbb{E}$ which intuitively returns the event structure
+that can be derived from the values of the endogenous variables
+in the model excluding $PV$.
+Let $\vec v$ be a vector of the values of the variables
+in $\mc{V} \setminus \s{PV}$ and $\vec v(V)$ be the value of
+$V$ in $\vec v$ for each $V \in \mc{V} \setminus \s{PV}$.
+We define the function $ES$ so that if
+$ES(\vec v) = (E,\#',\vdash')$ we have:
+\begin{align*}
+    \forall e,e' \in E. e \#' e' & \iff \vec{v}(C_{e,e'}) = \T \\
+    \forall s \in \mathcal{P}(E), e \in E.  s \vdash' e
+                                 & \iff \vec{v}(EN_{s,e}) = \T
+\end{align*}
+We define $\mathcal{E}$, the set of all allowable
+settings of the endogenous variables, to be the vector of
+values such as $\vec v'$ for which $ES(\vec v)$ is an
+event structure.
+
+Finally, to encode the property violation,
+we define the function of $PV$ such that
+if the value of the endogenous variables is
+$\vec v$ then we have:
+\begin{align*}
+    PV = \T \iff S \cap \mc{F}(ES(\vec v)) = \e
+\end{align*}
