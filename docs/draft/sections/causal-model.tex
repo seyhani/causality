@@ -93,51 +93,14 @@ events as follows:
         \right)
     \right)
 \end{align*}
-
-Where $\pi_S$ is the set of all permutations of $S$.
+\noindent Where $\pi_S$ is the set of all permutations of $S$.
 For a permutation $\pi \in \pi_S$, where $|S| = n$, 
 we write $\pi_i$ where $1 \leq i \leq n$ for the $i$th 
 element of $\pi$.
-
 Thus, for a given subset of events $S \subseteq E$, 
 we can use $\varphi_S$ as the effect for which we look
 for a cause.
 
 
-\subsection{Actual Cause of Unsafe Behavior}
-
-Using the definition of the actual cause in the extended causal
-model, we can rewrite the definition for unsafe behaviors in
-event structures as follows:
-
-\begin{definition}
-    Let $\mr{E} = (E,\#,\vdash)$ be an event structure and
-    $\mc{M}$ be the causal model of an unsafe behavior in
-    $\mr{E}$ where unsafe behavior is specified as the
-    function $F_{PV}$ in $\mc{M}$.
-    We say $\vec X = \vec x$ is an actual cause of
-    the unsafe behavior in $\mr{E}$ if the following
-    conditions hold:
-    \begin{itemize}
-        \item  \textbf{AC1.} $M\models \vec X = \vec x
-                  \wedge PV = \T$
-        \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
-
-              (a) $M \models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']
-                  PV = \F
-                  \wedge \vec V = \vec v
-                  \wedge  \vec v \in \mathcal{E}$.
-
-              (b) $M \models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
-                  \vec V = \vec v
-                  \wedge
-                  (\vec v \in \mathcal{E} \Rightarrow PV = \T)
-              $
-              for all subsets $Z'$ of $\vec Z$.
-
-        \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
-    \end{itemize}
-    Where $\vec v$ is the value of endogenous variables.
-\end{definition}
 \pagebreak
 

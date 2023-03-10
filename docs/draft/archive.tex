@@ -308,3 +308,71 @@ $\vec v$ then we have:
 \begin{align*}
     PV = \T \iff S \cap \mc{F}(ES(\vec v)) = \e
 \end{align*}
+
+\subsection{Actual Cause of Unsafe Behavior}
+
+Using the definition of the actual cause in the extended causal
+model, we can rewrite the definition for unsafe behaviors in
+event structures as follows:
+
+\begin{definition}
+    Let $\mr{E} = (E,\#,\vdash)$ be an event structure and
+    $\mc{M}$ be the causal model of an unsafe behavior in
+    $\mr{E}$ where unsafe behavior is specified as the
+    function $F_{PV}$ in $\mc{M}$.
+    We say $\vec X = \vec x$ is an actual cause of
+    the unsafe behavior in $\mr{E}$ if the following
+    conditions hold:
+    \begin{itemize}
+        \item  \textbf{AC1.} $M\models \vec X = \vec x
+                  \wedge PV = \T$
+        \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
+
+              (a) $M \models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']
+                  PV = \F
+                  \wedge \vec V = \vec v
+                  \wedge  \vec v \in \mathcal{E}$.
+
+              (b) $M \models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
+                  \vec V = \vec v
+                  \wedge
+                  (\vec v \in \mathcal{E} \Rightarrow PV = \T)
+              $
+              for all subsets $Z'$ of $\vec Z$.
+
+        \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
+    \end{itemize}
+    Where $\vec v$ is the value of endogenous variables.
+\end{definition}
+
+We define the following programs:
+\begin{align*}
+    N & = p_i q_i f_{ad} + q_i p_i f_{ad} \\
+    C & = p_o \times q_o \\
+    SDN & = (N \times C)\lceil \Lambda \\
+    \Lambda & = \s{(p_i,p_o),(q_i,q_o),(f_{ad},*)}
+\end{align*}
+This program captures the update behavior of the network 
+figure \ref{fig:blacklist}.
+Assume that two updates, $p$ and $q$ happening in the network.
+$p$ replaces the path $ab$ with $ac$ and $q$ replaces
+the path $cb$ with $cd$.
+Let $C$ be the controller that concurrently sends commands for these
+updates, $p_o,q_o$.
+We use $p_i$ and $q_i$ for actions of receiving these commands and
+$f_{ad}$ for the action of forwarding a packet from $a$ to $d$.
+For simplicity, we do not consider any forwarding in the network 
+other than $f_{ad}$.
+Event structure of the $SDN$ has the configurations as depicted 
+in figure \ref{fig:blacklist:es}.
+Blacklisted nodes are nodes in the network that must not
+be reachable \cite{network-abstractions}.
+Let's assume the network in figure \ref{fig:blacklist} as
+an example where the node $d$ is blacklisted.
+For simplicity we assume that we require
+$d$ not reachable only from $a$.
+Thus, we consider the existence of configurations
+$\s{p_1,q_1,ad_1}$ and $\s{p_2,q_2,ad_2}$ in an event structure
+as a property violation.
+In this example we can prove that $C_{p_1,q_1} = \F$ is an 
+actual cause of the property violation.
