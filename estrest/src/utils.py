@@ -1,5 +1,5 @@
 from itertools import chain, combinations
-from typing import Dict, Set, List, Iterable, FrozenSet, TypeVar
+from typing import Dict, Set, List, Iterable, FrozenSet
 
 from event import Event, SyncedEvent, STAR
 
@@ -111,4 +111,3 @@ def path_vertices(src, dst, out: Dict, in_: Dict) -> Set:
     __dfs_internal(src, out, visited_src_fwd, _sort_rev)
     __dfs_internal(dst, in_, visited_dst_rev, _sort_rev)
     return visited_src_fwd.intersection(visited_dst_rev)
-
