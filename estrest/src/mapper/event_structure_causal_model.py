@@ -1,4 +1,4 @@
-from typing import List, Set
+from typing import Set
 from itertools import combinations
 
 from causality import CausalModel
@@ -21,19 +21,15 @@ class EventStructureCausalModel(CausalModel):
         self.vars.add(var)
         self.add_constant(repr(var), val)
 
-    def add_enabling(
-        self, s: Set[Event], e: Event, fn: FN, deps: List[EventStructureVar]
-    ):
+    def add_enabling(self, s: Set[Event], e: Event, fn: FN):
         var = EnablingVar(s, e)
         self.vars.add(var)
-        self.add(repr(var), fn, [repr(d) for d in deps])
+        self.add(repr(var), fn)
 
-    def add_min_enabling(
-        self, s: Set[Event], e: Event, fn: FN, deps: List[EventStructureVar]
-    ):
+    def add_min_enabling(self, s: Set[Event], e: Event, fn: FN):
         var = MinEnablingVar(s, e)
         self.vars.add(var)
-        self.add(repr(var), fn, [repr(d) for d in deps])
+        self.add(repr(var), fn)
 
     def get_es(self) -> EventStructure:
         es = EventStructure(set())
