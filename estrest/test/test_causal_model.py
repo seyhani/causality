@@ -9,40 +9,40 @@ class TestCausalModel(unittest.TestCase):
 
     def test_recursive(self):
         m = CausalModel()
-        m.add('A', lambda vals: True, [])
-        m.add('B', lambda vals: True, [])
-        m.add('C', lambda vals: vals['A'] and vals['B'], ['A', 'B'])
+        m.add('A', lambda vals: True)
+        m.add('B', lambda vals: True)
+        m.add('C', lambda vals: vals['A'] & vals['B'])
         m.evaluate()
         self.assertEqual(m.vals['C'], True)
 
     def test_non_recursive(self):
         m = CausalModel()
-        m.add('A', lambda vals: vals['B'], ['B'])
-        m.add('B', lambda vals: vals['A'], ['A'])
+        m.add('A', lambda vals: vals['B'])
+        m.add('B', lambda vals: vals['A'])
         m.evaluate()
         self.assertIsNone(m.vals['B'])
 
     def test_intervention(self):
         m = CausalModel()
-        m.add('A', lambda vals: True, [])
-        m.add('B', lambda vals: False, [])
-        m.add('C', lambda vals: vals['A'] and vals['B'], ['A', 'B'])
-        m.add('D', lambda vals: vals['C'] and True, ['C'])
+        m.add('A', lambda vals: True)
+        m.add('B', lambda vals: False)
+        m.add('C', lambda vals: vals['A'] & vals['B'])
+        m.add('D', lambda vals: vals['C'] & True)
         m = m.intervene({'C': True})
         m.evaluate()
         self.assertEqual(m.vals['D'], True)
 
     def test_invalid_intervention(self):
         m = CausalModel()
-        m.add('A', lambda vals: True, [])
+        m.add('A', lambda vals: True)
         self.assertRaises(Exception, lambda: m.intervene({'X': True}))
 
     def test_w_projection(self):
         m = CausalModel()
-        m.add('A', lambda vals: True, [])
-        m.add('B', lambda vals: False, [])
-        m.add('C', lambda vals: vals['A'] and vals['B'], ['A', 'B'])
-        m.add('D', lambda vals: vals['C'] and True, ['C'])
+        m.add('A', lambda vals: True)
+        m.add('B', lambda vals: False)
+        m.add('C', lambda vals: vals['A'] & vals['B'])
+        m.add('D', lambda vals: vals['C'] & True)
         m_wp = m.get_w_projection(
             PrimitiveEvent('A', True), PrimitiveEvent('D', True)
         )
