@@ -1,6 +1,7 @@
 from copy import deepcopy
 from typing import Dict, Callable, List, Optional, Set
 
+from causality.dep_finder import DependencyFinder
 from utils import topological_sort, path_vertices
 
 VALS = Dict[str, Optional[bool]]
@@ -34,13 +35,13 @@ class CausalModel:
         self.fns = {}
         self.deps = {}
 
-    def add(self, var: str, fn: FN, deps: List[str]) -> None:
+    def add(self, var: str, fn: FN) -> None:
         self.vals[var] = None
         self.fns[var] = fn
-        self.deps[var] = deps
+        self.deps[var] = list(DependencyFinder().find(fn))
 
     def add_constant(self, var: str, val: bool):
-        self.add(var, lambda vals: val, [])
+        self.add(var, lambda vals: val)
 
     def __intervene_internal(self, ints: Dict[str, bool]):
         model = deepcopy(self)

@@ -30,16 +30,14 @@ class EventStructureCausalChecker:
         self.__add_effect_var(ces)
         self.cm = self.cm.get_w_projection(cause, ES_CM_EFFECT_EVENT)
 
-        if not witness.w.issubset(self.cm.vals):
+        if not witness.w.issubset(self.cm.get_var_names()):
             raise Exception("Invalid w for witness")
         self.witness = witness
 
     def __add_effect_var(self, ces):
-        self.cm.add(
-            ES_CM_EFFECT_EVENT.var,
-            lambda _: False,
-            self.__get_effect_deps(ces)
-        )
+        PV = ES_CM_EFFECT_EVENT.var
+        self.cm.add(PV, lambda _: False)
+        self.cm.deps[PV] = self.__get_effect_deps(ces)
 
     @staticmethod
     def __get_effect_deps(
