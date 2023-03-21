@@ -2,7 +2,7 @@
 
 \subsection{Causal Model of Event Structure}
 Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure where
-$E = \s{e_1, e_2, ...,e_n}$. 
+$E = \s{e_1, e_2, ...,e_n}$.
 Let $S \subseteq \mc{P}(E)$ be the set of unsafe behaviors.
 We define the causal model
 $\mc{M} = (\mc{S},\mc{F},\mc{E})$ of unsafe behavior
@@ -14,19 +14,19 @@ consisting of boolean variables as follows:
     \mathcal{V} = & \s{C_{e_i,e_j} ~|~  1 \leq i < j \leq n.
     e_i \in E \wedge e_j \in E}                                \\
                   & \cup \s{EN_{s,e} ~|~ s \in \mathcal{P}(E),
-    e \in E. e \not \in s }                                  \\
+    e \in E. e \not \in s }                                    \\
                   & \cup \s{M_{s,e} ~|~ s \in \mathcal{P}(E),
-        e \in E. e \not \in s } \cup \s{PV}
+        e \in E. e \not \in s }
 \end{align*}
-Intuitively, these variables model the existence of specific elements in 
+Intuitively, these variables model the existence of specific elements in
 each of the event structure relations: $\#$, $\vdash_{min}$, and $\vdash$.
 For two events $e,e' \in E$, variables of the form $C_{e,e'}$ represent whether $e\#e'$.
 Similarly, for a subset of events $s \subseteq E$ and an event $e \in E$,
-we use variables of the form $M_{s,e}$ and $EN_{s,e}$ to represent 
+we use variables of the form $M_{s,e}$ and $EN_{s,e}$ to represent
 whether $s \vdash_{min} e$ and $s \vdash e$ respectively.
-Finally, we use a single boolean variable, $PV$, which denote the 
+Finally, we use a single boolean variable, $PV$, which denote the
 violation of property in the event structure.
-For each variable $X \in \mathcal{V}$ we define $\vec V_X$ 
+For each variable $X \in \mathcal{V}$ we define $\vec V_X$
 as a vector of all variables in $\mathcal{V} \setminus \s{X}$.
 For $x,y \in \mathcal{P}(E)$ we say $x$ is covered by $y$ written $ x \prec y$ iff:
 \begin{align*}
@@ -70,71 +70,37 @@ Where we have:
     \neg M_{s',e}
     \right)
 \end{align*}
-Let $\mathbb{E}$ be the all triples of the form
-$(E,\#',\vdash')$ on the set of events $E$ where
-$\#' \subseteq E \times E$ and
-$\vdash' \subseteq \mc{P}(E) \times E$.
-We define a function
-$ES: \times_{V \in \mc{V}\setminus \s{PV}} \mc{R}(V) \rightarrow \mathbb{E}$ which intuitively returns the event structure
-that can be derived from the values of the endogenous variables
-in the model excluding $PV$.
-Let $\vec v$ be a vector of the values of the variables
-in $\mc{V} \setminus \s{PV}$ and $\vec v(V)$ be the value of
- $V$ in $\vec v$ for each $V \in \mc{V} \setminus \s{PV}$.
-We define the function $ES$ so that if
-$ES(\vec v) = (E,\#',\vdash')$ we have:
+
+\noindent Let $S \subseteq E$ be a subset of events.
+We define $\varphi_S$, a boolean formula of primitive
+events as follows:
 \begin{align*}
-    \forall e,e' \in E. e \#' e' & \iff \vec{v}(C_{e,e'}) = \T \\
-    \forall s \in \mathcal{P}(E), e \in E.  s \vdash' e
-     & \iff \vec{v}(EN_{s,e}) = \T
+    \left(
+        \bigwedge_{\forall e,e' \in S} \neg C_{e,e'}
+    \right)
+    \bigwedge
+    \left(
+        \bigwedge_{\forall e \in S}
+        \left(
+            \bigvee_{\forall \pi \in \pi_S} 
+            \left(
+                EN_{\e,\pi_1} \wedge
+                EN_{\s{\pi_1},\pi_2} \wedge
+                \dots
+                \wedge
+                EN_{\s{\pi_1,...,\pi_{n_1}},p_n}
+            \right)
+        \right)
+    \right)
 \end{align*}
-We define $\mathcal{E}$, the set of all allowable
-settings of the endogenous variables, to be the vector of
-values such as $\vec v'$ for which $ES(\vec v)$ is an
-event structure.
+\noindent Where $\pi_S$ is the set of all permutations of $S$.
+For a permutation $\pi \in \pi_S$, where $|S| = n$, 
+we write $\pi_i$ where $1 \leq i \leq n$ for the $i$th 
+element of $\pi$.
+Thus, for a given subset of events $S \subseteq E$, 
+we can use $\varphi_S$ as the effect for which we look
+for a cause.
 
-Finally, to encode the property violation,
-we define the function of $PV$ such that 
-if the value of the endogenous variables is
-$\vec v$ then we have:
-\begin{align*}
-    PV = \T \iff S \cap \mc{F}(ES(\vec v)) = \e
-\end{align*}
 
-\subsection{Actual Cause of Unsafe Behavior}
-
-Using the definition of the actual cause in the extended causal 
-model, we can rewrite the definition for unsafe behaviors in 
-event structures as follows:
-
-\begin{definition}
-    Let $\mr{E} = (E,\#,\vdash)$ be an event structure and
-    $\mc{M}$ be the causal model of an unsafe behavior in
-    $\mr{E}$ where unsafe behavior is specified as the
-    function $F_{PV}$ in $\mc{M}$.
-    We say $\vec X = \vec x$ is an actual cause of 
-    the unsafe behavior in $\mr{E}$ if the following
-    conditions hold:
-    \begin{itemize}
-        \item  \textbf{AC1.} $M\models \vec X = \vec x
-                  \wedge PV = \T$
-        \item  \textbf{AC2. }There exists a partition $(\vec Z, \vec W)$ of $\mathcal{V}$ with $\vec X \subseteq \vec Z$ and some setting $(\vec x',\vec w')$ of the variables in $(\vec X,\vec W)$ such that if $(M,\vec u)\models \vec Z = z^*$ for all $Z\in \vec Z$, then both of the following conditions hold:
-
-              (a) $M \models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']
-                  PV = \F
-                  \wedge \vec V = \vec v
-                  \wedge  \vec v \in \mathcal{E}$.
-
-              (b) $M \models[\vec X\leftarrow \vec x, \vec W' \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]
-                  \vec V = \vec v
-                  \wedge 
-                  (\vec v \in \mathcal{E} \Rightarrow PV = \T)
-                  $
-              for all subsets $Z'$ of $\vec Z$.
-
-        \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
-    \end{itemize}
-    Where $\vec v$ is the value of endogenous variables.
-\end{definition}
 \pagebreak
 
