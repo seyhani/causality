@@ -1,0 +1,51 @@
+\section{Complexity Improvements for Causality}
+
+\MK{Maybe we should say this when we define causality?}
+Eiter and Lukasiewicz \cite{eiter2001complexity} have shown that, for
+a given cause $X=x$ and effect $Y=y$, deciding whether $X=x$ is an
+actual cause of $Y=y$ is $\Sigma_2^P$-complete. In this section, we 
+present results that aim to reduce this complexity.
+
+\subsection{Singleton Cause}
+
+The following theorem is first presented by Halpern and Pearl as a 
+conjecture, which is later proved by Eiter and Lukasiewicz in 
+\cite{eiter2001complexity}:
+
+\begin{theorem}\label{th:singleton-cause}
+    Let $M=(\mathcal{S}, \mathcal{F})$ be a causal model, where 
+    $\mathcal{S}=(\mathcal{U}, \mathcal{V}, \mathcal{R})$. 
+    Let $X \subseteq \mathcal{V}$ such that for any $x \in X$, 
+    $x \in \mathcal{R}(x)$. Let $\varphi$ be a boolean combination of
+    events in $M$. If $X=x$ is an actual cause of $\varphi$, then $X$
+    is a singleton.
+\end{theorem}
+
+Given Thm. \ref{th:singleton-cause}, condition AC3 can be verified
+in constant time.
+
+\subsection{\texorpdfstring
+    {$W$-Projection}
+    {\textit{W}-Projection}
+}
+
+\MK{Define $W$-projection and how we can use it.}
+
+\subsection{\texorpdfstring
+    {Restricted Search Space for $Z$}
+    {Restricte Search Space for \textit{Z}}
+}
+
+The following theorem is presented by Hopkins
+\cite{hopkins2002strategies} as a result of a theorem by Eiter and 
+Lukasiewicz \cite{eiter2001complexity}:
+
+\begin{theorem}\label{th:restricted-Z}
+    Let $M$ be a binary causal model. Suppose for a given $x,y,w$, 
+    conditions AC1, AC2.a, and AC2.b hold. Then AC2.c holds if and 
+    if for $Z=V \setminus (X \cup W)$:
+    $$ (M, u) \models [X=x, W=w, Z=z] (Y=y) $$. 
+\end{theorem}
+
+Given Thm. \ref{th:singleton-cause}, \ref{th:restricted-Z}, deciding 
+an instance of the causality problem is NP-complete.
