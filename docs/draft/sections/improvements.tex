@@ -1,5 +1,15 @@
 \section{Complexity Improvements for Causality}
 
+\begin{definition}\label{def:actual-cause-problem}
+    Assume $M=(\sig, \varfns)$ is a causal model, where 
+    $\sig=(\extvars, \intvars, \varrngs)$. Assume
+    $X \subseteq \intvars$ and $x$ is defined such that for 
+    each $X_i \in X$, $X_i = x_i$, and $\varphi$ is a boolean 
+    expression over $\intvars$. $\actlcs(M, X, x, \varphi)$ is defined 
+    as the decision problem of verifying whether $X=x$ is an actual 
+    cause of $\varphi$.
+\end{definition}
+
 \MK{Maybe we should say this when we define causality?}
 Eiter and Lukasiewicz \cite{eiter2001complexity} have shown that, for
 a given cause $X=x$ and effect $Y=y$, deciding whether $X=x$ is an
@@ -13,23 +23,56 @@ conjecture, which is later proved by Eiter and Lukasiewicz in
 \cite{eiter2001complexity}:
 
 \begin{theorem}\label{th:singleton-cause}
-    Let $M=(\mathcal{S}, \mathcal{F})$ be a causal model, where 
-    $\mathcal{S}=(\mathcal{U}, \mathcal{V}, \mathcal{R})$. 
-    Let $X \subseteq \mathcal{V}$ such that for any $x \in X$, 
-    $x \in \mathcal{R}(x)$. Let $\varphi$ be a boolean combination of
-    events in $M$. If $X=x$ is an actual cause of $\varphi$, then $X$
-    is a singleton.
+    Let $M=(\sig, \varfns)$ be a causal model, where 
+    $\sig=(\extvars, \intvars, \varrngs)$. Let $X \subseteq \intvars$
+    such that for any $x \in X$, $x \in \varrngs(x)$. Let $\varphi$ 
+    be a boolean combination of events in $M$. If $X=x$ is an actual 
+    cause of $\varphi$, then $X$ is a singleton.
 \end{theorem}
 
 Given Thm. \ref{th:singleton-cause}, condition AC3 can be verified
-in constant time.
+in constant time. The overall complexity of this problem, however, is
+still in verifying condition AC2; as a result, this problem is still 
+$\Sigma_2^P$-Complete.
 
 \subsection{\texorpdfstring
     {$W$-Projection}
     {\textit{W}-Projection}
 }
 
-\MK{Define $W$-projection and how we can use it.}
+Hopkins \cite{hopkins2002strategies} defines the \emph{$W$-projection}
+of a causal model, with respect to a causal query, as the set of all 
+variables that are necessary for evaluating the query. Any other
+variable outside this projection can be \emph{deleted} from the causal
+model, without changing the result of the query.
+
+\begin{definition}\label{def:variable-deletion}
+    Assume $M=(\sig, \varfns)$ is a causal model, where 
+    $\sig=(\extvars, \intvars, \varrngs)$, and $U=u$. To 
+    \emph{delete} a variable $V \in \intvars$ from $(M,u)$, $V$ is 
+    removed from $\intvars$, and in the structural equation $F_X$ of
+    each child $X$ of $V$, variable $V$ is replaced by $v = V(u)$.
+    The \emph{projection} of $(M, u)$ over the set
+    $\mathbf{V} \subseteq \intvars$ is a new causal model in which
+    any variable in $\intvars \setminus \mathbf{V}$ is deleted.
+    The \emph{$W$-projection} of $(M,u)$ with respect to the query 
+    ``Is $X=x$ an actual cause of $Y=y$'', is the projection of $(M,u)$
+    over $X$, $Y$, variables $V^{XY}$ on a path from $X$ to $Y$ in
+    the causal network of $M$, and the parents of $V^{XY}$ and $Y$ 
+    in the causal network of $M$.
+\end{definition}
+
+Intuitively, deleting a variable gives us the same result as
+permanently fixing it at its actual value.
+
+\begin{theorem}
+    Let $M=(\sig, \varfns)$ be a causal model and $U=u$; then
+    $X=x$ is an actual cause of $Y=y$ in $(M,u)$ if and only if 
+    it is an actual cause in $(M',u)$, where $M'$ is the
+    $W$-projection of $M$ with respect to $X$ and $Y$.
+\end{theorem}
+
+\MK{Show how we can use $W$-projection.}
 
 \subsection{\texorpdfstring
     {Restricted Search Space for $Z$}
@@ -43,9 +86,12 @@ Lukasiewicz \cite{eiter2001complexity}:
 \begin{theorem}\label{th:restricted-Z}
     Let $M$ be a binary causal model. Suppose for a given $x,y,w$, 
     conditions AC1, AC2.a, and AC2.b hold. Then AC2.c holds if and 
-    if for $Z=V \setminus (X \cup W)$:
+    only if for $Z=V \setminus (X \cup W)$:
     $$ (M, u) \models [X=x, W=w, Z=z] (Y=y) $$. 
 \end{theorem}
+
+\MK{We can also use Eiter's theorem, if the issues with this theorem
+do not resolve.}
 
 Given Thm. \ref{th:singleton-cause}, \ref{th:restricted-Z}, deciding 
 an instance of the causality problem is NP-complete.
