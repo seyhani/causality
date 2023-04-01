@@ -6,7 +6,8 @@
         \item $E$ is a set of events
         \item \# is a binary symmetric, irreflexive relation on $E$,
               the conflict relation.
-              We shall write $Con$ for the set of conflict-free subsets of $E$,
+              We shall write $Con$ for the set of 
+              \textit{consistent} subsets of $E$,
               i.e. those finite subsets $X \subseteq E$ for which:
               $\forall e,e' \in X . \neg (e\#e')$
         \item $\vdash \subseteq Con \times E$ is the enabling relation which satisfies:
@@ -14,6 +15,11 @@
     \end{enumerate}
 
 \end{definition}
+
+\begin{comment}
+    salam
+\end{comment}
+
 \begin{notion}{$(\doublevee)$}
     In an event structure we shall write $\doublevee$ for the reflexive conflict relation by which we mean
     that $e\doublevee e'$ in an event structure iff either $e\#e'$ or $e=e'$.
@@ -32,7 +38,7 @@
     Let $\mr{E} = (E,\#,\vdash)$ be an event structure.
     Define a \textit{configuration} of $\mr{E}$ to be a subset of events $x \subseteq E$ which is
     \begin{enumerate}
-        \item conflict-free: $x \in Con$
+        \item consistent: $x \in Con$
         \item secured: $\forall e \in x. \exists e_0,...,e_n \in x. e_n = e \ \wedge
                   \forall i \leq n. \s{e_0,...,e_{i-1}} \vdash e_i$
     \end{enumerate}
@@ -52,9 +58,48 @@ We call such a sequence $e_0,e_1,...,e_n = e$ a \emph{securing} for $e$ in $x$.
     not including the element *, and $l$ is a function $l: E \rightarrow L$
     from its events to its labels.
 \end{definition}
-\subsection{Constructions on Labeled Event Structures \cite{es}}
-We use $(\e,\e)$, an empty set of events and an empty set of labels, to
-denote an empty labeled event structure.
+\begin{example}
+    Here we define an event structure for capturing the 
+    behavior of the network of figure \ref{fig:blacklist}.
+    To do so, first we encode the network using a language for SDNs and 
+    then we use event structure as a semantic model of the language 
+    and derive the event structure.
+    Since the SDN language and its event structure semantic model
+    is out of the scope of this paper, here we only describe the 
+    resulting event structure.
+    Figure \ref{fig:blacklist:es} shows the event structure of network
+    in figure \ref{fig:blacklist}.
+    Here, we only interested in the update events $p,q$ and the event
+    of forwarding a packet from $a$ to $d$, so for simplicity, we omit 
+    other events such other packet forwardings that may happen in 
+    the network.
+    Events $p_1,p_2$ indicate the happening of the update $p$,
+    events $q_1,q_2$ indicate the happening of the update $q$,
+    and $ad_1,ad_2$ are used for the forwarding of a packet from 
+    $a$ to $d$.
+    $\s{p_1,q_1,ad_1}$ is an unsafe configuration of this event structure since it includes the event $ad_1$.
+
+    \begin{figure}
+        \centering
+        \begin{tikzpicture}
+            \crd{0}{0}{$\emptyset$}
+            \crd[left]{-2}{1}{$\s{p_1}$}
+            \crd[left]{-2}{2}{$\s{p_1,q_1}$}
+            \crd[left]{-2}{3}{$\s{p_1,q_1,ad_1}$}
+            \crd[right]{2}{1}{$\s{q_2}$}
+            \crd[right]{2}{2}{$\s{p_2,q_2}$}
+            \crd[right]{2}{3}{$\s{p_2,q_2,ad_2}$}
+            \draw [ultra thick] (-2,1) -- (-2,2);
+            \draw [ultra thick] (-2,2) -- (-2,3);
+            \draw [ultra thick] (0,0) -- (2,1);
+            \draw [ultra thick] (0,0) -- (-2,1);
+            \draw [ultra thick] (2,1) -- (2,2);
+            \draw [ultra thick] (2,1) -- (2,3);
+        \end{tikzpicture}
+        \caption{}
+        \label{fig:blacklist:es}
+    \end{figure}
+\end{example}
 
 \subsection{Causal Model \cite{hp}}
 A signature $\mathcal{S}$ is a tuple $(\mathcal{U},\mathcal{V},\mathcal{R})$,
@@ -76,27 +121,6 @@ For example, the equation above claims that in the context $U=u$, if $Y$ were 4,
 
 The function $\mathcal{F}$ defines a set of (\textit{modifiable}) \textit{structural equations} relating to the values of the variables.
 
-\begin{example}
-    Suppose that we want to reason about a forest fire that could
-    be caused by either lightning or a match lit by an arsonist.
-    Then the causal model would have the following endogenous variables :
-    \begin{itemize}
-        \item $F$ for fire
-        \item $L$ for lighting
-        \item $ML$ for match lit
-    \end{itemize}
-    The set $\mathcal{U}$ of exogenous variables includes conditions
-    that suffice to render all relationships deterministic (such as
-    whether the wood is dry, whether there is enough oxygen in the air
-    for the match to light, etc.).
-    Suppose that $\vec u$ is a setting of the exogenous variables that
-    makes a forest fire possible (i.e., the wood is sufficiently dry,
-    there is oxygen in the air, and so on).
-    Then, for example, $F_F(\vec u, L, ML)$ is such that $F=1$ if either
-    $L=1$ or $ML=1$.
-    Note that although the value of $F$ depends on the value $L$ and $ML$, the value of $L$ does not depend on the values of $F$ and $ML$.
-\end{example}
-
 \subsubsection{Causal Network}
 We can describe a causal model $\m$ using a causal network.
 This is a graph with nodes corresponding to the random variables
@@ -105,18 +129,6 @@ labeled $Y$ if $F_Y$ depends on the value of $X$.
 This graph is a dag that follows from the assumption that the
 equations are recursive.
 We occasionally omit the exogenous variables $\vec U$ from the causal network.
-For example, the causal network for example 2.2.1 has the following
-form:
-
-\begin{center}
-    \begin{tikzpicture}[node distance={15mm}]
-        \node (l) {L};
-        \node (ml) [below right of=l]  {ML};
-        \node (f) [above right of=ml] {F};
-        \draw [->] (l) -- (ml);
-        \draw [->] (f) -- (ml);
-    \end{tikzpicture}
-\end{center}
 
 \subsubsection{Actual Cause}
 Given a signature $S= (\mathcal{U},\mathcal{V},\mathcal{R})$, a formula of the form $X =x$, for $X \in \mathcal{V}$ and $x \in \mathcal{R}(X)$, is called a \textit{primitive event}.
@@ -141,7 +153,9 @@ We abbreviate this as $\vec X = \vec x$.
 
               (a) $(M,\vec u)\models[\vec X \leftarrow \vec x', \vec W \leftarrow \vec w']\neg \varphi$.
 
-              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]\varphi$ for all subsets $Z'$ of $\vec Z$.
+              (b) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W \leftarrow \vec w']\varphi$ .
+
+              (c) $(M,\vec u)\models[\vec X\leftarrow \vec x, \vec W \leftarrow \vec w', \vec Z'\leftarrow \vec z^*]\varphi$ for all subsets $Z'$ of $\vec Z$.
 
         \item  \textbf{AC3.} $\vec X$ is minimal; no subset of $\vec X$ satisfies conditions $AC1$ and $AC2$.
     \end{itemize}

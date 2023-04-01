@@ -1,5 +1,13 @@
 \section{Causal Model of Unsafe Behavior in Event Structure}
 
+In this section, we define a causal model for the safety violation
+in an event structure. 
+More specifically, we model relations of an event structure 
+with the variables and structural equations. 
+We then encode the safety violation as the inclusion of a specific
+subset of events in the set of configurations of the event structure.
+
+
 \subsection{Causal Model of Event Structure}
 Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure where
 $E = \s{e_1, e_2, ...,e_n}$.
@@ -34,30 +42,26 @@ For $x,y \in \mathcal{P}(E)$ we say $x$ is covered by $y$ written $ x \prec y$ i
     (\forall z. x \subseteq z \subseteq y \Rightarrow x = z
     \vee y = z)
 \end{align*}
-We define the functions in $\mathcal{F}$ as follows:
+Next we define the structural equations for each of these variables.
+First, we define the structural equation of conflict variables as 
+follows:
 $$
     \f{C_{e,e'}} = \begin{cases}
         true  & \text{ if } e \# e' \\
         false & \text{ otherwise }
     \end{cases}
 $$
+We use the existing conflicts in the event structure as the initial 
+value for these variables.
+
+\noindent
+For minimal enabling variables we define the following equations:
 $$
     \f{M_{s,e}} = \begin{cases}
         Min(s,e) \wedge Con(s) & \text{ if } s \vdash_{min} e \\
         false                  & \text{ otherwise }
     \end{cases}
 $$
-\begin{align*}
-    \f{EN_{s,e}} & =
-    \left(
-    M_{s,e} \bigvee
-    \left(
-    \bigvee_{s'\prec s}EN_{s',e}
-    \right)
-    \right)
-    \bigwedge
-    Con(s)
-\end{align*}
 Where we have:
 \begin{align*}
     Con(s)   & =   \left(
@@ -70,14 +74,35 @@ Where we have:
     \neg M_{s',e}
     \right)
 \end{align*}
+Intuitively, we defined the equation so that it can be affected by 
+other conflict and minimal enabling variables.
+For instance, assume that for some $s$ we have $s \vdash_{min} e$
+thus the variable $M_{s,e}$ is true.
+If we add a conflict between any pair of events in $s$ then $M_{s,e}$
+becomes false.
+Also if make any subset or superset of $s$ to minimally enable the $e$ then
+$M_{s,e}$ becomes false.
+Finally, we define the equation for the enabling variables as follows:
+\begin{align*}
+    \f{EN_{s,e}} & =
+    \left(
+    M_{s,e} \bigvee
+    \left(
+    \bigvee_{s'\prec s}EN_{s',e}
+    \right)
+    \right)
+    \bigwedge
+    Con(s)
+\end{align*}
+Intuitively, we are capturing the idea that if $s$ enables $e$ then first 
+it must be consistent, and secondly either $s$ minimally enables $e$ or 
+there exists a subset of $s$ that enables $e$.
 
 \noindent Let $S \subseteq E$ be a subset of events.
 We define $\varphi_S$, a boolean formula of primitive
 events as follows:
 \begin{align*}
-    \left(
-        \bigwedge_{\forall e,e' \in S} \neg C_{e,e'}
-    \right)
+    Con(S)
     \bigwedge
     \left(
         \bigwedge_{\forall e \in S}
@@ -88,7 +113,7 @@ events as follows:
                 EN_{\s{\pi_1},\pi_2} \wedge
                 \dots
                 \wedge
-                EN_{\s{\pi_1,...,\pi_{n_1}},p_n}
+                EN_{\s{\pi_1,...,\pi_{n-1}},\pi_n}
             \right)
         \right)
     \right)
@@ -100,7 +125,6 @@ element of $\pi$.
 Thus, for a given subset of events $S \subseteq E$, 
 we can use $\varphi_S$ as the effect for which we look
 for a cause.
-
 
 \pagebreak
 

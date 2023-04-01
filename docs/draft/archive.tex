@@ -376,3 +376,24 @@ $\s{p_1,q_1,ad_1}$ and $\s{p_2,q_2,ad_2}$ in an event structure
 as a property violation.
 In this example we can prove that $C_{p_1,q_1} = \F$ is an 
 actual cause of the property violation.
+
+\begin{example}
+    Suppose that we want to reason about a forest fire that could
+    be caused by either lightning or a match lit by an arsonist.
+    Then the causal model would have the following endogenous variables :
+    \begin{itemize}
+        \item $F$ for fire
+        \item $L$ for lighting
+        \item $ML$ for match lit
+    \end{itemize}
+    The set $\mathcal{U}$ of exogenous variables includes conditions
+    that suffice to render all relationships deterministic (such as
+    whether the wood is dry, whether there is enough oxygen in the air
+    for the match to light, etc.).
+    Suppose that $\vec u$ is a setting of the exogenous variables that
+    makes a forest fire possible (i.e., the wood is sufficiently dry,
+    there is oxygen in the air, and so on).
+    Then, for example, $F_F(\vec u, L, ML)$ is such that $F=1$ if either
+    $L=1$ or $ML=1$.
+    Note that although the value of $F$ depends on the value $L$ and $ML$, the value of $L$ does not depend on the values of $F$ and $ML$.
+\end{example}
