@@ -10,12 +10,10 @@ subset of events in the set of configurations of the event structure.
 
 \subsection{Causal Model of Event Structure}
 Let $\mathrm{E} = (E,\#,\vdash)$ be an event structure where
-$E = \s{e_1, e_2, ...,e_n}$.
-Let $S \subseteq \mc{P}(E)$ be the set of unsafe behaviors.
-We define the causal model
-$\mc{M} = (\mc{S},\mc{F},\mc{E})$ of unsafe behavior
-in $\mr{E}$ where
-$\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$.
+$E = \s{e_1, e_2, ...,e_n}$ and $S \in \mc{F}(\mr{E})$ be an unsafe
+configuration for which we wish to find the cause.
+Let $\mc{M} = (\mc{S},\mc{F},\mc{E})$ be the causal model of the unsafe 
+behavior where $\mathcal{S} = (\mathcal{U},\mathcal{V},\mathcal{R})$.
 We define $\mathcal{U}$ to be empty and $\mathcal{V}$
 consisting of boolean variables as follows:
 \begin{align*}
@@ -32,9 +30,13 @@ For two events $e,e' \in E$, variables of the form $C_{e,e'}$ represent whether 
 Similarly, for a subset of events $s \subseteq E$ and an event $e \in E$,
 we use variables of the form $M_{s,e}$ and $EN_{s,e}$ to represent
 whether $s \vdash_{min} e$ and $s \vdash e$ respectively.
-Finally, we use a single boolean variable, $PV$, which denote the
-violation of property in the event structure.
-For each variable $X \in \mathcal{V}$ we define $\vec V_X$
+For instance, for the event structure of example \ref{example:loop}, 
+we have a variable $C_{p,q}$ which denotes a conflict between events 
+$p$ and $q$.
+We also have variables such $M_{\s{p,q},bb}$ and $EN_{\s{p,q},bb}$ that denote 
+whether $\s{p,q} \vdash_{min} bb$ and $\s{p,q} \vdash bb$ respectively.
+
+In the following, for each variable $X \in \mathcal{V}$ we define $\vec V_X$
 as a vector of all variables in $\mathcal{V} \setminus \s{X}$.
 For $x,y \in \mathcal{P}(E)$ we say $x$ is covered by $y$ written $ x \prec y$ iff:
 \begin{align*}
@@ -53,9 +55,14 @@ $$
 $$
 We use the existing conflicts in the event structure as the initial 
 value for these variables.
+For the causal model of example \ref{example:loop}, we have 
+\begin{align*}
+    \f{C_{p,q}} & = false \\
+    \f{C_{q,bb}} & = true 
+\end{align*}
 
 \noindent
-For minimal enabling variables we define the following equations:
+For minimal enabling variables, we define the following equations:
 $$
     \f{M_{s,e}} = \begin{cases}
         Min(s,e) \wedge Con(s) & \text{ if } s \vdash_{min} e \\
@@ -82,6 +89,13 @@ If we add a conflict between any pair of events in $s$ then $M_{s,e}$
 becomes false.
 Also if make any subset or superset of $s$ to minimally enable the $e$ then
 $M_{s,e}$ becomes false.
+For the causal model of example \ref{fig:loop}, we have the following 
+equation for $M_{\s{p,q},bb}$:
+\begin{align*}
+    \f{M_{\s{p},bb}} = & Min(\s{p},bb) \wedge Con(\s{p},bb) \\
+    Min(\s{p},bb) = & \neg M_{\e,bb} \wedge \neg M_{\s{p,q},bb} \\
+    Con(\s{p}) = & true 
+\end{align*}
 Finally, we define the equation for the enabling variables as follows:
 \begin{align*}
     \f{EN_{s,e}} & =
@@ -97,23 +111,30 @@ Finally, we define the equation for the enabling variables as follows:
 Intuitively, we are capturing the idea that if $s$ enables $e$ then first 
 it must be consistent, and secondly either $s$ minimally enables $e$ or 
 there exists a subset of $s$ that enables $e$.
+We have the following equation for $EN_{\s{p},bb}$ of example \ref{fig:loop}:
+\begin{align*}
+    \f{EN_{\s{p},bb}} = 
+    \left(
+        M_{\s{p},bb} \vee EN_{\e,bb}
+    \right) \wedge Con(\s{p})
+\end{align*}
 
-\noindent Let $S \subseteq E$ be a subset of events.
-We define $\varphi_S$, a boolean formula of primitive
-events as follows:
+Finally, we need to define the effect for which we seek a cause.
+Given that $S \in \mc{F}(\mr{E})$ is an unsafe configuration of $\mr{E}$,
+we define $\varphi_S$, a boolean formula of primitive events as follows:
 \begin{align*}
     Con(S)
     \bigwedge
     \left(
         \bigwedge_{\forall e \in S}
         \left(
-            \bigvee_{\forall \pi \in \pi_S} 
+            \bigvee_{\forall \pi \in \pi_{S \setminus e}} 
             \left(
                 EN_{\e,\pi_1} \wedge
                 EN_{\s{\pi_1},\pi_2} \wedge
                 \dots
                 \wedge
-                EN_{\s{\pi_1,...,\pi_{n-1}},\pi_n}
+                EN_{\s{\pi_1,...,\pi_{n-1}},e}
             \right)
         \right)
     \right)
@@ -122,9 +143,26 @@ events as follows:
 For a permutation $\pi \in \pi_S$, where $|S| = n$, 
 we write $\pi_i$ where $1 \leq i \leq n$ for the $i$th 
 element of $\pi$.
-Thus, for a given subset of events $S \subseteq E$, 
-we can use $\varphi_S$ as the effect for which we look
-for a cause.
+The first and second clause of this formula are defined according to the 
+consistent and secured conditions of the configuration in the definition 
+\ref{conf}.
+Now if we consider the example \ref{example:loop}, and $\s{p,bb}$ as an 
+unsafe configuration, we can define $\varphi_{\s{p,bb}}$ as follows:
+\begin{align*}
+    Con(\s{p,bb}) \wedge
+    \left(
+        EN_{\e,bb} \wedge EN_{\s{bb},p}
+    \right) \wedge
+    \left(
+        EN_{\e,p} \wedge EN_{\s{p},bb}
+    \right)
+\end{align*}
+Where we have:
+\begin{align*}
+    Con(\s{p,bb}) = \neg C_{p,bb}
+\end{align*}
+Using our model we can prove that $M_{\s{q},p} = \F$ is an actual cause 
+of $\varphi_{\s{p,bb}}$.
 
 \pagebreak
 

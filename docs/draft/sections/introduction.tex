@@ -1,36 +1,40 @@
 \section{Introduction}
+
+\begin{example}
+\label{example:loop}
 We use an example through the paper to illustrate 
 the concepts.
-Consider the network depicted in the figure \ref{fig:blacklist}.
-In this network we have four switches and solid arrows show 
+Consider the network depicted in figure \ref{fig:loop}.
+In this network, we have four switches and solid arrows show 
 the initial routes.
-Assume that two updates $p,q$ happen in the network.
-The update $p$ replaces the route $cb$ with $cd$ and 
-$q$ replaces the route $ab$ with $ac$.
-Assume that the switch $d$ is blacklisted and as a result
-existence of a path from $a$ to $d$ constitutes a safety 
-violation.
-Allowing both updates to happen in the network will result in the violation. 
-In the following we show how we can use actual causality  
-to capture this phenomenon as an actual case of the 
-a safety property violation.
+Assume that two concurrent updates $p,q$ will happen in the network.
+The update $p$ replaces the route $cd$ with $cbd$ and 
+$q$ replaces the route $abc$ with $ac$.
+Assume that we require to ensure that no loop appears in the network at 
+any given time.
+If $q$ happens before $p$ then we have loop in network between the $b$ 
+and $c$.
+But if $q$ happens after $p$ no loop appears in the network and we reach
+the desired state without violating the loop-freedom property.
+In the following, we explain how we can use the causal model to show that the 
+lack of ordering between $p$ and $q$ is an actual cause of 
+the loop-freedom violation.
+\end{example}
 
 \begin{figure}
     \centering
-    \begin{tikzpicture}[
-            node distance={20mm},
-            main/.style = {draw, circle},
-            s/.style = {->,thick},
-            d/.style = {->,thick,dashed} ]
-        \node[main] (b) {$b$};
-        \node[main] (a) [above right of=b] {$a$};
-        \node[main] (c) [below right of=a] {$c$};
-        \node[main] (d) [right of=c] {$d$};
-        \draw[thick,green,->] (a) -- (b);
-        \draw[thick,green,->,dashed] (a) -- (c);
-        \draw[thick,orange,->] (c) -- (b);
-        \draw[thick,orange,->,dashed] (c) -- (d);
+    \begin{tikzpicture}[node distance={20mm},main/.style = {draw, circle,minimum size=8mm}]
+        \node[main] (a)  {$a$};
+        \node[main] (b) [above of=a]  {$b$};
+        \node[main] (c) [left of=b] {$c$};
+        \node[main] (d)  [below of=c] {$d$};
+        \draw [->,green,thick] (a) -- (b);
+        \draw [->,green,thick] (b) -- (c);
+        \draw [->,orange,thick] (c) -- (d);
+        \draw [->,green,thick,dashed] (a) -- (c);
+        \draw [->,orange,thick,dashed] (c) edge[bend left] (b);
+        \draw [->,orange,thick,dashed] (b) -- (d);
     \end{tikzpicture}
-    \caption{}
-    \label{fig:blacklist}
+    \caption{Loop-freedom example}
+    \label{fig:loop}
 \end{figure}
