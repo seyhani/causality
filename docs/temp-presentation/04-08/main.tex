@@ -1,0 +1,93 @@
+\documentclass{beamer}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{minted}
+
+\begin{document}
+\begin{frame}[fragile]{Causality improvements (1)}
+  \textbf{Only singleton causes:} by design, only singletons can be
+  passed to the \emph{CauseChecker}.
+  
+  \vspace{1.5\baselineskip}
+  
+  \begin{minted}{python}
+  class CauseChecker:
+    model: CausalModel
+    cause: PrimitiveEvent # Only 1 variable
+    effect: PrimitiveEvent
+    witness: Witness 
+  \end{minted}
+
+\end{frame}
+
+\begin{frame}{Causality improvements (2)}
+  \textbf{$W$-projection*:} \emph{deleting} some variables from the
+  given causal model results in somewhat faster evaluations.
+
+  \vspace{1.5\baselineskip}
+
+  *: to implement this, we needed to find all variables $V$ accessed in
+  a function $F_X$. We discuss this later.
+\end{frame}
+
+\begin{frame}[fragile]{Causality improvements (3)}
+  \textbf{Single intervention for $Z$}: AC2(b) is now split to 
+  AC2(b, c). Checking AC2(c) now requires only one intervention for 
+  $Z$.
+
+  \vspace{1.5\baselineskip}
+
+  \begin{minted}[mathescape=true]{python}
+  def check_ac2c(self):
+    m = self.model
+    m.evaluate()
+    Z = {
+      z: m.vals[z] for z in m.get_var_names()
+      if z not in self.witness.w.union([self.effect.var])
+    } # $Z = V - (\{ X,Y \} \cup W)$
+    ints = {self.cause.var: self.cause.val}
+    ints.update(self.witness.vw)
+    m = m.intervene(ints)
+    return m.satisfies(self.effect, Z)
+  \end{minted}
+\end{frame}
+
+\begin{frame}{Miscellaneous improvemens (1)}
+  \textbf{Topological-sorting, then evaluate*:} taking advantage of the
+  DAG structure for linear-time evaluation.
+
+  \vspace{1.5\baselineskip}
+
+  \textbf{Simpler intervention:} only one copy per each call of the
+  \mintinline{python}{intervene} method
+
+  \vspace{1.5\baselineskip}
+
+  *: again, we need to find variables in a function.
+\end{frame}
+
+\begin{frame}[fragile]{Miscellaneous improvemens (2)}
+  We saw that we need to find all variables accessed in a given
+  function.
+
+  \vspace{1.5\baselineskip}
+
+  \textbf{DependencyFinder}: For a given function $f$,
+  this object finds all variables in $f$.
+
+  \vspace{1.5\baselineskip}
+
+  \textit{Example:}
+  \begin{minted}{python}
+  f = lambda vals: vals['A'] & vals['B']
+  result = DependencyFinder().find(f)
+  assertEqual({'A', 'B'}, result)
+  \end{minted}
+
+  \vspace{1.5\baselineskip}
+
+  We use DependencyFinder internally. $\implies$ no need to specify 
+  dependencies of a function when defining the causal model.
+\end{frame}
+\end{document}
