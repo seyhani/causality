@@ -32,9 +32,10 @@ class ConflictVar(EventStructureVar):
         ids_ = ids({self.e, self.ep})
         return f'C{tuple(sorted(ids_))}'.replace('\'', '')
 
+
 # E.g. EnablingVar({Event('b'), Event('a')}, Event('c')) -> 'EN([a, b], c)'
-     # Here the set is represented as a list of labels, as only a list can hold
-     # their lexicographic order.
+# Here the set is represented as a list of labels, as only a list can hold
+# their lexicographic order.
 class EnablingVar(EventStructureVar):
     s: Set[Event]
     e: Event

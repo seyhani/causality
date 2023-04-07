@@ -24,17 +24,17 @@ class TestCausalModel(unittest.TestCase):
         d = es.find_events_by_label('d').pop()
 
         cause = PrimitiveEvent(MinEnablingVar({b}, a), False)
-        witness = Witness(None, None, True)
+        witness = Witness({}, True)
         checker = EventStructureCausalChecker(es, [{a, b}], cause, witness)
         self.assertTrue(checker.is_cause())
 
         cause = PrimitiveEvent(ConflictVar(a, b), False)
-        witness = Witness(None, None, True)
+        witness = Witness({}, True)
         checker = EventStructureCausalChecker(es, [{a, b}], cause, witness)
         self.assertTrue(checker.is_cause())
 
         cause = PrimitiveEvent(MinEnablingVar({d}, c), False)
-        witness = Witness(None, None, True)
+        witness = Witness({}, True)
         checker = EventStructureCausalChecker(es, [{a, b}], cause, witness)
         self.assertFalse(checker.is_cause())
 
@@ -46,7 +46,7 @@ class TestCausalModel(unittest.TestCase):
         es.add_min_enabling({a, b}, c)
         es.build_configurations()
         cause = PrimitiveEvent('C(a, b)', False)
-        witness = Witness(None, None, True)
+        witness = Witness({}, True)
         checker = EventStructureCausalChecker(es, [{a, b, c}], cause, witness)
         self.assertTrue(checker.is_cause())
 
@@ -58,11 +58,10 @@ class TestCausalModel(unittest.TestCase):
         es.add_min_enabling({a, b}, c)
         es.build_configurations()
         cause = PrimitiveEvent('M([], c)', False)
-        witness = Witness(None, None, True)
+        witness = Witness({}, True)
         checker = EventStructureCausalChecker(es, [{a, b, c}], cause, witness)
         self.assertFalse(checker.is_cause())
 
-    @unittest.skip
     def test_blacklist(self):
         ab1, ab2, ab3, ac1, ac2, ac3 = Event('ab1'), Event('ab2'), Event('ab3'), \
                                        Event('ac1'), Event('ac2'), Event('ac3')
@@ -98,9 +97,48 @@ class TestCausalModel(unittest.TestCase):
         self.assertTrue(es.is_configuration(c2))
 
         cause = PrimitiveEvent('C(p1, q1)', False)
-        witness = Witness('C(p2, q2)', True, True)
+        witness = Witness({'C(p2, q2)': True}, True)
         checker = EventStructureCausalChecker(es, [c1, c2], cause, witness)
         self.assertTrue(checker.is_cause())
+
+    def test_loop_freedom(self):
+        p, q, bb = Event('p'), Event('q'), Event('bb')
+        es = ValidEventStructure({p, q, bb})
+
+        es.add_min_enabling(set(), p)
+        es.add_min_enabling(set(), q)
+        es.add_min_enabling({p}, bb)
+
+        es.add_conflict_set({q, bb})
+
+        es.build_configurations()
+
+        c1 = {p, q}
+        c2 = {p, bb}
+        c3 = {p, q, bb}
+        # c2 = {p2, q2, ad2}
+        #
+        self.assertTrue(es.is_configuration(c1))
+        self.assertTrue(es.is_configuration(c2))
+        self.assertFalse(es.is_configuration(c3))
+
+        cause = PrimitiveEvent('M([q], p)', False)
+        witness = Witness({}, True)
+
+        checker = EventStructureCausalChecker(es, [c1], cause, witness)
+        self.assertFalse(checker.is_cause())
+
+        checker = EventStructureCausalChecker(es, [c2], cause, witness)
+        self.assertTrue(checker.is_cause())
+
+        cause = PrimitiveEvent('C(p, q)', False)
+        witness = Witness({}, True)
+
+        checker = EventStructureCausalChecker(es, [c1], cause, witness)
+        self.assertTrue(checker.is_cause())
+
+        checker = EventStructureCausalChecker(es, [c2], cause, witness)
+        self.assertFalse(checker.is_cause())
 
 
 if __name__ == '__main__':

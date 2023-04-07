@@ -7,6 +7,8 @@ from event_structure.valid_event_structure import ValidEventStructure
 from mapper import EventStructureToCausalModelMapper
 from mapper.event_structure_causal_model import EventStructureCausalModel
 
+ES_CM_EFFECT_EVENT = PrimitiveEvent('PV', False)
+
 
 class EventStructureCausalChecker:
     cm: EventStructureCausalModel
@@ -14,35 +16,65 @@ class EventStructureCausalChecker:
     cause: PrimitiveEvent
     witness: Witness
 
-    def __init__(self, es: ValidEventStructure, ces: List[Set[Event]], cause: PrimitiveEvent, witness: Witness):
+    def __init__(
+        self,
+        es: ValidEventStructure,
+        ces: List[Set[Event]],
+        cause: PrimitiveEvent,
+        witness: Witness
+    ):
         self.ces = ces
         self.cause = cause
-        self.witness = witness
+
         self.cm = EventStructureToCausalModelMapper(es).map()
+        self.__add_effect_var(ces)
+        self.cm = self.cm.get_w_projection(cause, ES_CM_EFFECT_EVENT)
+
+        if not witness.w.issubset(self.cm.get_var_names()):
+            raise Exception("Invalid w for witness")
+        self.witness = witness
+
+    def __add_effect_var(self, ces):
+        PV = ES_CM_EFFECT_EVENT.var
+        self.cm.add(PV, lambda _: False)
+        self.cm.deps[PV] = self.__get_effect_deps(ces)
+
+    @staticmethod
+    def __get_effect_deps(
+        ces: List[Set[Event]]
+    ) -> List[str]:
+        deps = set()
+        for c in ces:
+            deps.update(EventStructureCausalModel.get_configuration_deps(c))
+        deps = list(map(repr, deps))
+        return deps
 
     def check_ac1(self):
         return self.cm.satisfies(self.cause) and self.check_effect(self.cm)
 
     def check_ac2a(self):
         ints = {self.cause.var: self.witness.vxp}
-        if self.witness.w is not None:
-            ints[self.witness.w] = self.witness.vw
+        ints.update(self.witness.vw)
         cm = self.cm.intervene(ints)
         return not self.check_effect(cm)
 
     def check_ac2b(self):
         self.cm.evaluate()
-        Z = {z: self.cm.vals[z] for z in self.cm.vals if z != self.witness.w}
         ints = {self.cause.var: self.cause.val}
-        if self.witness.w is not None:
-            ints[self.witness.w] = self.witness.vw
+        ints.update(self.witness.vw)
+        return self.check_effect(self.cm.intervene(ints))
+
+    def check_ac2c(self):
+        self.cm.evaluate()
+        Z = {
+            z: self.cm.vals[z] for z in self.cm.get_var_names()
+            if z != self.witness.w.union([ES_CM_EFFECT_EVENT.var])
+        }
+        ints = {self.cause.var: self.cause.val}
+        ints.update(self.witness.vw)
         m = self.cm.intervene(ints)
         m.evaluate()
-        return self.check_effect(m.intervene({z: Z[z] for z in Z}))
-        # for Zp in powerset(Z):
-        #     if not self.check_effect(m.intervene({z: Z[z] for z in Zp})):
-        #         return False
-        # return True
+        return self.check_effect(m.intervene(Z))
 
     def check_effect(self, cm: EventStructureCausalModel):
         cm.evaluate()
@@ -51,6 +83,9 @@ class EventStructureCausalChecker:
         return es.is_valid() and any([es.is_configuration(c) for c in self.ces])
 
     def is_cause(self):
-        return self.check_ac1() \
-               and self.check_ac2a() \
-               and self.check_ac2b()
+        return (
+            self.check_ac1()
+            and self.check_ac2a()
+            and self.check_ac2b()
+            and self.check_ac2c()
+        )

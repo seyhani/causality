@@ -1,0 +1,111 @@
+\section{Complexity Improvements for Causality}
+
+\begin{definition}\label{def:actual-cause-notation}
+    For a given set of variables $\vec{X}$, set of values $\vec{x}$
+    such that $\vec{X}=\vec{x}$, and boolean property $\varphi$,
+    we use $\vec{x} \cause \varphi$ to show that $\vec{X}=\vec{x}$ 
+    is an actual cause of $\varphi$. A causal \emph{query} is an
+    expression of form $\vec{x} \cause \varphi$.
+\end{definition}
+
+{ \color{gray}
+\begin{definition}\label{def:actual-cause-problem}
+    Assume $M=(\sig, \varfns)$ is a causal model, where 
+    $\sig=(\extvars, \intvars, \varrngs)$. Assume
+    $\vec{X} \subseteq \intvars$ and $\vec{x}$ is defined such that for 
+    each $X_i \in \vec{X}$, $X_i = x_i$, and $\varphi$ is a boolean 
+    expression over $\intvars$. $\actlcs(M, \vec{X}, \vec{x}, \varphi)$
+    is defined as the decision problem of verifying whether $X=x$ is 
+    an actual cause of $\varphi$.
+\end{definition}
+}
+
+
+\MK{Maybe we should say this when we define causality?}
+Eiter and Lukasiewicz \cite{eiter2001complexity} have shown that, for
+a given cause $X=x$ and effect $Y=y$, deciding whether $X=x$ is an
+actual cause of $Y=y$ is $\Sigma_2^P$-complete. In this section, we 
+present results that aim to reduce this complexity.
+
+\subsection{Singleton Cause}
+
+The following theorem is first presented by Halpern and Pearl as a 
+conjecture, which is later proved by Eiter and Lukasiewicz in 
+\cite{eiter2001complexity}:
+
+\begin{theorem}\label{th:singleton-cause}
+    {\color{gray} Let $M=(\sig, \varfns)$ be a causal model, where 
+    $\sig=(\extvars, \intvars, \varrngs)$. Let $X \subseteq \intvars$
+    such that for any $x \in X$, $x \in \varrngs(x)$. Let $\varphi$ 
+    be a boolean combination of events in $M$.} If $\vec{X}=\vec{x}$
+    is an actual cause of $\varphi$, then $\vec{X}$ is a singleton.
+\end{theorem}
+
+Given Thm. \ref{th:singleton-cause}, condition AC3 can be verified
+in constant time. The overall complexity of this problem, however, is
+still in verifying condition AC2; as a result, this problem remains in 
+$\Sigma_2^P$-Complete.
+
+\subsection{\texorpdfstring
+    {$W$-Projection}
+    {\textit{W}-Projection}
+}
+
+Hopkins \cite{hopkins2002strategies} defines the \emph{$W$-projection}
+of a causal model, with respect to a causal query, as the set of all 
+variables that are necessary for evaluating the query. Any other
+variable outside this projection can be \emph{deleted} from the causal
+model, without changing the result of the query.
+
+\begin{definition}\label{def:variable-deletion}
+    {\color{gray} Assume $M=(\sig, \varfns)$ is a causal model, where 
+    $\sig=(\extvars, \intvars, \varrngs)$, and $U=u$.} To 
+    \emph{delete} a variable $V \in \intvars$ from $(M,\vec{u})$, $V$ is 
+    removed from $\intvars$, and in the structural equation $F_X$ of
+    each child $X$ of $V$, variable $V$ is replaced by $v = V(\vec{u})$.
+    The \emph{projection} of $(M, u)$ over the set
+    $\vec{V} \subseteq \intvars$ is a new causal model in which
+    any variable in $\intvars \setminus \vec{V}$ is deleted.
+    The \emph{$W$-projection} of $(M,\vec{u})$ with respect to the query 
+    $\vec{x} \cause \vec{y}$, is the projection of $(M,\vec{u})$
+    over $\vec{X}$, $\vec{Y}$, variables $\vec{V}^{XY}$ on a path from
+    $\vec{X}$ to $\vec{Y}$ in the causal network of $M$, and the parents of 
+    $\vec{V}^{XY}$ and $\vec{Y}$ in the causal network of $M$.
+\end{definition}
+
+Intuitively, deleting a variable gives us the same result as
+permanently fixing it at its actual value.
+
+\begin{theorem}
+    {\color{gray}Let $M=(\sig, \varfns)$ be a causal model and $U=u$; then}
+    $\vec{x} \cause \vec{y}$ in $(M,\vec{u})$ if and only if 
+    $\vec{x} \cause \vec{y}$ in $(M',\vec{u})$, where $M'$ is the
+    $W$-projection of $M$ with respect to $\vec{X}$ and $\vec{Y}$.
+\end{theorem}
+
+\MK{Show how we can use $W$-projection.}
+
+\subsection{\texorpdfstring
+    {Restricted Search Space for $Z$}
+    {Restricte Search Space for \textit{Z}}
+}
+
+The following theorem is presented by Hopkins
+\cite{hopkins2002strategies} as a result of a theorem by Eiter and 
+Lukasiewicz \cite{eiter2001complexity}:
+
+\begin{theorem}\label{th:restricted-Z}
+    Let $M$ be a binary causal model. Suppose for a given $\vec{x},\vec{y},\vec{w}$, 
+    conditions AC1, AC2.a, and AC2.b hold. Then AC2.c holds if and 
+    only if for $\vec{Z}=\intvars \setminus (\vec{X} \cup \vec{W})$:
+    $$ (M, \vec{u}) \models 
+      [\vec{X}=\vec{x}, \vec{W}=\vec{w}, \vec{Z}=\vec{z}] (\vec{Y}=\vec{y})
+    $$. 
+\end{theorem}
+
+\MK{We can also use Eiter's theorem, if the issues with this theorem
+do not resolve.} Given Thm. \ref{th:singleton-cause}, \ref{th:restricted-Z}, 
+answering the causal query $\vec{x} \cause \varphi$ in a boolean 
+causal model is NP-complete; AC1 and AC3 can be verified in 
+polynomial time, and for a given $W$, each sub-condition of AC2 
+can also be verified in polynomial time.

@@ -1,1 +1,2 @@
 from .event_structure_mapper import EventStructureToCausalModelMapper
+from .event_structure_causal_model import EventStructureCausalModel

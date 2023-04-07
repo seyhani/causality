@@ -78,15 +78,7 @@ To prove this theorem first we define some new notions and prove some lemmas.
     Let $\m$ be a causal model with the set of endogenous variables $\mc{V}$.
     Let $X,Y \in \mc{V}$ be two endogenous variables of $\m$.
     Given a context $\vec u$, we say that $Y$ depends on $X$ denoted by
-    $X \to Y$ if there exists a set of variables $\vec W$ and values
-    $\vec w, x', y'$ where $x \neq x'$ and $y \neq y'$ that satisfy the
-    following conditions:
-    \begin{align*}
-        (\m,\vec u) \vDash[\vec W \la \vec w] X = x \wedge Y = y \\
-        (\m,\vec u) \vDash[\vec W \la \vec w, X \la x'] Y = y'
-    \end{align*}
-    The dependency intuitively captures the fact that the value of $Y$
-    can be changed by changing the value of $X$.
+    $X \to Y$ the function of $Y$ includes the variable $X$.
 \end{notion}
 
 \begin{notion}

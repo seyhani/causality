@@ -21,25 +21,30 @@ class EventStructureToCausalModelMapper:
             else:
                 self.cm.add_conflict(e, ep, False)
 
-    def con(self, s: Set[Event], vals: VALS):
+    @staticmethod
+    def con(s: Set[Event], vals: VALS):
         result = True
         for e, ep in combinations(s, 2):
-            result = result and not vals[repr(ConflictVar(e, ep))]
+            result &= not vals[repr(ConflictVar(e, ep))]
         return result
 
     def min(self, s: Set[Event], e: Event, vals: VALS):
         result = True
         for sp in powerset(self.es.events):
             if (sp < s or s < sp) and (e not in sp):
-                result = result and not vals[repr(MinEnablingVar(sp, e))]
+                result &= not vals[repr(MinEnablingVar(sp, e))]
         return result
 
     def __add_min_en_vars(self):
         for s in powerset(self.es.events):
             for e in self.es.events - s:
                 if self.es.min_enables(s, e):
-                    self.cm.add_min_enabling(s, e, (
-                        lambda s_=s, e_=e: lambda vals: self.min(s_, e_, vals) and self.con(s_, vals))())
+                    self.cm.add_min_enabling(
+                        s, e, (
+                            lambda s_=s, e_=e: lambda vals:
+                                self.min(s_, e_, vals) & self.con(s_, vals)
+                        )(),
+                    )
                 else:
                     self.cm.add_min_enabling(s, e, lambda vals: False)
 
@@ -47,13 +52,18 @@ class EventStructureToCausalModelMapper:
         def enabling_condition(vals, s_, e_):
             result = vals[repr(MinEnablingVar(s_, e_))]
             for ep in s_:
-                result = result or vals[repr(EnablingVar(s_ - {ep}, e_))]
-            result = result and self.con(s_, vals)
+                result |= vals[repr(EnablingVar(s_ - {ep}, e_))]
+            result &= self.con(s_, vals)
             return result
 
         for s in powerset(self.es.events):
             for e in self.es.events - s:
-                self.cm.add_enabling(s, e, (lambda s_=s, e_=e: lambda vals: enabling_condition(vals, s_, e_))())
+                self.cm.add_enabling(
+                    s, e, (
+                        lambda s_=s, e_=e: lambda vals:
+                            enabling_condition(vals, s_, e_)
+                    )(),
+                )
 
     def map(self) -> EventStructureCausalModel:
         self.__add_conflict_vars()
